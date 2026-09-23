@@ -1,0 +1,692 @@
+{
+ "floor": {
+  "id": "unit4-l2",
+  "name": "Unit 4, Second Floor",
+  "plan_revision": "rev-b",
+  "plan_asset": "assets/plan/floor_unit4_l2.svg",
+  "units": "metres",
+  "width_m": 31.707,
+  "height_m": 18.442
+ },
+ "status": "DRAFT: drawn from the proposed Rev B layout. Walk the floor and set verified=true per unit.",
+ "spaces": [
+  {
+   "id": "L2-MAIN",
+   "kind": "desk_zone",
+   "name": "Main office",
+   "bookable": false
+  },
+  {
+   "id": "L2-MEET",
+   "kind": "meeting_zone",
+   "name": "Meeting rooms",
+   "bookable": false
+  },
+  {
+   "id": "L2-OFFICES",
+   "kind": "office_suite",
+   "name": "Private offices",
+   "bookable": false
+  },
+  {
+   "id": "L2-KITCHEN",
+   "kind": "communal",
+   "name": "Kitchen",
+   "bookable": false,
+   "x_m": 14.9,
+   "y_m": 12.8,
+   "footprint": [
+    [
+     12.743,
+     11.189
+    ],
+    [
+     16.454,
+     10.601
+    ],
+    [
+     17.057,
+     14.411
+    ],
+    [
+     13.346,
+     14.999
+    ]
+   ]
+  },
+  {
+   "id": "L2-PODS",
+   "kind": "communal",
+   "name": "Phone pods (2)",
+   "bookable": false,
+   "x_m": 16.65,
+   "y_m": 8.0,
+   "footprint": [
+    [
+     15.781,
+     6.67
+    ],
+    [
+     17.065,
+     6.466
+    ],
+    [
+     17.519,
+     9.33
+    ],
+    [
+     16.235,
+     9.534
+    ]
+   ]
+  }
+ ],
+ "units": [
+  {
+   "id": "L2-D001",
+   "space_id": "L2-MAIN",
+   "kind": "desk",
+   "label": "Window 1",
+   "capacity": 1,
+   "x_m": 12.599,
+   "y_m": 4.679,
+   "rot_deg": 81.0,
+   "footprint": [
+    [
+     12.824,
+     3.96
+    ],
+    [
+     13.035,
+     5.293
+    ],
+    [
+     12.374,
+     5.398
+    ],
+    [
+     12.163,
+     4.065
+    ]
+   ],
+   "source": "rev-b:detected",
+   "verified": false
+  },
+  {
+   "id": "L2-D002",
+   "space_id": "L2-MAIN",
+   "kind": "desk",
+   "label": "Window 2",
+   "capacity": 1,
+   "x_m": 13.265,
+   "y_m": 4.574,
+   "rot_deg": 81.0,
+   "footprint": [
+    [
+     13.49,
+     3.855
+    ],
+    [
+     13.701,
+     5.188
+    ],
+    [
+     13.04,
+     5.293
+    ],
+    [
+     12.829,
+     3.96
+    ]
+   ],
+   "source": "rev-b:detected",
+   "verified": false
+  },
+  {
+   "id": "L2-D003",
+   "space_id": "L2-MAIN",
+   "kind": "desk",
+   "label": "Window 3",
+   "capacity": 1,
+   "x_m": 15.677,
+   "y_m": 4.191,
+   "rot_deg": 81.0,
+   "footprint": [
+    [
+     15.902,
+     3.472
+    ],
+    [
+     16.113,
+     4.805
+    ],
+    [
+     15.452,
+     4.91
+    ],
+    [
+     15.241,
+     3.577
+    ]
+   ],
+   "source": "rev-b:detected",
+   "verified": false
+  },
+  {
+   "id": "L2-D004",
+   "space_id": "L2-MAIN",
+   "kind": "desk",
+   "label": "Window 4",
+   "capacity": 1,
+   "x_m": 16.343,
+   "y_m": 4.085,
+   "rot_deg": 81.0,
+   "footprint": [
+    [
+     16.568,
+     3.366
+    ],
+    [
+     16.779,
+     4.699
+    ],
+    [
+     16.118,
+     4.804
+    ],
+    [
+     15.907,
+     3.471
+    ]
+   ],
+   "source": "rev-b:detected",
+   "verified": false
+  },
+  {
+   "id": "L2-D005",
+   "space_id": "L2-MAIN",
+   "kind": "desk",
+   "label": "Window 5",
+   "capacity": 1,
+   "x_m": 18.755,
+   "y_m": 3.703,
+   "rot_deg": 81.0,
+   "footprint": [
+    [
+     18.98,
+     2.984
+    ],
+    [
+     19.191,
+     4.317
+    ],
+    [
+     18.53,
+     4.422
+    ],
+    [
+     18.319,
+     3.089
+    ]
+   ],
+   "source": "rev-b:detected",
+   "verified": false
+  },
+  {
+   "id": "L2-D006",
+   "space_id": "L2-MAIN",
+   "kind": "desk",
+   "label": "Window 6",
+   "capacity": 1,
+   "x_m": 19.421,
+   "y_m": 3.597,
+   "rot_deg": 81.0,
+   "footprint": [
+    [
+     19.646,
+     2.878
+    ],
+    [
+     19.857,
+     4.211
+    ],
+    [
+     19.196,
+     4.316
+    ],
+    [
+     18.985,
+     2.983
+    ]
+   ],
+   "source": "rev-b:detected",
+   "verified": false
+  },
+  {
+   "id": "L2-D007",
+   "space_id": "L2-MAIN",
+   "kind": "desk",
+   "label": "Window 7",
+   "capacity": 1,
+   "x_m": 21.833,
+   "y_m": 3.214,
+   "rot_deg": 81.0,
+   "footprint": [
+    [
+     22.058,
+     2.495
+    ],
+    [
+     22.269,
+     3.828
+    ],
+    [
+     21.608,
+     3.933
+    ],
+    [
+     21.397,
+     2.6
+    ]
+   ],
+   "source": "rev-b:detected",
+   "verified": false
+  },
+  {
+   "id": "L2-D008",
+   "space_id": "L2-MAIN",
+   "kind": "desk",
+   "label": "Window 8",
+   "capacity": 1,
+   "x_m": 22.499,
+   "y_m": 3.108,
+   "rot_deg": 81.0,
+   "footprint": [
+    [
+     22.724,
+     2.389
+    ],
+    [
+     22.935,
+     3.722
+    ],
+    [
+     22.274,
+     3.827
+    ],
+    [
+     22.063,
+     2.494
+    ]
+   ],
+   "source": "rev-b:detected",
+   "verified": false
+  },
+  {
+   "id": "L2-D009",
+   "space_id": "L2-MAIN",
+   "kind": "desk",
+   "label": "Centre 1",
+   "capacity": 1,
+   "x_m": 19.263,
+   "y_m": 6.473,
+   "rot_deg": -9.0,
+   "footprint": [
+    [
+     18.544,
+     6.248
+    ],
+    [
+     19.877,
+     6.037
+    ],
+    [
+     19.982,
+     6.698
+    ],
+    [
+     18.649,
+     6.909
+    ]
+   ],
+   "source": "rev-b:detected",
+   "verified": false
+  },
+  {
+   "id": "L2-D010",
+   "space_id": "L2-MAIN",
+   "kind": "desk",
+   "label": "Centre 2",
+   "capacity": 1,
+   "x_m": 19.368,
+   "y_m": 7.138,
+   "rot_deg": -9.0,
+   "footprint": [
+    [
+     18.649,
+     6.913
+    ],
+    [
+     19.982,
+     6.702
+    ],
+    [
+     20.087,
+     7.363
+    ],
+    [
+     18.754,
+     7.574
+    ]
+   ],
+   "source": "rev-b:detected",
+   "verified": false
+  },
+  {
+   "id": "L2-D011",
+   "space_id": "L2-MAIN",
+   "kind": "desk",
+   "label": "Centre 3",
+   "capacity": 1,
+   "x_m": 21.038,
+   "y_m": 6.191,
+   "rot_deg": -9.0,
+   "footprint": [
+    [
+     20.319,
+     5.966
+    ],
+    [
+     21.652,
+     5.755
+    ],
+    [
+     21.757,
+     6.416
+    ],
+    [
+     20.424,
+     6.627
+    ]
+   ],
+   "source": "rev-b:detected",
+   "verified": false
+  },
+  {
+   "id": "L2-D012",
+   "space_id": "L2-MAIN",
+   "kind": "desk",
+   "label": "Centre 4",
+   "capacity": 1,
+   "x_m": 21.143,
+   "y_m": 6.857,
+   "rot_deg": -9.0,
+   "footprint": [
+    [
+     20.424,
+     6.632
+    ],
+    [
+     21.757,
+     6.421
+    ],
+    [
+     21.862,
+     7.082
+    ],
+    [
+     20.529,
+     7.293
+    ]
+   ],
+   "source": "rev-b:detected",
+   "verified": false
+  },
+  {
+   "id": "L2-D013",
+   "space_id": "L2-MAIN",
+   "kind": "desk",
+   "label": "Centre 5",
+   "capacity": 1,
+   "x_m": 22.812,
+   "y_m": 5.909,
+   "rot_deg": -9.0,
+   "footprint": [
+    [
+     22.093,
+     5.684
+    ],
+    [
+     23.426,
+     5.473
+    ],
+    [
+     23.531,
+     6.134
+    ],
+    [
+     22.198,
+     6.345
+    ]
+   ],
+   "source": "rev-b:detected",
+   "verified": false
+  },
+  {
+   "id": "L2-D014",
+   "space_id": "L2-MAIN",
+   "kind": "desk",
+   "label": "Centre 6",
+   "capacity": 1,
+   "x_m": 22.918,
+   "y_m": 6.575,
+   "rot_deg": -9.0,
+   "footprint": [
+    [
+     22.199,
+     6.35
+    ],
+    [
+     23.532,
+     6.139
+    ],
+    [
+     23.637,
+     6.8
+    ],
+    [
+     22.304,
+     7.011
+    ]
+   ],
+   "source": "rev-b:detected",
+   "verified": false
+  },
+  {
+   "id": "L2-D015",
+   "space_id": "L2-MAIN",
+   "kind": "desk",
+   "label": "Corner 1",
+   "capacity": 1,
+   "x_m": 23.318,
+   "y_m": 9.972,
+   "rot_deg": 81.0,
+   "footprint": [
+    [
+     23.543,
+     9.253
+    ],
+    [
+     23.754,
+     10.586
+    ],
+    [
+     23.093,
+     10.691
+    ],
+    [
+     22.882,
+     9.358
+    ]
+   ],
+   "source": "rev-b:detected",
+   "verified": false
+  },
+  {
+   "id": "L2-D016",
+   "space_id": "L2-MAIN",
+   "kind": "desk",
+   "label": "Corner 2",
+   "capacity": 1,
+   "x_m": 23.984,
+   "y_m": 9.867,
+   "rot_deg": 81.0,
+   "footprint": [
+    [
+     24.209,
+     9.148
+    ],
+    [
+     24.42,
+     10.481
+    ],
+    [
+     23.759,
+     10.586
+    ],
+    [
+     23.548,
+     9.253
+    ]
+   ],
+   "source": "rev-b:detected",
+   "verified": false
+  },
+  {
+   "id": "L2-MR01",
+   "space_id": "L2-MEET",
+   "kind": "meeting_room",
+   "label": "Meeting room (small)",
+   "capacity": 4,
+   "x_m": 9.0,
+   "y_m": 7.3,
+   "rot_deg": -9.0,
+   "footprint": [
+    [
+     7.163,
+     6.296
+    ],
+    [
+     10.437,
+     5.778
+    ],
+    [
+     10.837,
+     8.304
+    ],
+    [
+     7.563,
+     8.822
+    ]
+   ],
+   "source": "rev-b:annotated",
+   "verified": false,
+   "note": "Drawing: MEETING ROOM 8.2 sqm, table for 4"
+  },
+  {
+   "id": "L2-MR02",
+   "space_id": "L2-MEET",
+   "kind": "meeting_room",
+   "label": "Meeting room (large)",
+   "capacity": 8,
+   "x_m": 19.1,
+   "y_m": 12.55,
+   "rot_deg": -9.0,
+   "footprint": [
+    [
+     16.465,
+     11.098
+    ],
+    [
+     21.157,
+     10.355
+    ],
+    [
+     21.735,
+     14.002
+    ],
+    [
+     17.043,
+     14.745
+    ]
+   ],
+   "source": "rev-b:annotated",
+   "verified": false,
+   "note": "Drawing: MEETING ROOM 17.6 sqm, table for 8"
+  },
+  {
+   "id": "L2-OFFICE01",
+   "space_id": "L2-OFFICES",
+   "kind": "private_office",
+   "label": "Private office 1",
+   "capacity": 6,
+   "x_m": 27.4,
+   "y_m": 3.8,
+   "rot_deg": -9.0,
+   "footprint": [
+    [
+     24.172,
+     1.638
+    ],
+    [
+     29.802,
+     0.747
+    ],
+    [
+     30.628,
+     5.962
+    ],
+    [
+     24.998,
+     6.853
+    ]
+   ],
+   "source": "rev-b:annotated",
+   "verified": false,
+   "bookable": false,
+   "note": "Drawing labels this 'ACG Offices' (6 desks). Existing tenant? Not bookable until the operator decides (ROADMAP D6)"
+  },
+  {
+   "id": "L2-OFFICE02",
+   "space_id": "L2-OFFICES",
+   "kind": "private_office",
+   "label": "Private office 2",
+   "capacity": 1,
+   "x_m": 28.7,
+   "y_m": 8.25,
+   "rot_deg": -9.0,
+   "footprint": [
+    [
+     26.295,
+     7.127
+    ],
+    [
+     30.641,
+     6.439
+    ],
+    [
+     31.105,
+     9.373
+    ],
+    [
+     26.759,
+     10.061
+    ]
+   ],
+   "source": "rev-b:annotated",
+   "verified": false,
+   "bookable": false,
+   "note": "Drawing labels this \"Iffy's OFFICE 12 sqm\" (1 desk drawn). Existing tenant? Not bookable until the operator decides (ROADMAP D6)"
+  }
+ ]
+}

@@ -1,7 +1,7 @@
 # Hub laboratories
 
 Everything under `/lab` is isolated research. A lab does not become production because it
-looks impressive or because its library is listed in `docs/TECHNOLOGY_RADAR.md`.
+looks impressive or because its library is listed in `docs/research/TECHNOLOGY_RADAR.md`.
 
 ## Existing
 

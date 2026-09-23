@@ -3,7 +3,15 @@
 2026-09-22
 
 Unit 4, Second Floor. Source drawing: Proposed Plans Unit 4 Lloyds Wharf Rev B.
-Working assets: `/mnt/c/Users/puror/lloyds-wharf-hub/`
+Working assets (outside git — Rev B PDF, 113 walkthrough stills, raw video): `/mnt/c/Users/puror/lloyds-wharf-hub/`. The PDF and `segs_raw.json` are now also in `assets/plan/source/`.
+
+> **Correction, 23 Sep 2026.** The first extraction read PDF *lines* in bottom-up
+> coordinates and *curves* top-down, so every wall was mirrored vertically against the
+> furniture. `tools/extract.py` now reads both top-down; the SVG was regenerated. The scale
+> finding below is unaffected (lengths do not change under a mirror). Corrected figures:
+> extent 31.71 m × 18.44 m; 52 structure, 354 partition, 6,264 detail segments. The main
+> office desks are drawn as 1.35 × 0.67 m blocks with the 1.2000 dimension inside them;
+> the ACG and Iffy's desks are 1.2 × 0.6. `tools/detect_desks.py` finds all 23.
 
 ---
 

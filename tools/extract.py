@@ -1,10 +1,15 @@
 import pdfplumber, math, json
-PDF='/mnt/c/Users/puror/Downloads/Proposed Plans Unit 4 Lloyds Wharf Rev B.pdf'
+import sys
+PDF=sys.argv[1] if len(sys.argv)>1 else 'assets/plan/source/rev-b.pdf'
 pdf=pdfplumber.open(PDF); p=pdf.pages[0]
 
 segs=[]   # (x0,y0,x1,y1,kind)
+# Use 'pts' for both lines and curves: they are top-origin (y down, as displayed).
+# l['y0']/l['y1'] are bottom-origin PDF space. Mixing the two mirrored every wall
+# vertically against the furniture until 2026-09-23.
 for l in p.lines:
-    segs.append((l['x0'],l['y0'],l['x1'],l['y1'],'line'))
+    (ax,ay),(bx,by)=l['pts'][0],l['pts'][-1]
+    segs.append((ax,ay,bx,by,'line'))
 for c in p.curves:
     pts=c['pts']
     for a,b in zip(pts,pts[1:]):

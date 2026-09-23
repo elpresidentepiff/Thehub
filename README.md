@@ -2,51 +2,59 @@
 
 2 Mill Street, SE1 2BD — a Victorian wharf warehouse in Shad Thames, est. 1857, now a workspace.
 
-This repo holds the digital experience: the opening sequence, the floor, the seat picker,
-and eventually booking.
+This repo holds the digital experience (the opening sequence, the floor, the seat picker) and
+the commerce engine behind it (inventory, availability, holds, booking, Stripe).
 
-## Read this first
+## Start here
 
-**`.claude/skills/hub-experience/SKILL.md`** is the project constitution — brand, materials,
-type, motion, stack boundaries and prohibitions. Load it before writing any code, copy,
-colour or scene. It carries measured values, not preferences.
-
-`docs/BUILD_PLAN.md` is the phased plan and the open decisions.
-
-Before adding a library, purchased component or spatial experiment, read
-`docs/TECHNOLOGY_RADAR.md`. External component source must be recorded in
-`docs/COMPONENT_REGISTRY.md`. Product work that connects the measured plan to inventory,
-booking or Stripe starts with `docs/COMMERCE_SPATIAL_WORKSTREAM.md`.
-
-## What is here
-
-| Path | Contents |
+| Read | Why |
 | --- | --- |
-| `.claude/skills/hub-experience/` | the constitution — load before any work |
-| `tokens/` | design tokens, CSS + JSON, all measured from real photography |
-| `assets/brand/` | the lit sign, the cleat wall, the Neckinger sign, `cleat.svg` |
-| `assets/plan/` | `floor_unit4_l2.svg` (viewBox in **metres**) + `plan_meta.json` |
-| `assets/video/` | web-encoded clips + poster from the walkthrough |
-| `proto/opening.html` | the opening sequence prototype — zero dependencies |
-| `tools/` | the PDF extraction scripts, re-runnable on a new drawing |
-| `docs/` | build plan |
-| `lab/` | isolated visual, spatial and commerce experiments — never production by default |
+| [`AGENTS.md`](AGENTS.md) | Rules for every agent (Claude, Codex): branch, where things go, hard gates |
+| [`.claude/skills/hub-experience/SKILL.md`](.claude/skills/hub-experience/SKILL.md) | **The constitution** — brand, materials, type, motion, stack boundaries. Load before any work |
+| [`docs/plan/ROADMAP.md`](docs/plan/ROADMAP.md) | **The plan** — status board, milestones, next actions, decisions owed by the operator |
+| [`docs/README.md`](docs/README.md) | Index of every other document |
 
-## The prototype
+## What is where
 
-`proto/opening.html` is the first 40 seconds: 1857 → the cleat lit by its own halo →
-THE HUB with real footage inside the letters → push through → arrival on the floor.
+| Path | What it is | Ships to production? |
+| --- | --- | --- |
+| `src/app/` | Next.js routes. `/` is the opening | yes |
+| `src/experience/` | Opening sequence, spatial stage (Canvas 2D → R3F), motion runtime, perf | yes |
+| `src/commerce/` | Commerce engine: inventory, availability, pricing, holds, Stripe mapping. Renderer-independent | yes (server) |
+| `src/app/lab/`, `src/lab/` | Next.js dev-only lab routes. Never imported by production (build fails if so) | no |
+| `supabase/` | Hub database: migrations, SQL tests. **Local only — no Supabase project exists yet** | when approved |
+| `data/inventory/` | Stable bookable-unit registry (IDs + metric geometry). No prices, no availability | yes (seed) |
+| `proto/` | Milestone 1 zero-dependency opening prototype — the approved narrative reference | no |
+| `lab/` | Static zero-build studies (opening tests, floor/booking/checkout mocks, cleat studies) | no |
+| `assets/` | Brand photos, `cleat.svg`, the metric plan, web video. `assets/plan/source/` = Rev B PDF + raw segments | via `public/` |
+| `tokens/` | Design tokens (CSS + JSON), measured from real photography | yes |
+| `tools/` | PDF → metric plan extraction, desk detection | no |
+| `scripts/` | Build guards (`check-boundaries`, `check-bundle`), media sync, test runners | no |
+| `docs/` | Plan, experience, commerce, research, reports — see `docs/README.md` | no |
 
-It is deliberately dependency-free — vanilla scroll-driven, no GSAP, no Lenis, no build
-step — so the choreography can be judged on its own before the production stack goes in.
-Open the file directly, or serve the folder:
+Outside git: `/mnt/c/Users/puror/lloyds-wharf-hub/` holds the 113 walkthrough stills and the
+original extraction workspace.
+
+## Run it
+
+Node work happens in the WSL checkout (`~/Thehub`) where `node_modules` lives.
 
 ```bash
-python3 -m http.server -d proto 8080
+npm install
+npm run dev            # Next.js on :3000 — the production opening at /
+npm run check          # constitution boundaries + typecheck
+npm test               # commerce engine unit tests
+npm run db:test        # migrations + SQL tests against a throwaway local Postgres
+npm run build          # prebuild guards → build → postbuild bundle proof
 ```
 
-In production this sequence is rebuilt on GSAP ScrollTrigger + Lenis, with the camera
-choreography authored in Theatre.js and exported as state JSON.
+Static studies need no build — serve the repo root and open the paths:
+
+```bash
+python3 -m http.server 8080
+# http://127.0.0.1:8080/proto/opening.html
+# http://127.0.0.1:8080/lab/floor/
+```
 
 ## Three facts the brand rests on
 
@@ -59,7 +67,7 @@ choreography authored in Theatre.js and exported as state JSON.
 
 `assets/plan/floor_unit4_l2.svg` was extracted from the architect's Rev B drawing —
 1,345 lines and 1,240 curves, scale confirmed at **1:50 (56.69 pt/m)** against the
-annotated 1.2 m desks. Floorplate is **31.71 m × 18.02 m**.
+annotated 1.2 m desks. Drawing extent is **31.71 m × 18.44 m**.
 
 The viewBox is **in metres**. Seat coordinates, camera paths and wall extrusion all share
 that one coordinate system. Never introduce a second.

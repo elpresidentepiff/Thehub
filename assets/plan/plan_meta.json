@@ -6,11 +6,11 @@
  "units": "metres",
  "extent_m": {
   "w": 31.707,
-  "h": 18.019
+  "h": 18.442
  },
  "pdf_origin_pt": {
   "x": 185.48,
-  "y": 353.56
+  "y": 333.4
  },
  "grid_angles_deg": [
   9,
@@ -18,9 +18,9 @@
   171
  ],
  "segment_counts": {
-  "structure": 51,
+  "structure": 52,
   "partition": 354,
-  "detail": 6256
+  "detail": 6264
  },
  "note": "y increases downward, matching PDF raw y (display-correct for this file)"
 }

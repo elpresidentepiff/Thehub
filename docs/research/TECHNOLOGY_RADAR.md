@@ -103,7 +103,7 @@ An unsolicited talking head in the corner is explicitly out of scope.
 
 ## Required evaluation record
 
-Every Lab or Harvest candidate must add one row to `docs/COMPONENT_REGISTRY.md` or a
+Every Lab or Harvest candidate must add one row to `docs/research/COMPONENT_REGISTRY.md` or a
 short decision record containing:
 
 - Source URL and exact version or retrieval date.

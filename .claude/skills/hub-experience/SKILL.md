@@ -137,10 +137,10 @@ Rev B drawing.
 
 - **viewBox is in METRES.** Origin top-left, y increasing downward.
 - Scale of the source drawing: 1:50 on A1, **56.69 pt per metre**.
-- Floorplate: **31.71 m × 18.02 m**.
-- Three layers: `#structure` (51 segments), `#partition` (354), `#detail` (6,256).
+- Drawing extent: **31.71 m × 18.44 m** (corrected 23 Sep; the earlier 18.02 came from mirrored wall lines).
+- Three layers: `#structure` (52 segments), `#partition` (354), `#detail` (6,264).
 - **Ship structure + partition as live SVG. Bake `detail` to a raster underlay.**
-  All 6,661 as live DOM will not survive mobile.
+  All 6,670 as live DOM will not survive mobile.
 
 Seat coordinates, camera paths and wall extrusion all use these same metric coordinates.
 One coordinate system across 2D, 3D and video. Never introduce a second.
@@ -198,7 +198,7 @@ looks impressive in its catalogue.
 Before selected source reaches production it must:
 
 1. Be copied into the Hub codebase only when its licence and acquisition terms allow it.
-2. Be recorded in `docs/COMPONENT_REGISTRY.md` with its source, licence, named job and owner.
+2. Be recorded in `docs/research/COMPONENT_REGISTRY.md` with its source, licence, named job and owner.
 3. Be converted to Hub tokens, Archivo typography and the building's material language.
 4. Have conflicting styling and unnecessary animation dependencies removed.
 5. Reuse the motion engine already assigned to that job.
@@ -208,7 +208,7 @@ Before selected source reaches production it must:
 Never install an entire catalogue to use one effect. Never combine multiple motion engines
 to achieve one interaction. Never copy a catalogue's generic AI/SaaS aesthetic into the Hub.
 
-See `docs/TECHNOLOGY_RADAR.md` before adding any visual, spatial or concierge tool.
+See `docs/research/TECHNOLOGY_RADAR.md` before adding any visual, spatial or concierge tool.
 
 ## Parallel workstreams
 
@@ -220,7 +220,7 @@ IDs and the shared metric floor coordinate system.
 
 The renderer is never the commercial database. SVG shapes, splats and 3D objects reference
 stable IDs; availability, pricing, reservations and customers live behind server-validated
-interfaces. Read `docs/COMMERCE_SPATIAL_WORKSTREAM.md` before building either side of that
+interfaces. Read `docs/commerce/COMMERCE_SPATIAL_WORKSTREAM.md` before building either side of that
 boundary.
 
 ## Copy
