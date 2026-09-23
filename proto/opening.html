@@ -1,0 +1,286 @@
+<title>The Hub at Lloyds Wharf</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Black&display=swap">
+<style>
+:root{
+  --ink:#0B0907; --ink-2:#14100C;
+  --halo:#FEE6B5; --halo-warm:#F8CF95; --brass:#B97C3C; --brass-deep:#7A4E22;
+  --brick:#79573B; --brick-lit:#B48963;
+  --oak:#A48F7C; --daylight:#7E8EB1; --steel:#72747E;
+  --cream:#EFE7DA; --cream-dim:#A99C8B;
+  --display:"Archivo Black","Archivo",Impact,sans-serif;
+  --body:"Archivo",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--cream);font-family:var(--body);
+     -webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* ---------- stage ---------- */
+.scroller{height:560vh;position:relative}
+.stage{position:sticky;top:0;height:100vh;overflow:hidden;background:var(--ink)}
+.layer{position:absolute;inset:0;display:grid;place-items:center;will-change:opacity,transform}
+
+/* ---------- water (the Neckinger) ---------- */
+#water{position:absolute;inset:auto 0 0 0;height:46vh;width:100%;display:block;opacity:.55}
+.waterfade{position:absolute;inset:auto 0 0 0;height:46vh;
+  background:linear-gradient(to bottom,var(--ink) 0%,rgba(11,9,7,0) 38%)}
+
+/* ---------- beat 1 : 1857 ---------- */
+.est{font-family:var(--body);font-weight:500;letter-spacing:.62em;
+     font-size:clamp(13px,1.6vw,20px);color:var(--cream-dim);text-indent:.62em}
+.est b{font-weight:700;color:var(--cream)}
+.rule{width:min(58vw,460px);height:1px;background:linear-gradient(90deg,
+      transparent,var(--brass) 18%,var(--halo-warm) 50%,var(--brass) 82%,transparent);
+      margin:26px auto 0;transform-origin:50% 50%}
+
+/* ---------- beat 2 : the cleat, lit by its own halo ---------- */
+.cleatwrap{position:relative;width:min(84vw,860px);filter:drop-shadow(0 0 var(--glow,0px) var(--halo-warm))}
+.cleatglow{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:130%;aspect-ratio:2.4/1;border-radius:50%;pointer-events:none;
+  background:radial-gradient(ellipse at center,
+    rgba(254,230,181,.60) 0%,rgba(248,207,149,.30) 32%,
+    rgba(185,124,60,.14) 55%,rgba(11,9,7,0) 74%);filter:blur(16px)}
+svg.cleat{display:block;width:100%;height:auto;color:var(--cream);position:relative}
+svg.cleat path,svg.cleat rect,svg.cleat circle{
+  stroke-dasharray:1;stroke-dashoffset:1;vector-effect:non-scaling-stroke}
+
+/* ---------- beat 3 : THE HUB, footage inside the letters ---------- */
+.wordmark{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1vw,14px)}
+.the{font-family:var(--display);font-size:clamp(28px,5.2vw,74px);letter-spacing:.06em;
+     color:var(--cream);line-height:1}
+.hubtype{position:relative;width:min(92vw,1000px);aspect-ratio:1000/260;overflow:hidden}
+.hubtype video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+     filter:saturate(.82) contrast(1.16) brightness(1.06)}
+.hubtype svg{position:absolute;inset:0;width:100%;height:100%}
+.hubtype .sheen{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;
+     background:linear-gradient(105deg,transparent 38%,rgba(254,230,181,.30) 50%,transparent 62%);
+     background-size:260% 100%}
+.wharf{font-family:var(--body);font-weight:600;color:var(--cream-dim);
+     font-size:clamp(11px,1.5vw,19px);letter-spacing:.34em;text-indent:.34em}
+
+/* ---------- beat 5 : inside ---------- */
+.inside video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.insidegrade{position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 42%,rgba(11,9,7,0) 34%,rgba(11,9,7,.78) 100%)}
+.pillars{position:relative;display:flex;flex-wrap:wrap;justify-content:center;
+  gap:clamp(14px,3.4vw,54px);padding:0 5vw}
+.pillars span{font-family:var(--body);font-weight:600;letter-spacing:.3em;
+  font-size:clamp(10px,1.35vw,16px);color:var(--cream);text-indent:.3em;
+  text-shadow:0 2px 26px rgba(11,9,7,.9)}
+.pillars span i{font-style:normal;color:var(--brass);padding-right:clamp(14px,3.4vw,54px)}
+
+/* ---------- chrome ---------- */
+.hint{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:20;
+  font-size:10px;letter-spacing:.34em;color:var(--cream-dim);text-indent:.34em;
+  display:flex;flex-direction:column;align-items:center;gap:9px;pointer-events:none}
+.hint .bar{width:1px;height:30px;background:linear-gradient(var(--brass),transparent)}
+.beats{position:fixed;right:clamp(12px,2.2vw,28px);top:50%;transform:translateY(-50%);
+  z-index:20;display:flex;flex-direction:column;gap:12px}
+.beats button{all:unset;cursor:pointer;width:26px;height:26px;display:grid;place-items:center}
+.beats i{display:block;width:7px;height:7px;border-radius:50%;
+  border:1px solid var(--brass);background:transparent;transition:background .3s,transform .3s}
+.beats button[aria-current="true"] i{background:var(--halo);transform:scale(1.5)}
+.beats button:focus-visible i{outline:2px solid var(--halo);outline-offset:3px}
+.note{position:fixed;left:clamp(12px,2.2vw,28px);bottom:clamp(12px,2.2vw,24px);z-index:20;
+  font-size:10px;letter-spacing:.16em;color:#5E5348;max-width:34ch;line-height:1.7}
+
+@media (prefers-reduced-motion:reduce){
+  .scroller{height:auto}
+  .stage{position:static;height:auto;display:flex;flex-direction:column;gap:64px;padding:64px 0}
+  .layer{position:static;opacity:1!important;transform:none!important;min-height:52vh}
+  svg.cleat path,svg.cleat rect,svg.cleat circle{stroke-dashoffset:0!important}
+  .hint{display:none}
+  #water{position:static;height:30vh}
+  .inside{min-height:70vh;position:relative}
+}
+</style>
+
+<div class="scroller">
+<div class="stage">
+
+  <canvas id="water" aria-hidden="true"></canvas>
+  <div class="waterfade" aria-hidden="true"></div>
+
+  <!-- 1 -->
+  <div class="layer" id="L1">
+    <div style="text-align:center">
+      <div class="est">EST<b>.</b> 1857</div>
+      <div class="rule" id="rule"></div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="layer" id="L2">
+    <div class="cleatwrap" id="cleatwrap">
+      <div class="cleatglow" id="cleatglow"></div>
+      <svg class="cleat" viewBox="0 0 1000 340" fill="none" stroke="currentColor"
+           stroke-width="17" stroke-linecap="round" stroke-linejoin="round"
+           role="img" aria-label="The Lloyds Wharf mooring cleat">
+        <path pathLength="1" d="M 26 52 C 170 22, 350 14, 500 14 C 650 14, 830 22, 974 52
+              C 990 62, 988 82, 966 88 C 830 68, 650 60, 500 60 C 350 60, 170 68, 34 88
+              C 12 82, 10 62, 26 52 Z"/>
+        <path pathLength="1" d="M 196 62 C 202 122, 252 172, 322 200
+              C 394 224, 606 224, 678 200 C 748 172, 798 122, 804 62"/>
+        <path pathLength="1" d="M 500 60 L 500 288"/>
+        <path pathLength="1" d="M 240 150 L 190 288 L 810 288 L 760 150"/>
+        <rect pathLength="1" x="252" y="190" width="30" height="44" rx="14"/>
+        <rect pathLength="1" x="718" y="190" width="30" height="44" rx="14"/>
+        <circle pathLength="1" cx="238" cy="262" r="14"/>
+        <circle pathLength="1" cx="762" cy="262" r="14"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="layer" id="L3">
+    <div class="wordmark" id="wordmark">
+      <div class="the">THE</div>
+      <div class="hubtype">
+        <video id="typevid" src="type.mp4" muted loop playsinline autoplay preload="auto"></video>
+        <svg viewBox="0 0 1000 260" preserveAspectRatio="none" aria-hidden="true">
+          <defs><mask id="knock" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="260">
+            <rect x="0" y="0" width="1000" height="260" fill="#fff"/>
+            <text x="500" y="212" text-anchor="middle" fill="#000"
+                  font-family="Archivo Black, Archivo, Impact, sans-serif"
+                  font-size="268" letter-spacing="6">HUB</text>
+          </mask></defs>
+          <rect x="0" y="0" width="1000" height="260" fill="#0B0907" mask="url(#knock)"/>
+        </svg>
+        <div class="sheen" id="sheen"></div>
+      </div>
+      <div class="wharf">@ LLOYDS WHARF</div>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="layer inside" id="L5">
+    <video id="arrivevid" src="arrive.mp4" poster="arrive_poster.jpg" muted loop playsinline preload="auto"></video>
+    <div class="insidegrade"></div>
+    <div class="pillars" id="pillars">
+      <span>WORK<i> ·</i></span><span>MEET<i> ·</i></span><span>CREATE<i> ·</i></span><span>CONNECT<i> ·</i></span><span>BELONG</span>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<div class="hint" id="hint"><span>SCROLL</span><span class="bar"></span></div>
+<nav class="beats" id="beatnav" aria-label="Sequence"></nav>
+<div class="note">Opening sequence prototype · real Lloyds Wharf footage · scroll or use the dots</div>
+
+<script>
+(function(){
+  "use strict";
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var scroller = document.querySelector(".scroller");
+  var L1=document.getElementById("L1"), L2=document.getElementById("L2"),
+      L3=document.getElementById("L3"), L5=document.getElementById("L5");
+  var rule=document.getElementById("rule"), wrap=document.getElementById("cleatwrap"),
+      glow=document.getElementById("cleatglow"), wm=document.getElementById("wordmark"),
+      sheen=document.getElementById("sheen"), pillars=document.getElementById("pillars"),
+      hint=document.getElementById("hint");
+  var strokes = document.querySelectorAll("svg.cleat path, svg.cleat rect, svg.cleat circle");
+  var typevid=document.getElementById("typevid"), arrivevid=document.getElementById("arrivevid");
+
+  var BEATS=[{n:"1857",p:0.02},{n:"Cleat",p:0.26},{n:"The Hub",p:0.50},{n:"Through",p:0.70},{n:"Inside",p:0.92}];
+  var nav=document.getElementById("beatnav");
+  BEATS.forEach(function(b,i){
+    var btn=document.createElement("button");
+    btn.innerHTML='<i></i>'; btn.title=b.n;
+    btn.setAttribute("aria-label","Go to "+b.n);
+    btn.addEventListener("click",function(){
+      var max=scroller.scrollHeight-innerHeight;
+      scrollTo({top:b.p*max,behavior:"smooth"});
+    });
+    nav.appendChild(btn);
+  });
+  var dots=nav.querySelectorAll("button");
+
+  function clamp(v,a,b){return v<a?a:v>b?b:v}
+  // eased 0..1 ramp between two scroll points
+  function seg(p,a,b){return clamp((p-a)/(b-a),0,1)}
+  function ease(t){return t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2}
+
+  function frame(){
+    if(reduce) return;
+    var max=scroller.scrollHeight-innerHeight;
+    var p=max>0 ? clamp(scrollY/max,0,1) : 0;
+
+    /* 1 — 1857 -------------------------------------------------- */
+    var in1=seg(p,0.00,0.06), out1=seg(p,0.15,0.24);
+    L1.style.opacity = (in1*(1-out1)).toFixed(3);
+    L1.style.transform = "translateY("+(-26*out1).toFixed(1)+"px)";
+    rule.style.transform = "scaleX("+ease(seg(p,0.02,0.14)).toFixed(3)+")";
+
+    /* 2 — the cleat, drawn by its own light ---------------------- */
+    var draw=ease(seg(p,0.17,0.40)), out2=seg(p,0.44,0.54);
+    L2.style.opacity = (seg(p,0.15,0.21)*(1-out2)).toFixed(3);
+    for(var i=0;i<strokes.length;i++){
+      var stagger = i*0.055;
+      strokes[i].style.strokeDashoffset = (1-clamp((draw-stagger)/(1-stagger*0.5),0,1)).toFixed(4);
+    }
+    var lit=ease(seg(p,0.30,0.46));
+    glow.style.opacity = lit.toFixed(3);
+    wrap.style.setProperty("--glow",(26*lit).toFixed(1)+"px");
+    wrap.style.transform = "scale("+(1-0.10*out2).toFixed(3)+") translateY("+(-40*out2).toFixed(1)+"px)";
+
+    /* 3 — THE HUB ------------------------------------------------ */
+    var in3=ease(seg(p,0.46,0.58)), push=seg(p,0.66,0.86);
+    L3.style.opacity = (in3*(1-seg(p,0.80,0.88))).toFixed(3);
+    var s = (0.90+0.10*in3) * (1 + 5.2*ease(push));
+    wm.style.transform = "scale("+s.toFixed(3)+")";
+    wm.style.filter = "blur("+(9*push*push).toFixed(2)+"px)";
+    sheen.style.backgroundPosition = (150-190*ease(seg(p,0.50,0.70)))+"% 0";
+
+    /* 5 — inside ------------------------------------------------- */
+    var in5=ease(seg(p,0.74,0.90));
+    L5.style.opacity = in5.toFixed(3);
+    L5.style.transform = "scale("+(1.14-0.14*in5).toFixed(3)+")";
+    pillars.style.opacity = ease(seg(p,0.90,1.00)).toFixed(3);
+    pillars.style.transform = "translateY("+(22*(1-ease(seg(p,0.90,1.00)))).toFixed(1)+"px)";
+
+    hint.style.opacity = (1-seg(p,0.00,0.07)).toFixed(3);
+
+    /* play only what is on screen */
+    tog(typevid, in3>0.05 && push<0.98);
+    tog(arrivevid, in5>0.02);
+
+    var active=0;
+    for(var b=0;b<BEATS.length;b++) if(p>=BEATS[b].p-0.02) active=b;
+    for(var d=0;d<dots.length;d++) dots[d].setAttribute("aria-current", d===active?"true":"false");
+  }
+  function tog(v,on){ if(!v) return; if(on){ if(v.paused) v.play().catch(function(){}); } else if(!v.paused) v.pause(); }
+
+  var tick=false;
+  function onScroll(){ if(!tick){ tick=true; requestAnimationFrame(function(){ frame(); tick=false; }); } }
+  addEventListener("scroll",onScroll,{passive:true});
+  addEventListener("resize",onScroll);
+
+  /* ---- water: the Neckinger, still running under the building ---- */
+  var cv=document.getElementById("water"), cx=cv.getContext("2d"), t=0, raf;
+  function sizeC(){ var d=Math.min(devicePixelRatio||1,2);
+    cv.width=innerWidth*d; cv.height=cv.clientHeight*d; cx.setTransform(d,0,0,d,0,0); }
+  function water(){
+    var w=innerWidth,h=cv.clientHeight;
+    cx.clearRect(0,0,w,h);
+    for(var i=0;i<26;i++){
+      var y=h*(i/26), amp=2+ (i/26)*11, sp=0.4+(i/26)*0.9;
+      cx.beginPath();
+      for(var x=0;x<=w;x+=9){
+        var yy=y+Math.sin((x*0.0075)+(t*sp)+i*0.7)*amp + Math.sin((x*0.019)-(t*sp*0.6))*amp*0.35;
+        x===0?cx.moveTo(x,yy):cx.lineTo(x,yy);
+      }
+      var a=0.035+0.075*(i/26);
+      cx.strokeStyle="rgba(185,124,60,"+a.toFixed(3)+")";
+      cx.lineWidth=1; cx.stroke();
+    }
+    t+=0.012; raf=requestAnimationFrame(water);
+  }
+  if(!reduce){ sizeC(); water(); addEventListener("resize",sizeC); }
+  else { cv.style.display="none"; }
+
+  document.fonts && document.fonts.ready.then(frame);
+  frame();
+})();
+</script>

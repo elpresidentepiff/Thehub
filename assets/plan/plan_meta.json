@@ -1,0 +1,26 @@
+{
+ "source": "Proposed Plans Unit 4 Lloyds Wharf Rev B.pdf",
+ "sheet": "A1 2384x1684pt",
+ "scale": "1:50",
+ "pt_per_metre": 56.69,
+ "units": "metres",
+ "extent_m": {
+  "w": 31.707,
+  "h": 18.019
+ },
+ "pdf_origin_pt": {
+  "x": 185.48,
+  "y": 353.56
+ },
+ "grid_angles_deg": [
+  9,
+  81,
+  171
+ ],
+ "segment_counts": {
+  "structure": 51,
+  "partition": 354,
+  "detail": 6256
+ },
+ "note": "y increases downward, matching PDF raw y (display-correct for this file)"
+}

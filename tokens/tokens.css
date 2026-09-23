@@ -1,0 +1,61 @@
+/* The Hub at Lloyds Wharf — design tokens
+   Every colour measured from real photography of the building.
+   Arrival = warm (entrance, sign, heritage). Floor = cool (workspace, daylight).
+   Do not add brand colours here without a measurement or an operator decision. */
+
+:root{
+  /* ——— arrival: warm ——— */
+  --hub-ink:          #0B0907;   /* ground, deepest shadow */
+  --hub-ink-2:        #14100C;
+  --hub-halo:         #FEE6B5;   /* backlight core — the signature light */
+  --hub-halo-warm:    #F8CF95;
+  --hub-brass:        #B97C3C;
+  --hub-brass-deep:   #7A4E22;
+  --hub-brick-lit:    #B48963;
+  --hub-brick:        #79573B;
+  --hub-cobble:       #9B7C67;
+  --hub-oak-bench:    #84512B;
+
+  /* ——— floor: cool ——— */
+  --hub-oak:          #A48F7C;   /* herringbone */
+  --hub-oak-lit:      #C8B7A8;
+  --hub-timber:       #664F32;
+  --hub-steel:        #342D2F;   /* cast iron, Crittall */
+  --hub-steel-2:      #72747E;
+  --hub-panel:        #0F0E12;   /* black acoustic wall */
+  --hub-daylight:     #7E8EB1;   /* arched window light */
+  --hub-plaster:      #E0DDDC;
+
+  /* ——— type ——— */
+  --hub-cream:        #EFE7DA;
+  --hub-cream-dim:    #A99C8B;
+
+  /* ——— UNRESOLVED: pedestal yellow ———
+     Measured #786000–#846C00 in footage (underexposed interior).
+     ~#E3B400 normalised. Awaiting RAL or a daylight photograph.
+     Do not use in production until the operator confirms. */
+  --hub-accent-provisional: #E3B400;
+
+  /* ——— type stacks ——— */
+  --hub-display: "Archivo Black","Archivo",Impact,sans-serif;
+  --hub-body:    "Archivo",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+
+  /* ——— label treatment (trailing text-indent keeps centring true) ——— */
+  --hub-label-tracking: .3em;
+
+  /* ——— motion: slow out, settled. nothing elastic. ——— */
+  --hub-ease:      cubic-bezier(.22,.61,.36,1);
+  --hub-ease-deep: cubic-bezier(.16,1,.3,1);
+  --hub-dur-fast:  .28s;
+  --hub-dur:       .6s;
+  --hub-dur-slow:  1.2s;
+}
+
+.hub-label{
+  font-family:var(--hub-body);font-weight:600;text-transform:uppercase;
+  letter-spacing:var(--hub-label-tracking);text-indent:var(--hub-label-tracking);
+}
+
+@media (prefers-reduced-motion:reduce){
+  :root{--hub-dur-fast:0s;--hub-dur:0s;--hub-dur-slow:0s}
+}

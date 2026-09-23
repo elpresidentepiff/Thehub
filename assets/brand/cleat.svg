@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 340" fill="none"
+     stroke="currentColor" stroke-width="17" stroke-linecap="round" stroke-linejoin="round">
+  <path id="cl-horn" d="M 26 52
+      C 170 22, 350 14, 500 14 C 650 14, 830 22, 974 52
+      C 990 62, 988 82, 966 88
+      C 830 68, 650 60, 500 60 C 350 60, 170 68, 34 88
+      C 12 82, 10 62, 26 52 Z"/>
+  <path id="cl-body" d="M 196 62 C 202 122, 252 172, 322 200
+      C 394 224, 606 224, 678 200 C 748 172, 798 122, 804 62"/>
+  <path id="cl-stem" d="M 500 60 L 500 288"/>
+  <path id="cl-base" d="M 240 150 L 190 288 L 810 288 L 760 150"/>
+  <rect id="cl-slotL" x="252" y="190" width="30" height="44" rx="14"/>
+  <rect id="cl-slotR" x="718" y="190" width="30" height="44" rx="14"/>
+  <circle id="cl-boltL" cx="238" cy="262" r="14"/>
+  <circle id="cl-boltR" cx="762" cy="262" r="14"/>
+</svg>
