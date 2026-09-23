@@ -1,0 +1,64 @@
+@import 'tailwindcss';
+@import '../../tokens/tokens.css';
+@import 'lenis/dist/lenis.css';
+
+/* The Tailwind theme is the measured palette and nothing else. The default palette is removed so
+   an invented colour cannot be reached for by accident (constitution: do not invent brand
+   colours). The accent yellow is UNRESOLVED and deliberately absent. */
+@theme inline {
+  --color-*: initial;
+  --color-ink: var(--hub-ink);
+  --color-ink-2: var(--hub-ink-2);
+  --color-halo: var(--hub-halo);
+  --color-halo-warm: var(--hub-halo-warm);
+  --color-brass: var(--hub-brass);
+  --color-brass-deep: var(--hub-brass-deep);
+  --color-brick-lit: var(--hub-brick-lit);
+  --color-brick: var(--hub-brick);
+  --color-cobble: var(--hub-cobble);
+  --color-oak-bench: var(--hub-oak-bench);
+  --color-oak: var(--hub-oak);
+  --color-oak-lit: var(--hub-oak-lit);
+  --color-timber: var(--hub-timber);
+  --color-steel: var(--hub-steel);
+  --color-steel-2: var(--hub-steel-2);
+  --color-panel: var(--hub-panel);
+  --color-daylight: var(--hub-daylight);
+  --color-plaster: var(--hub-plaster);
+  --color-cream: var(--hub-cream);
+  --color-cream-dim: var(--hub-cream-dim);
+
+  --font-display: var(--hub-display);
+  --font-body: var(--hub-body);
+
+  --ease-hub: var(--hub-ease);
+  --ease-hub-deep: var(--hub-ease-deep);
+}
+
+/* next/font self-hosts Archivo and Archivo Black under hashed family names; point the token
+   stacks at them, keeping the named families and the fallbacks behind. */
+:root {
+  --hub-display: var(--font-archivo-black), 'Archivo Black', 'Archivo', Impact, sans-serif;
+  --hub-body: var(--font-archivo), 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+html {
+  background: var(--hub-ink);
+  color: var(--hub-cream);
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  background: var(--hub-ink);
+  color: var(--hub-cream);
+  font-family: var(--hub-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--hub-brass);
+  color: var(--hub-ink);
+}

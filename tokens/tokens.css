@@ -30,11 +30,11 @@
   --hub-cream:        #EFE7DA;
   --hub-cream-dim:    #A99C8B;
 
-  /* ——— UNRESOLVED: pedestal yellow ———
-     Measured #786000–#846C00 in footage (underexposed interior).
-     ~#E3B400 normalised. Awaiting RAL or a daylight photograph.
-     Do not use in production until the operator confirms. */
-  --hub-accent-provisional: #E3B400;
+  /* ——— UNRESOLVED: accent yellow (pedestals) ———
+     Deliberately no custom property. The footage measures #786000–#846C00, which is
+     interior underexposure, not the paint. The value will be derived from authoritative
+     brand/signage material (source artwork, RAL, or a daylight photograph) — not guessed.
+     scripts/check-boundaries.mjs fails the build if an accent token appears before then. */
 
   /* ——— type stacks ——— */
   --hub-display: "Archivo Black","Archivo",Impact,sans-serif;
