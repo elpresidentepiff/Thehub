@@ -36,14 +36,20 @@ Reviewed against Stripe documentation on 23 September 2026.
 
 Set server-controlled metadata only, with opaque identifiers:
 
-- `hub_hold_id`
-- `hub_reservation_id` when already allocated safely
-- `hub_customer_id`
+- `hub_hold_id` — the `hub.reservations` row in status `held`. A hold *is* the reservation
+  row, so no separate `hub_reservation_id` is sent. Also sent as `client_reference_id`.
+- `hub_customer_id` when the visitor is signed in
 - `hub_product_price_id`
 - `hub_environment` (`development`, `preview`, `production`)
 
+The same metadata is copied to the PaymentIntent (`payment_intent_data.metadata`) for
+reconciliation. Each Session is created with the idempotency key `hub-checkout-<hold id>`,
+so a retried request cannot open a second Session for one hold.
+
 Do not place emails, names, addresses or sensitive booking detail in metadata. Do not rely on
 metadata as the only integrity check; load the Hub records and validate their relationships.
+The webhook reducer rejects a session whose `client_reference_id` and `hub_hold_id` disagree,
+and confirmation looks the hold up by Session ID, never by metadata.
 
 ## One-time booking flow
 
@@ -64,6 +70,23 @@ so a visitor can never be charged for a slot whose hold lapsed mid-payment. If a
 still lands after expiry and the slot has gone, the booking is flagged `needs_refund`, not
 double-booked. Implemented in `src/commerce/stripe.ts` (session parameters, webhook
 decisions) and `supabase/migrations/*_hub_booking_operations.sql`.
+
+**Webhook decisions (`webhookAction` in `src/commerce/stripe.ts`), one per event:**
+
+| Event | Condition | Action → database call |
+| --- | --- | --- |
+| `checkout.session.completed` | `payment_status = paid` | `confirm` → `ensure_customer`, then `confirm_from_checkout` |
+| `checkout.session.completed` | `unpaid` (delayed method) | ignore; wait for the async event |
+| `checkout.session.async_payment_succeeded` | — | `confirm` |
+| `checkout.session.expired` / `async_payment_failed` | — | `expire` → `expire_checkout` |
+| any | no `hub_hold_id` in metadata | ignore (not a Hub session) |
+| any | `livemode` does not match the deployment | **reject** and alert (misconfigured keys) |
+| any | `hub_environment` is another deployment's | ignore (test mode is shared by dev and preview) |
+| any | `mode = subscription` | ignore until memberships go live (C4) |
+
+Every delivery is written to `private.stripe_events` first (`eventRecord`), so duplicates are
+no-ops. Signatures are checked by `verifyStripeSignature` against the raw body with a
+5-minute tolerance, without the Stripe SDK; the SDK is added only when C2 needs API calls.
 
 Handle at least:
 

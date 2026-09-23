@@ -9,6 +9,8 @@
 //     scroll-smoothing layer).
 //  5. The accent yellow is UNRESOLVED: no accent token or provisional hex anywhere in src/ or
 //     tokens/.
+//  6. src/commerce is pure: it imports only node: built-ins and its own modules — no React, no
+//     SVG, no renderer. Test files and fixtures are imported only by tests.
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -49,6 +51,12 @@ for (const abs of walk(join(root, 'src'))) {
     }
     if (spec === '@theatre/studio' && !STUDIO_ALLOWED.has(file)) fail(file, 'imports @theatre/studio outside the dev-only loader');
     if (/^(animejs|anime|curtainsjs)$/.test(spec) || spec === 'gsap/ScrollSmoother') fail(file, `imports a cut library (${spec})`);
+    if (file.startsWith('src/commerce/') && !/^node:/.test(spec) && !/^\.\/[\w-]+(\.test)?\.ts$/.test(spec)) {
+      fail(file, `commerce must stay pure — imports ${spec}`);
+    }
+    if (!/\.test\.ts$|\/test-fixtures\.ts$/.test(file) && /(\.test|test-fixtures)(\.tsx?)?$/.test(spec)) {
+      fail(file, `app code imports test code (${spec})`);
+    }
   }
 }
 

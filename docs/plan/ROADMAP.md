@@ -3,7 +3,7 @@
 The single living plan. Update the status board and next actions whenever work lands.
 `BUILD_PLAN.md` beside this file is the original rationale (22 Sep) and still holds.
 
-Last updated: 2026-09-23.
+Last updated: 2026-09-24.
 
 ---
 
@@ -18,7 +18,7 @@ Last updated: 2026-09-23.
 | Logo / opening-shot design | **Operator deciding** | — | Operator |
 | Inventory registry | Draft from Rev B: 16 open-plan desks, 2 meeting rooms, 2 private offices. **Not yet walked on site** | `data/inventory/unit4-l2.json` | Floor walk; ACG/Iffy's decision |
 | Database schema | Migrations written and tested on a throwaway local Postgres (no-overlap proven under concurrency). **No Supabase project exists** | `supabase/` | Operator approval of schema proposal |
-| Commerce engine | Pure TypeScript engine + tests: pricing, periods, holds, Stripe Checkout params, webhook reducer | `src/commerce/` | — |
+| Commerce engine | Pure TypeScript, 26 tests (`npm test`): dev-only catalogue, London-time periods, quotes, hold tokens + DB refusal map, Stripe Checkout params, webhook signature check + reducer, mock availability that throws outside development. `check-boundaries` keeps it free of React/renderer imports | `src/commerce/` | — |
 | Stripe | Mapping proposed. **Nothing created** in Stripe | `docs/commerce/STRIPE_OBJECT_MAPPING.md` | Approval + prices |
 | Static commerce mocks | Floor → booking → checkout click-through; invented desk positions | `lab/floor`, `lab/booking`, `lab/checkout` | Superseded by Next lab routes wired to the engine |
 
@@ -42,7 +42,7 @@ Last updated: 2026-09-23.
 | --- | --- | --- |
 | C1.1 | `data/inventory/unit4-l2.json` — stable IDs placed on real Rev B geometry | Draft done; needs floor walk |
 | C1.2 | `supabase/migrations` — `hub` / `private` / `api` schemas, exclusion-constraint no-overlap, holds, RLS, grants | Done locally; `npm run db:test` |
-| C1.3 | `src/commerce` — engine + unit tests; mock availability that cannot run in production | Done; `npm test` |
+| C1.3 | `src/commerce` — engine + unit tests; mock availability that cannot run in production | Done 24 Sep; `npm test` (the 23 Sep board said done before the tests existed) |
 | C1.4 | `src/app/lab/floor` — the real plan + registry + engine, touch/keyboard states | Next |
 | C1.5 | Seat authoring tool (BUILD_PLAN §2): place/nudge/name seats on the plan, export registry | Next |
 
