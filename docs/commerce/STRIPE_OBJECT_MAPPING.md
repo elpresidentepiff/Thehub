@@ -57,6 +57,14 @@ metadata as the only integrity check; load the Hub records and validate their re
 8. Availability notification is published.
 9. Success page retrieves server-confirmed state; it never fulfills the booking itself.
 
+**Session expiry and the hold (verified 23 Sep against the Checkout Sessions API):** a
+Session's `expires_at` must be 30 minutes to 24 hours after creation. The engine sets it to
+30 minutes and the database stretches the hold past it (`private.attach_checkout_session`),
+so a visitor can never be charged for a slot whose hold lapsed mid-payment. If a payment
+still lands after expiry and the slot has gone, the booking is flagged `needs_refund`, not
+double-booked. Implemented in `src/commerce/stripe.ts` (session parameters, webhook
+decisions) and `supabase/migrations/*_hub_booking_operations.sql`.
+
 Handle at least:
 
 - `checkout.session.completed`

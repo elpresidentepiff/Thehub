@@ -1,8 +1,55 @@
 # Hub Supabase schema proposal
 
-Status: proposal only. No project, table, migration or production resource has been created.
+Status: **proposal, implemented as local migrations for review.** No Supabase project exists.
+Nothing has been applied to any remote database. Approval (ROADMAP D3) is what creates the
+dedicated Hub project.
 
 Reviewed against Supabase documentation and changelog on 23 September 2026.
+
+## Implementation status (23 Sep)
+
+The proposal below is now real SQL in `supabase/migrations/`, proven by `npm run db:test`
+on a throwaway local Postgres 16 (Supabase runs 17; nothing used is version-specific):
+
+| Check | Result |
+| --- | --- |
+| Migrations apply cleanly, in order, each in one transaction | 3/3 |
+| Real registry (`data/inventory/unit4-l2.json`) seeds, twice (idempotent) | 16 desks, 4 rooms/offices |
+| Structural guarantees (`01_structure.test.sql`) | 12/12 |
+| Booking behaviour (`02_booking.test.sql`) | 35/35 |
+| Who can see and do what (`03_access.test.sql`) | 21/21 |
+| 24 concurrent sessions, identical period, one desk | exactly 1 hold |
+| 40 concurrent sessions, random overlapping periods | 0 overlapping rows |
+| Negative control: same suite with the exclusion constraint removed | fails (24/24 sessions got the desk) |
+
+### Where the implementation departs from the proposal, and why
+
+1. **A hold is a reservation in state `held`, not a row in a separate table.** One table,
+   one GiST exclusion constraint over `(unit_id, during)` for `held` and `confirmed` rows.
+   Two tables need a lock discipline across both to stay correct; one table makes double
+   booking impossible even for a raw `INSERT` that skips every function (tested).
+2. **No `security definer` anywhere.** Every operation is a `security invoker` function in
+   `private`, with `search_path = ''`, executable only by `service_role`.
+3. **The Data API exposes only four read-only views** in `api`: `floors`, `units`,
+   `unit_media` (anon + authenticated) and `my_reservations` (authenticated, own rows only).
+   Availability, holds and payments go through the Next.js server, never the Data API.
+4. **Hold length.** A hold starts at 10 minutes (browsing extras). Attaching a Stripe
+   Checkout Session stretches it past the session's expiry. Stripe Checkout Sessions cannot
+   expire sooner than 30 minutes, so the build plan's fixed 10-minute hold would have let
+   a visitor pay for a slot that had already lapsed.
+5. **Paid after the hold lapsed.** If the slot is still free, the booking stands
+   (`confirmed_after_expiry`). If someone else took it, the row is flagged `needs_refund`
+   and stays unbooked (`conflict_refund_required`). It is never double-booked.
+6. **Operators** are authenticated users with `app_metadata.hub_role = 'operator'`
+   (server-controlled). `user_metadata` cannot grant it (tested).
+7. **Errors carry Hub SQLSTATEs** (`HB400` bad request, `HB403` not owner, `HB404` unknown or
+   not bookable, `HB409` unavailable, `HB410` hold gone, `HB423` closed) so the server maps
+   them without parsing text.
+8. Open decisions stay out of the schema: opening hours, durations and buffers (D9) live in
+   `src/commerce/catalogue.ts` as development values; the database enforces only what is
+   certain (no overlap, valid ranges, closures, ownership).
+
+`events` and `availability_rules` tables are not built yet. They wait on D9 and D10.
 
 ## Platform boundary
 
