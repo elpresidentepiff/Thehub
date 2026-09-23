@@ -17,7 +17,7 @@ body{margin:0;background:var(--ink);color:var(--cream);font-family:var(--body);
      -webkit-font-smoothing:antialiased;overflow-x:hidden}
 
 /* ---------- stage ---------- */
-.scroller{height:560vh;position:relative}
+.scroller{height:430vh;position:relative}
 .stage{position:sticky;top:0;height:100vh;overflow:hidden;background:var(--ink)}
 .layer{position:absolute;inset:0;display:grid;place-items:center;will-change:opacity,transform}
 
@@ -35,29 +35,28 @@ body{margin:0;background:var(--ink);color:var(--cream);font-family:var(--body);
       margin:26px auto 0;transform-origin:50% 50%}
 
 /* ---------- beat 2 : the cleat, lit by its own halo ---------- */
-.cleatwrap{position:relative;width:min(84vw,860px);filter:drop-shadow(0 0 var(--glow,0px) var(--halo-warm))}
+.cleatwrap{position:relative;width:min(84vw,860px);filter:drop-shadow(0 0 var(--glow,0px) var(--halo-warm));
+  transform-style:preserve-3d;perspective:900px}
 .cleatglow{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
   width:130%;aspect-ratio:2.4/1;border-radius:50%;pointer-events:none;
   background:radial-gradient(ellipse at center,
     rgba(254,230,181,.60) 0%,rgba(248,207,149,.30) 32%,
     rgba(185,124,60,.14) 55%,rgba(11,9,7,0) 74%);filter:blur(16px)}
+.liquid-ring{position:absolute;left:50%;top:50%;width:112%;aspect-ratio:2.45/1;
+  border:1px solid rgba(254,230,181,.28);border-radius:50%;pointer-events:none;
+  transform:translate(-50%,-50%) scale(.72);opacity:0;
+  box-shadow:inset 0 0 24px rgba(248,207,149,.12),0 0 34px rgba(185,124,60,.14);
+  animation:liquidOrbit 4.8s cubic-bezier(.22,.61,.36,1) infinite}
+.liquid-ring.r2{width:126%;animation-delay:-2.4s;animation-duration:6.4s}
+@keyframes liquidOrbit{
+  0%{opacity:0;transform:translate(-50%,-50%) rotateX(66deg) rotateZ(-2deg) scale(.68)}
+  24%{opacity:.42}
+  68%{opacity:.16}
+  100%{opacity:0;transform:translate(-50%,-50%) rotateX(66deg) rotateZ(5deg) scale(1.14)}
+}
 svg.cleat{display:block;width:100%;height:auto;color:var(--cream);position:relative}
 svg.cleat path,svg.cleat rect,svg.cleat circle{
   stroke-dasharray:1;stroke-dashoffset:1;vector-effect:non-scaling-stroke}
-
-/* ---------- beat 3 : THE HUB, footage inside the letters ---------- */
-.wordmark{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1vw,14px)}
-.the{font-family:var(--display);font-size:clamp(28px,5.2vw,74px);letter-spacing:.06em;
-     color:var(--cream);line-height:1}
-.hubtype{position:relative;width:min(92vw,1000px);aspect-ratio:1000/260;overflow:hidden}
-.hubtype video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-     filter:saturate(.82) contrast(1.16) brightness(1.06)}
-.hubtype svg{position:absolute;inset:0;width:100%;height:100%}
-.hubtype .sheen{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;
-     background:linear-gradient(105deg,transparent 38%,rgba(254,230,181,.30) 50%,transparent 62%);
-     background-size:260% 100%}
-.wharf{font-family:var(--body);font-weight:600;color:var(--cream-dim);
-     font-size:clamp(11px,1.5vw,19px);letter-spacing:.34em;text-indent:.34em}
 
 /* ---------- beat 5 : inside ---------- */
 .inside video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -90,6 +89,8 @@ svg.cleat path,svg.cleat rect,svg.cleat circle{
   .stage{position:static;height:auto;display:flex;flex-direction:column;gap:64px;padding:64px 0}
   .layer{position:static;opacity:1!important;transform:none!important;min-height:52vh}
   svg.cleat path,svg.cleat rect,svg.cleat circle{stroke-dashoffset:0!important}
+  .liquid-ring{animation:none;opacity:.18;transform:translate(-50%,-50%) scale(.9)}
+  .cleat-art{filter:none}
   .hint{display:none}
   #water{position:static;height:30vh}
   .inside{min-height:70vh;position:relative}
@@ -114,9 +115,21 @@ svg.cleat path,svg.cleat rect,svg.cleat circle{
   <div class="layer" id="L2">
     <div class="cleatwrap" id="cleatwrap">
       <div class="cleatglow" id="cleatglow"></div>
+      <div class="liquid-ring"></div><div class="liquid-ring r2"></div>
       <svg class="cleat" viewBox="0 0 1000 340" fill="none" stroke="currentColor"
            stroke-width="17" stroke-linecap="round" stroke-linejoin="round"
            role="img" aria-label="The Lloyds Wharf mooring cleat">
+        <defs>
+          <filter id="liquidCleat" x="-18%" y="-35%" width="136%" height="170%">
+            <feTurbulence type="fractalNoise" baseFrequency=".006 .014" numOctaves="2" seed="19" result="flow">
+              <animate attributeName="baseFrequency" dur="5.6s" values=".006 .014;.011 .008;.005 .016;.006 .014" repeatCount="indefinite"/>
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="flow" scale="7" xChannelSelector="R" yChannelSelector="B">
+              <animate attributeName="scale" dur="4.2s" values="4;11;6;9;4" repeatCount="indefinite"/>
+            </feDisplacementMap>
+          </filter>
+        </defs>
+        <g class="cleat-art" filter="url(#liquidCleat)">
         <path pathLength="1" d="M 26 52 C 170 22, 350 14, 500 14 C 650 14, 830 22, 974 52
               C 990 62, 988 82, 966 88 C 830 68, 650 60, 500 60 C 350 60, 170 68, 34 88
               C 12 82, 10 62, 26 52 Z"/>
@@ -128,34 +141,14 @@ svg.cleat path,svg.cleat rect,svg.cleat circle{
         <rect pathLength="1" x="718" y="190" width="30" height="44" rx="14"/>
         <circle pathLength="1" cx="238" cy="262" r="14"/>
         <circle pathLength="1" cx="762" cy="262" r="14"/>
+        </g>
       </svg>
-    </div>
-  </div>
-
-  <!-- 3 -->
-  <div class="layer" id="L3">
-    <div class="wordmark" id="wordmark">
-      <div class="the">THE</div>
-      <div class="hubtype">
-        <video id="typevid" src="type.mp4" muted loop playsinline autoplay preload="auto"></video>
-        <svg viewBox="0 0 1000 260" preserveAspectRatio="none" aria-hidden="true">
-          <defs><mask id="knock" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="260">
-            <rect x="0" y="0" width="1000" height="260" fill="#fff"/>
-            <text x="500" y="212" text-anchor="middle" fill="#000"
-                  font-family="Archivo Black, Archivo, Impact, sans-serif"
-                  font-size="268" letter-spacing="6">HUB</text>
-          </mask></defs>
-          <rect x="0" y="0" width="1000" height="260" fill="#0B0907" mask="url(#knock)"/>
-        </svg>
-        <div class="sheen" id="sheen"></div>
-      </div>
-      <div class="wharf">@ LLOYDS WHARF</div>
     </div>
   </div>
 
   <!-- 5 -->
   <div class="layer inside" id="L5">
-    <video id="arrivevid" src="arrive.mp4" poster="arrive_poster.jpg" muted loop playsinline preload="auto"></video>
+    <video id="arrivevid" src="../assets/video/arrive.mp4" poster="../assets/video/arrive_poster.jpg" muted loop playsinline preload="auto"></video>
     <div class="insidegrade"></div>
     <div class="pillars" id="pillars">
       <span>WORK<i> ·</i></span><span>MEET<i> ·</i></span><span>CREATE<i> ·</i></span><span>CONNECT<i> ·</i></span><span>BELONG</span>
@@ -175,15 +168,14 @@ svg.cleat path,svg.cleat rect,svg.cleat circle{
   var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   var scroller = document.querySelector(".scroller");
   var L1=document.getElementById("L1"), L2=document.getElementById("L2"),
-      L3=document.getElementById("L3"), L5=document.getElementById("L5");
+      L5=document.getElementById("L5");
   var rule=document.getElementById("rule"), wrap=document.getElementById("cleatwrap"),
-      glow=document.getElementById("cleatglow"), wm=document.getElementById("wordmark"),
-      sheen=document.getElementById("sheen"), pillars=document.getElementById("pillars"),
+      glow=document.getElementById("cleatglow"), pillars=document.getElementById("pillars"),
       hint=document.getElementById("hint");
   var strokes = document.querySelectorAll("svg.cleat path, svg.cleat rect, svg.cleat circle");
-  var typevid=document.getElementById("typevid"), arrivevid=document.getElementById("arrivevid");
+  var arrivevid=document.getElementById("arrivevid");
 
-  var BEATS=[{n:"1857",p:0.02},{n:"Cleat",p:0.26},{n:"The Hub",p:0.50},{n:"Through",p:0.70},{n:"Inside",p:0.92}];
+  var BEATS=[{n:"1857",p:0.02},{n:"Cleat",p:0.30},{n:"Through",p:0.61},{n:"Inside",p:0.88}];
   var nav=document.getElementById("beatnav");
   BEATS.forEach(function(b,i){
     var btn=document.createElement("button");
@@ -214,36 +206,30 @@ svg.cleat path,svg.cleat rect,svg.cleat circle{
     rule.style.transform = "scaleX("+ease(seg(p,0.02,0.14)).toFixed(3)+")";
 
     /* 2 — the cleat, drawn by its own light ---------------------- */
-    var draw=ease(seg(p,0.17,0.40)), out2=seg(p,0.44,0.54);
+    var draw=ease(seg(p,0.17,0.42)), out2=seg(p,0.48,0.72);
     L2.style.opacity = (seg(p,0.15,0.21)*(1-out2)).toFixed(3);
     for(var i=0;i<strokes.length;i++){
       var stagger = i*0.055;
       strokes[i].style.strokeDashoffset = (1-clamp((draw-stagger)/(1-stagger*0.5),0,1)).toFixed(4);
     }
-    var lit=ease(seg(p,0.30,0.46));
+    var lit=ease(seg(p,0.27,0.46));
     glow.style.opacity = lit.toFixed(3);
-    wrap.style.setProperty("--glow",(26*lit).toFixed(1)+"px");
-    wrap.style.transform = "scale("+(1-0.10*out2).toFixed(3)+") translateY("+(-40*out2).toFixed(1)+"px)";
-
-    /* 3 — THE HUB ------------------------------------------------ */
-    var in3=ease(seg(p,0.46,0.58)), push=seg(p,0.66,0.86);
-    L3.style.opacity = (in3*(1-seg(p,0.80,0.88))).toFixed(3);
-    var s = (0.90+0.10*in3) * (1 + 5.2*ease(push));
-    wm.style.transform = "scale("+s.toFixed(3)+")";
-    wm.style.filter = "blur("+(9*push*push).toFixed(2)+"px)";
-    sheen.style.backgroundPosition = (150-190*ease(seg(p,0.50,0.70)))+"% 0";
+    wrap.style.setProperty("--glow",(18+34*lit).toFixed(1)+"px");
+    var push=ease(seg(p,0.50,0.73));
+    var breathe=1+Math.sin(p*34)*.012*lit*(1-push);
+    wrap.style.transform = "rotateX("+(5*lit-12*push).toFixed(2)+"deg) rotateY("+(Math.sin(p*18)*3*lit).toFixed(2)+"deg) scale("+((1+3.8*push)*breathe).toFixed(3)+")";
+    wrap.style.filter = "drop-shadow(0 0 "+(18+34*lit).toFixed(1)+"px var(--halo-warm)) blur("+(7*push*push).toFixed(2)+"px)";
 
     /* 5 — inside ------------------------------------------------- */
-    var in5=ease(seg(p,0.74,0.90));
+    var in5=ease(seg(p,0.58,0.76));
     L5.style.opacity = in5.toFixed(3);
     L5.style.transform = "scale("+(1.14-0.14*in5).toFixed(3)+")";
-    pillars.style.opacity = ease(seg(p,0.90,1.00)).toFixed(3);
-    pillars.style.transform = "translateY("+(22*(1-ease(seg(p,0.90,1.00)))).toFixed(1)+"px)";
+    pillars.style.opacity = ease(seg(p,0.84,1.00)).toFixed(3);
+    pillars.style.transform = "translateY("+(22*(1-ease(seg(p,0.84,1.00)))).toFixed(1)+"px)";
 
     hint.style.opacity = (1-seg(p,0.00,0.07)).toFixed(3);
 
     /* play only what is on screen */
-    tog(typevid, in3>0.05 && push<0.98);
     tog(arrivevid, in5>0.02);
 
     var active=0;

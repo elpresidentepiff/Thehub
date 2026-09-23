@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Hub — Opening transition tests</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Black&display=swap">
+<style>
+:root{--ink:#0B0907;--halo:#FEE6B5;--halo-warm:#F8CF95;--brass:#B97C3C;--cream:#EFE7DA;--dim:#A99C8B}
+*{box-sizing:border-box}html{background:var(--ink)}body{margin:0;background:var(--ink);color:var(--cream);font-family:Archivo,Arial,sans-serif;overflow-x:hidden}
+.tests{position:fixed;z-index:50;top:16px;left:50%;transform:translateX(-50%);display:flex;gap:5px;padding:5px;border:1px solid rgba(254,230,181,.16);border-radius:999px;background:rgba(11,9,7,.76);backdrop-filter:blur(16px)}
+.tests button{appearance:none;border:0;border-radius:999px;padding:9px 13px;background:transparent;color:var(--dim);font:600 10px/1 Archivo,sans-serif;letter-spacing:.14em;cursor:pointer}
+.tests button[aria-pressed=true]{background:var(--halo);color:var(--ink)}.tests button:focus-visible{outline:2px solid var(--halo);outline-offset:3px}
+.scroller{height:430vh;position:relative}.stage{position:sticky;top:0;height:100vh;overflow:hidden;background:var(--ink)}
+.layer{position:absolute;inset:0;display:grid;place-items:center;will-change:opacity,transform}.intro{text-align:center}.est{font-weight:500;letter-spacing:.62em;font-size:clamp(13px,1.6vw,20px);color:var(--dim);text-indent:.62em}.est b{color:var(--cream)}
+.rule{width:min(58vw,460px);height:1px;margin:26px auto 0;background:linear-gradient(90deg,transparent,var(--brass) 18%,var(--halo-warm) 50%,var(--brass) 82%,transparent);transform-origin:center}
+.cleatwrap{position:relative;width:min(84vw,860px);transform-style:preserve-3d;perspective:900px}.cleatglow{position:absolute;left:50%;top:50%;width:132%;aspect-ratio:2.4/1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(ellipse,rgba(254,230,181,.62),rgba(248,207,149,.27) 34%,rgba(185,124,60,.12) 55%,transparent 74%);filter:blur(18px)}
+.ring{position:absolute;left:50%;top:50%;width:112%;aspect-ratio:2.45/1;border:1px solid rgba(254,230,181,.26);border-radius:50%;transform:translate(-50%,-50%) rotateX(66deg) scale(.7);opacity:0;animation:ring 5s cubic-bezier(.22,.61,.36,1) infinite;box-shadow:0 0 34px rgba(185,124,60,.14)}.ring.r2{width:127%;animation-delay:-2.5s;animation-duration:6.5s}@keyframes ring{20%{opacity:.4}100%{opacity:0;transform:translate(-50%,-50%) rotateX(66deg) rotateZ(6deg) scale(1.15)}}
+.cleat{position:relative;display:block;width:100%;height:auto;color:var(--cream)}.cleat path,.cleat rect,.cleat circle{stroke-dasharray:1;stroke-dashoffset:1;vector-effect:non-scaling-stroke}
+.inside video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.insidegrade{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 42%,transparent 30%,rgba(11,9,7,.74) 100%)}
+.words{position:relative;display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(14px,3.4vw,54px);padding:0 5vw}.words span{font-weight:600;letter-spacing:.3em;font-size:clamp(10px,1.35vw,16px);text-shadow:0 2px 26px rgba(11,9,7,.9)}.words i{font-style:normal;color:var(--brass);padding-right:clamp(14px,3.4vw,54px)}
+#water,#particles{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}#water{top:auto;height:46%;opacity:.52}#particles{z-index:8}.waterfade{position:absolute;inset:auto 0 0;height:46%;background:linear-gradient(var(--ink),transparent 38%)}
+.progress{position:fixed;z-index:30;right:20px;top:50%;width:1px;height:110px;background:rgba(185,124,60,.24);transform:translateY(-50%)}.progress i{display:block;width:1px;height:100%;background:var(--halo);transform:scaleY(0);transform-origin:top}
+.caption{position:fixed;z-index:30;left:18px;bottom:16px;max-width:46ch;color:#7f7163;font-size:10px;line-height:1.55;letter-spacing:.11em;text-transform:uppercase}.hint{position:fixed;z-index:30;left:50%;bottom:22px;transform:translateX(-50%);font-size:9px;letter-spacing:.3em;color:var(--dim)}
+@media(max-width:680px){.tests{top:9px;width:calc(100% - 18px);justify-content:center}.tests button{padding:9px 8px;font-size:9px}.caption{max-width:30ch}.inside video{object-position:50% 50%}}
+@media(prefers-reduced-motion:reduce){.scroller{height:100vh}.stage{position:relative}.intro,.cleatlayer{display:none}.inside{opacity:1!important;transform:none!important}.ring{animation:none}.tests,.progress,.hint{display:none}.caption{color:var(--cream);background:rgba(11,9,7,.72);padding:8px}.words{opacity:1!important;transform:none!important}#particles,#water{display:none}}
+</style>
+</head>
+<body>
+<nav class="tests" aria-label="Opening transition tests">
+  <button data-test="a" aria-pressed="true">A · DIRECT</button>
+  <button data-test="b" aria-pressed="false">B · PARTICLES</button>
+  <button data-test="c" aria-pressed="false">C · SPATIAL</button>
+</nav>
+<div class="scroller"><div class="stage">
+  <canvas id="water" aria-hidden="true"></canvas><div class="waterfade" aria-hidden="true"></div>
+  <div class="layer intro" id="intro"><div><div class="est">EST<b>.</b> 1857</div><div class="rule" id="rule"></div></div></div>
+  <div class="layer cleatlayer" id="cleatlayer"><div class="cleatwrap" id="cleatwrap"><div class="cleatglow" id="glow"></div><div class="ring"></div><div class="ring r2"></div>
+    <svg class="cleat" viewBox="0 0 1000 340" fill="none" stroke="currentColor" stroke-width="17" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="The Lloyds Wharf mooring cleat">
+      <defs><filter id="liquid" x="-18%" y="-35%" width="136%" height="170%"><feTurbulence type="fractalNoise" baseFrequency=".006 .014" numOctaves="2" seed="19" result="flow"><animate attributeName="baseFrequency" dur="5.6s" values=".006 .014;.011 .008;.005 .016;.006 .014" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" in2="flow" scale="7" xChannelSelector="R" yChannelSelector="B"><animate attributeName="scale" dur="4.2s" values="4;11;6;9;4" repeatCount="indefinite"/></feDisplacementMap></filter></defs>
+      <g filter="url(#liquid)"><path pathLength="1" d="M26 52C170 22 350 14 500 14S830 22 974 52C990 62 988 82 966 88C830 68 650 60 500 60S170 68 34 88C12 82 10 62 26 52Z"/><path pathLength="1" d="M196 62C202 122 252 172 322 200C394 224 606 224 678 200C748 172 798 122 804 62"/><path pathLength="1" d="M500 60V288M240 150L190 288H810L760 150"/><rect pathLength="1" x="252" y="190" width="30" height="44" rx="14"/><rect pathLength="1" x="718" y="190" width="30" height="44" rx="14"/><circle pathLength="1" cx="238" cy="262" r="14"/><circle pathLength="1" cx="762" cy="262" r="14"/></g>
+    </svg>
+  </div></div>
+  <div class="layer inside" id="inside"><video id="video" src="../../assets/video/arrive.mp4" poster="../../assets/video/arrive_poster.jpg" muted loop playsinline preload="auto"></video><div class="insidegrade"></div><div class="words" id="words"><span>WORK<i> ·</i></span><span>MEET<i> ·</i></span><span>CREATE<i> ·</i></span><span>CONNECT<i> ·</i></span><span>BELONG</span></div></div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+</div></div>
+<div class="progress"><i id="progress"></i></div><div class="caption" id="caption"></div><div class="hint">SCROLL TO TEST</div>
+<script>
+(()=>{'use strict';
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+const scroller=$('.scroller'),intro=$('#intro'),rule=$('#rule'),cleatLayer=$('#cleatlayer'),wrap=$('#cleatwrap'),glow=$('#glow'),inside=$('#inside'),video=$('#video'),words=$('#words'),bar=$('#progress'),caption=$('#caption');
+const strokes=$$('.cleat path,.cleat rect,.cleat circle'), pc=$('#particles'), px=pc.getContext('2d'), wc=$('#water'), wx=wc.getContext('2d');
+let mode=new URLSearchParams(location.search).get('test')||'a', particles=[],posterReady=false,framePending=false;
+const copy={a:'TEST A — LIQUID CLEAT DIRECTLY INTO THE REAL WALKTHROUGH',b:'TEST B — THE CLEAT RELEASES GOLD PARTICLES THAT REVEAL THE WALKTHROUGH',c:'TEST C — A SPLAT-INSPIRED POINT RECONSTRUCTION. VISUAL STUDY ONLY; NOT A REAL GAUSSIAN CAPTURE.'};
+function clamp(v,a=0,b=1){return Math.max(a,Math.min(b,v))}function seg(p,a,b){return clamp((p-a)/(b-a))}function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
+function size(){const d=Math.min(devicePixelRatio||1,1.6);for(const [c,x] of [[pc,px],[wc,wx]]){c.width=innerWidth*d;c.height=innerHeight*d;x.setTransform(d,0,0,d,0,0)}makeParticles()}
+const poster=new Image();poster.src='../../assets/video/arrive_poster.jpg';poster.onload=()=>{posterReady=true;makeParticles()};
+function makeParticles(){particles=[];const n=innerWidth<700?520:1000;if(mode==='a')return;let sample=null;if(mode==='c'&&posterReady){const o=document.createElement('canvas'),ox=o.getContext('2d',{willReadFrequently:true});o.width=48;o.height=30;ox.drawImage(poster,0,0,o.width,o.height);sample=ox.getImageData(0,0,o.width,o.height).data}
+  for(let i=0;i<n;i++){const ang=Math.random()*Math.PI*2,r=Math.pow(Math.random(),.62)*Math.min(innerWidth*.29,330),sx=innerWidth/2+Math.cos(ang)*r,sy=innerHeight/2+Math.sin(ang)*r*.28;let tx,ty,col;
+    if(mode==='c'&&sample){const gx=i%48,gy=Math.floor(i/48)%30;tx=(gx+.5)/48*innerWidth;ty=(gy+.5)/30*innerHeight;const k=(gy*48+gx)*4;col=`rgb(${sample[k]},${sample[k+1]},${sample[k+2]})`}
+    else{tx=innerWidth/2+(Math.random()-.5)*innerWidth*1.25;ty=innerHeight/2+(Math.random()-.5)*innerHeight*1.1;col=Math.random()>.45?'#FEE6B5':'#B97C3C'}
+    particles.push({sx,sy,tx,ty,z:Math.random(),size:.7+Math.random()*2.4,col,phase:Math.random()*.16})}}
+function drawParticles(p){px.clearRect(0,0,innerWidth,innerHeight);if(mode==='a'||p<=0)return;px.save();px.globalCompositeOperation=mode==='b'?'lighter':'source-over';for(const q of particles){const t=ease(clamp((p-q.phase)/(1-q.phase))),arc=Math.sin(t*Math.PI)*(mode==='b'?(q.z-.5)*120:(q.z-.5)*48),x=q.sx+(q.tx-q.sx)*t+arc,y=q.sy+(q.ty-q.sy)*t-Math.sin(t*Math.PI)*q.z*80;px.globalAlpha=Math.sin(clamp(t)*Math.PI)*.78+(mode==='c'?seg(t,.72,1)*.62:0);px.fillStyle=q.col;px.beginPath();px.arc(x,y,q.size*(.65+t*1.2),0,Math.PI*2);px.fill()}px.restore()}
+function setMode(next){mode=next;history.replaceState(null,'',`?test=${mode}`);$$('[data-test]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.test===mode));caption.textContent=copy[mode];makeParticles();render()}
+$$('[data-test]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.test)));
+function render(){if(reduce){inside.style.opacity=1;caption.textContent='REDUCED MOTION — STATIC ARRIVAL';return}const max=scroller.scrollHeight-innerHeight,p=max?clamp(scrollY/max):0;bar.style.transform=`scaleY(${p})`;
+  const introOut=seg(p,.15,.25);intro.style.opacity=(seg(p,0,.06)*(1-introOut)).toFixed(3);intro.style.transform=`translateY(${-25*introOut}px)`;rule.style.transform=`scaleX(${ease(seg(p,.02,.14))})`;
+  const draw=ease(seg(p,.17,.42)),push=ease(seg(p,.50,.74));cleatLayer.style.opacity=(seg(p,.15,.21)*(1-seg(p,.64,.78))).toFixed(3);strokes.forEach((s,i)=>{const st=i*.045;s.style.strokeDashoffset=(1-clamp((draw-st)/(1-st*.5))).toFixed(3)});const lit=ease(seg(p,.27,.47));glow.style.opacity=lit;const direct=mode==='a'?3.8:mode==='b'?2.65:1.25;wrap.style.transform=`rotateX(${5*lit-11*push}deg) rotateY(${Math.sin(p*18)*3*lit}deg) scale(${1+direct*push})`;wrap.style.filter=`drop-shadow(0 0 ${18+35*lit}px var(--halo-warm)) blur(${(mode==='a'?7:3)*push*push}px)`;
+  let vin;if(mode==='a')vin=ease(seg(p,.58,.76));else if(mode==='b')vin=ease(seg(p,.66,.82));else vin=ease(seg(p,.73,.88));inside.style.opacity=vin;inside.style.transform=`scale(${1.13-.13*vin})`;words.style.opacity=ease(seg(p,.87,1));words.style.transform=`translateY(${22*(1-ease(seg(p,.87,1)))}px)`;drawParticles(mode==='b'?seg(p,.49,.82):mode==='c'?seg(p,.48,.88):0);if(vin>.02){if(video.paused)video.play().catch(()=>{})}else if(!video.paused)video.pause()}
+function requestRender(){if(!framePending){framePending=true;requestAnimationFrame(()=>{render();framePending=false})}}
+let t=0;function water(){wx.clearRect(0,0,innerWidth,innerHeight);const h=innerHeight*.46;for(let i=0;i<24;i++){const y=innerHeight-h+h*i/24,amp=2+i/24*10;wx.beginPath();for(let x=0;x<=innerWidth;x+=10){const yy=y+Math.sin(x*.0075+t*(.4+i/28)+i*.7)*amp+Math.sin(x*.019-t*.42)*amp*.35;x?wx.lineTo(x,yy):wx.moveTo(x,yy)}wx.strokeStyle=`rgba(185,124,60,${.03+.07*i/24})`;wx.stroke()}t+=.012;requestAnimationFrame(water)}
+addEventListener('scroll',requestRender,{passive:true});addEventListener('resize',()=>{size();render()});size();setMode(mode);if(!reduce)water();
+})();
+</script>
+</body></html>
