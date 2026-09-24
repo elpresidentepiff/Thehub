@@ -53,6 +53,34 @@ export type QuoteProblem =
 
 const MINUTES_PER: Record<string, number> = { hour: 60 };
 
+const hours = (mins: number) => (mins % 60 ? `${mins} minutes` : mins === 60 ? 'an hour' : `${mins / 60} hours`);
+
+/** What the visitor reads when a quote is refused. Every problem has words (the Record enforces it). */
+export function quoteProblemMessage(problem: QuoteProblem, catalogue: Catalogue, offer?: Offer): string {
+  const { rules } = catalogue;
+  const copy: Record<QuoteProblem, string> = {
+    invalid_period: 'The end time needs to be after the start time.',
+    in_past: 'That time has already gone.',
+    too_far_ahead: `Bookings open ${rules.maxAdvanceDays} days ahead.`,
+    not_on_slot: `Times go in ${rules.slotMinutes}-minute steps.`,
+    spans_days: 'A booking starts and ends on the same day.',
+    closed_day: 'The floor is closed that day.',
+    outside_hours: `The floor is open ${rules.opens}–${rules.closes}.`,
+    too_short: `Book this for at least ${hours(offer?.minMinutes ?? rules.slotMinutes)}.`,
+    too_long: `Book this for ${hours(offer?.maxMinutes ?? 0)} at most.`,
+    unknown_unit: 'That place is not on this floor.',
+    not_bookable: 'This one cannot be booked.',
+    unknown_offer: 'That price does not apply to this place.',
+    enquiry_only: 'This is let by conversation, not online. Ask us about it.',
+    membership_only: 'This is a monthly membership, not a one-off booking.',
+    not_whole_day: 'Desks are booked for the whole day.',
+    not_whole_blocks: `Times go in ${offer?.blockMinutes ?? rules.slotMinutes}-minute steps.`,
+    unknown_add_on: 'That extra is not available here.',
+    bad_add_on_quantity: 'That extra can only be added once.',
+  };
+  return copy[problem];
+}
+
 /** Pence per Stripe line-item quantity. Throws on a catalogue that cannot be charged exactly. */
 export function blockAmount(offer: Offer): number {
   if (offer.billing !== 'one_time' || offer.unitAmount === null) throw new Error(`${offer.productId} is not a one-time offer`);

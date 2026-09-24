@@ -20,7 +20,8 @@ Last updated: 2026-09-24.
 | Database schema | Migrations written and tested on a throwaway local Postgres (no-overlap proven under concurrency). **No Supabase project exists** | `supabase/` | Operator approval of schema proposal |
 | Commerce engine | Pure TypeScript, 26 tests (`npm test`): dev-only catalogue, London-time periods, quotes, hold tokens + DB refusal map, Stripe Checkout params, webhook signature check + reducer, mock availability that throws outside development. `check-boundaries` keeps it free of React/renderer imports | `src/commerce/` | — |
 | Stripe | Mapping proposed. **Nothing created** in Stripe | `docs/commerce/STRIPE_OBJECT_MAPPING.md` | Approval + prices |
-| Static commerce mocks | Floor → booking → checkout click-through; invented desk positions | `lab/floor`, `lab/booking`, `lab/checkout` | Superseded by Next lab routes wired to the engine |
+| Floor picker (lab) | `/lab/floor` in `npm run dev`: real plan + registry + engine; map (keyboard: arrows) and list (touch); server quotes; 404 in production. **Styling is a first pass** — operator wants it in the floor's own look (video + new floor photos coming) | `src/app/lab/floor/` | Operator's floor video/photos |
+| Static commerce mocks | Floor → booking → checkout click-through; invented desk positions | `lab/floor`, `lab/booking`, `lab/checkout` | Floor superseded by `/lab/floor`; booking/checkout still static |
 
 ---
 
@@ -43,7 +44,7 @@ Last updated: 2026-09-24.
 | C1.1 | `data/inventory/unit4-l2.json` — stable IDs placed on real Rev B geometry | Draft done; needs floor walk |
 | C1.2 | `supabase/migrations` — `hub` / `private` / `api` schemas, exclusion-constraint no-overlap, holds, RLS, grants | Done locally; `npm run db:test` |
 | C1.3 | `src/commerce` — engine + unit tests; mock availability that cannot run in production | Done 24 Sep; `npm test` (the 23 Sep board said done before the tests existed) |
-| C1.4 | `src/app/lab/floor` — the real plan + registry + engine, touch/keyboard states | Next |
+| C1.4 | `src/app/lab/floor` — the real plan + registry + engine, touch/keyboard states | Built 24 Sep (Playwright-checked desktop + phone); restyle to the floor's look pending |
 | C1.5 | Seat authoring tool (BUILD_PLAN §2): place/nudge/name seats on the plan, export registry | Next |
 
 ---
@@ -53,7 +54,8 @@ Last updated: 2026-09-24.
 1. **Operator:** pick the logo and opening-shot direction; pick a cleat direction
    (`docs/experience/CLEAT_DIRECTIONS.md`).
 2. **Operator:** answer the commerce questions below. They unblock C2.
-3. C1.4 floor lab route wired to the engine (no decisions needed).
+3. Restyle `/lab/floor` in the floor's own look from the operator's video and new photos; then
+   link the end of the opening (the walkthrough) into it so the site is one journey.
 4. C1.5 seat authoring tool; then walk the floor with it and mark the registry `verified`.
 5. After the opening decision: sync `src/experience/opening` to the approved prototype
    (remove the HUB-letters beat, cleat → walkthrough direct), rebuild, re-measure.
@@ -81,7 +83,7 @@ Last updated: 2026-09-24.
 | --- | --- |
 | D7 | Price list: day pass, hot desk, dedicated desk, meeting rooms (per hour / half / full day), offices, events, memberships. VAT included in displayed price? |
 | D8 | Hold duration while a visitor is in Checkout (default proposal: 10 minutes) |
-| D9 | Buffers between meeting-room bookings; opening hours; how far ahead people can book |
+| D9 | Buffers between meeting-room bookings; opening hours; how far ahead people can book; can today's day pass be bought after opening? (the engine currently refuses once the day is more than one slot old) |
 | D10 | Which products are self-serve vs enquiry-only (offices, events) |
 | D11 | Cancellation and refund rules |
 | D12 | Accent yellow: a RAL code or a daylight photograph of a pedestal |

@@ -90,9 +90,14 @@ export function offersFor(unit: { id: string; kind: UnitKind }, catalogue: Catal
   return catalogue.offers.filter((o) => o.unitKind === unit.kind && (!o.unitIds || o.unitIds.includes(unit.id)));
 }
 
+/** "£35", "£19.50", "£1,250". Pence in, display text out; never parsed back into an amount. */
+export function formatMoney(pence: number): string {
+  const pounds = pence / 100;
+  return `£${pounds.toLocaleString('en-GB', { minimumFractionDigits: pence % 100 ? 2 : 0, maximumFractionDigits: 2 })}`;
+}
+
 /** "£35 / day", "£38 / hour", "Enquire". For display only; never sent back as an amount. */
 export function formatPrice(offer: Offer): string {
   if (offer.unitAmount === null || !offer.displayUnit) return 'Enquire';
-  const pounds = offer.unitAmount % 100 === 0 ? String(offer.unitAmount / 100) : (offer.unitAmount / 100).toFixed(2);
-  return `£${pounds} / ${offer.displayUnit}`;
+  return `${formatMoney(offer.unitAmount)} / ${offer.displayUnit}`;
 }

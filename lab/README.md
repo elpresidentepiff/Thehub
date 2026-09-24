@@ -11,7 +11,8 @@ looks impressive or because its library is listed in `docs/research/TECHNOLOGY_R
 ## Available mock product labs
 
 - `/lab/floor/` — measured plan with stable mock bookable-unit overlays, filters, status
-  treatments, touch/keyboard selection and a spatial detail card.
+  treatments, touch/keyboard selection and a spatial detail card. **Superseded** by the Next
+  route `/lab/floor` (`npm run dev`), which uses the real registry and commerce engine.
 - `/lab/booking/` — mock date/time, duration and extras flow carried from the stable unit ID.
 - `/lab/checkout/` — non-paying boundary study showing the intended server hold → Stripe →
   webhook → booking sequence. It contains no credentials or payment action.

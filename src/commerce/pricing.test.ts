@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { catalogueFor, DEVELOPMENT_CATALOGUE, formatPrice } from './catalogue.ts';
+import { catalogueFor, DEVELOPMENT_CATALOGUE, formatMoney, formatPrice } from './catalogue.ts';
 import { parseRegistry } from './inventory.ts';
-import { blockAmount, quote, type QuoteRequest } from './pricing.ts';
+import { blockAmount, quote, quoteProblemMessage, type QuoteRequest } from './pricing.ts';
 import { NOW, registry, registryJson } from './test-fixtures.ts';
 
 const catalogue = DEVELOPMENT_CATALOGUE;
@@ -64,4 +64,13 @@ test('production refuses to sell at development prices', () => {
   assert.throws(() => catalogueFor('production'), /No approved production catalogue/);
   assert.equal(catalogueFor('preview').environment, 'preview');
   assert.deepEqual(catalogue.offers.map(formatPrice), ['£35 / day', '£395 / month', '£38 / hour', '£55 / hour', 'Enquire', 'Enquire']);
+});
+
+test('money and refusals read the way a visitor would say them', () => {
+  assert.deepEqual([3500, 1950, 125000].map(formatMoney), ['£35', '£19.50', '£1,250']);
+  const room = catalogue.offers[2]!;
+  assert.equal(quoteProblemMessage('too_short', catalogue, room), 'Book this for at least an hour.');
+  assert.equal(quoteProblemMessage('too_long', catalogue, room), 'Book this for 8 hours at most.');
+  assert.equal(quoteProblemMessage('outside_hours', catalogue), 'The floor is open 08:00–19:00.');
+  assert.equal(quoteProblemMessage('not_whole_blocks', catalogue, room), 'Times go in 30-minute steps.');
 });
