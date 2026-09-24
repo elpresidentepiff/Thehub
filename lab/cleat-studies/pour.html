@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cleat study 2 — Cast in 1857</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Black&display=swap">
+<link rel="stylesheet" href="shared.css">
+<style>
+  #mould *{fill:none;stroke:var(--steel-2);stroke-width:2;stroke-dasharray:6 9}
+  #metal *,#rim *{fill:none;stroke-width:24;stroke-linecap:round;stroke-linejoin:round}
+  #metal *{stroke:url(#heat)}
+  #rim *{stroke:var(--halo)}
+  #ladle{fill:none;stroke-linecap:round}
+  .cast{position:absolute;left:50%;top:calc(50% + min(15vw,170px));transform:translateX(-50%);opacity:0}
+</style>
+</head>
+<body>
+<p class="caption"><b>2 · Cast in 1857.</b> The gold line heats, rises and pours. Molten iron fills an invisible
+mould from the plinth up, glows white, then cools through amber to blackened iron, which is left backlit
+like the sign.</p>
+
+<div class="scroller"><div class="stage">
+  <div id="halo" style="position:absolute;left:50%;top:50%;width:min(110vw,1200px);aspect-ratio:2.3/1;transform:translate(-50%,-50%);border-radius:50%;filter:blur(26px);opacity:0;background:radial-gradient(ellipse at center,rgba(254,230,181,.5) 0%,rgba(248,207,149,.24) 32%,rgba(185,124,60,.1) 56%,transparent 74%)"></div>
+  <svg class="scene" id="scene" viewBox="-500 -150 2000 640" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <defs>
+      <!-- temperature runs bottom (poured first, cools first) to top -->
+      <linearGradient id="heat" gradientUnits="userSpaceOnUse" x1="0" y1="310" x2="0" y2="0">
+        <stop offset="0" stop-color="#342D2F"/><stop offset="0" stop-color="#342D2F"/>
+        <stop offset="0" stop-color="#7A4E22"/><stop offset="0" stop-color="#B97C3C"/>
+        <stop offset="0" stop-color="#F8CF95"/><stop offset="1" stop-color="#FEE6B5"/>
+      </linearGradient>
+      <mask id="level" maskUnits="userSpaceOnUse" x="-100" y="-200" width="1200" height="600">
+        <path id="levelPath" fill="#fff"/>
+      </mask>
+      <filter id="molten" x="-20%" y="-60%" width="140%" height="220%">
+        <feTurbulence type="fractalNoise" baseFrequency=".012 .04" numOctaves="2" seed="7" result="n"/>
+        <feDisplacementMap id="shimmer" in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G" result="d"/>
+        <feGaussianBlur in="d" stdDeviation="10" result="b"/>
+        <feComponentTransfer in="b" result="bb"><feFuncA id="glowA" type="linear" slope="0"/></feComponentTransfer>
+        <feMerge><feMergeNode in="bb"/><feMergeNode in="d"/></feMerge>
+      </filter>
+      <filter id="rimblur" x="-30%" y="-80%" width="160%" height="260%"><feGaussianBlur stdDeviation="11"/></filter>
+    </defs>
+    <g id="rim" filter="url(#rimblur)" opacity="0"></g>
+    <g id="mould" opacity="0"></g>
+    <g filter="url(#molten)">
+      <path id="ladle"/>
+      <path id="stream" fill="none" stroke-linecap="round"/>
+      <g id="metal" mask="url(#level)"></g>
+    </g>
+  </svg>
+  <div class="cast est" id="cast">EST<b>.</b> 1857</div>
+
+  <div class="layer est-layer"><div><div class="est">EST<b>.</b> 1857</div><div class="rule"></div></div></div>
+
+  <div class="layer inside" style="opacity:0">
+    <video muted playsinline loop preload="auto" src="../../assets/video/arrive.mp4" poster="../../assets/video/arrive_poster.jpg"></video>
+    <div class="grade"></div>
+    <div class="pillars"><span>WORK</span><span>MEET</span><span>CREATE</span><span>CONNECT</span><span>BELONG</span></div>
+  </div>
+</div></div>
+
+<script type="module">
+import { run, ramp, easeOut, easeInOut, lerp, mix, CLEAT } from './shared.js';
+import { PARTS } from './cleat.js';
+
+for (const id of ['metal', 'mould', 'rim']) document.getElementById(id).innerHTML = PARTS;
+const $ = (id) => document.getElementById(id);
+const stops = [...document.querySelectorAll('#heat stop')];
+const RULE_Y = 200;
+const HOT = '#FEE6B5';
+
+run((p) => {
+  const t = ramp(p, ...CLEAT);
+  document.querySelector('.rule').style.opacity = String(1 - ramp(p, 0.09, 0.11));
+
+  // the line heats and rises above the mould, then sags at its centre into a lip
+  const heatLine = easeOut(ramp(p, 0.09, 0.16));
+  const rise = easeInOut(ramp(t, 0.02, 0.14));
+  const y = lerp(RULE_Y, -95, rise);
+  const pinch = easeInOut(ramp(t, 0.12, 0.24));
+  const half = lerp(320, 70, pinch) * (1 - ramp(t, 0.56, 0.64));
+  const sag = 26 * pinch;
+  const ladle = $('ladle');
+  ladle.setAttribute('d', `M ${500 - half} ${y} Q 500 ${y + sag * 2} ${500 + half} ${y}`);
+  ladle.style.stroke = mix('#B97C3C', HOT, heatLine);
+  ladle.style.strokeWidth = String(lerp(3, 12, heatLine) * (1 - ramp(t, 0.58, 0.64)));
+  ladle.style.opacity = String(ramp(p, 0.085, 0.1));
+
+  // the fill: the level climbs from the plinth to the top of the horn
+  const fill = easeInOut(ramp(t, 0.22, 0.62));
+  const level = lerp(340, -10, fill);
+  const wave = Array.from({ length: 21 }, (_, i) => {
+    const x = -100 + i * 60;
+    return `L ${x} ${level + Math.sin(i * 1.3 + t * 60) * 6 * (1 - ramp(t, 0.6, 0.66))}`;
+  }).join(' ');
+  $('levelPath').setAttribute('d', `M -100 400 ${wave.replace(/^L/, 'L')} L 1100 400 Z`);
+
+  // the stream falls from the lip to the rising surface, then thins and stops
+  const flowing = ramp(t, 0.18, 0.24) * (1 - ramp(t, 0.58, 0.64));
+  const top = y + sag;
+  const bottom = lerp(top, Math.max(level, top), ramp(t, 0.18, 0.24));
+  const stream = $('stream');
+  stream.setAttribute('d', `M 500 ${top} L 500 ${bottom}`);
+  stream.style.stroke = HOT;
+  stream.style.strokeWidth = String(14 * flowing);
+
+  // cooling: a front climbs behind the fill, white → amber → brass → blackened iron
+  const cool = easeInOut(ramp(t, 0.55, 0.88));
+  const f = lerp(-0.25, 1.05, cool);
+  [f - 0.12, f - 0.12, f, f + 0.1, f + 0.22, f + 0.34].forEach((o, i) =>
+    stops[i].setAttribute('offset', String(Math.min(1, Math.max(0, o)))));
+  const heat = 1 - cool;
+  $('shimmer').setAttribute('scale', String(7 * heat * ramp(t, 0.18, 0.3)));
+  $('glowA').setAttribute('slope', String(1.5 * heat ** 2 * ramp(t, 0.15, 0.3)));
+
+  // the empty mould is only a ghost; the finished casting is backlit like the entrance sign
+  $('mould').setAttribute('opacity', String(0.4 * ramp(t, 0.04, 0.16) * (1 - fill)));
+  const rim = easeOut(ramp(t, 0.78, 0.94));
+  $('rim').setAttribute('opacity', String(rim));
+  $('halo').style.opacity = String(rim);
+  $('cast').style.opacity = String(ramp(t, 0.86, 0.96) * (1 - ramp(p, 0.8, 0.86)));
+
+  const push = easeInOut(ramp(p, 0.8, 0.93));
+  const scene = $('scene');
+  scene.style.transform = `scale(${1 + 1.6 * push})`;
+  scene.style.opacity = String(1 - ramp(p, 0.82, 0.89));
+  $('halo').style.transform = `translate(-50%,-50%) scale(${1 + 1.6 * push})`;
+  $('halo').style.opacity = String(rim * (1 - ramp(p, 0.82, 0.89)));
+});
+</script>
+</body>
+</html>

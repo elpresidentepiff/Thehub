@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cleat study 3 — The sign at night</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Black&display=swap">
+<link rel="stylesheet" href="shared.css">
+<style>
+  .brick{position:absolute;inset:-6%;background:url(brick.jpg) center/1100px auto repeat;
+    filter:sepia(.4) saturate(1.05) brightness(.95) contrast(1.12);opacity:0;
+    -webkit-mask-image:radial-gradient(ellipse var(--r,20%) calc(var(--r,20%) * .8) at 50% 50%,#000 0%,rgba(0,0,0,.62) 32%,rgba(0,0,0,.22) 60%,transparent 92%);
+            mask-image:radial-gradient(ellipse var(--r,20%) calc(var(--r,20%) * .8) at 50% 50%,#000 0%,rgba(0,0,0,.62) 32%,rgba(0,0,0,.22) 60%,transparent 92%)}
+  .wash{position:absolute;inset:0;opacity:0;
+    background:radial-gradient(ellipse 58% 50% at 50% 50%,rgba(248,207,149,.3),rgba(185,124,60,.12) 48%,transparent 90%)}
+  .sign *{stroke-linecap:round;stroke-linejoin:round}
+  .sign .cleat *{fill:none;stroke-width:20}
+  .sign text{font-family:var(--body);font-weight:700;text-anchor:middle}
+  #light .cleat *{stroke:var(--halo)}
+  #light text{fill:var(--halo);stroke:var(--halo);stroke-width:6}
+  #steel .cleat *{stroke:#16110d}
+  #steel text{fill:#16110d}
+  #spark{fill:var(--halo)}
+</style>
+</head>
+<body>
+<p class="caption"><b>3 · The sign at night.</b> The gold line pulls into a single point of light and goes out. Then,
+like the real sign switching on, a halo flickers up behind blackened steel: the cleat first, then LLOYDS WHARF
+and ESTᴰ 1857, as they are on the wall, with the brick warming around them.</p>
+
+<div class="scroller"><div class="stage">
+  <div class="brick" id="brick"></div>
+  <div class="wash" id="wash"></div>
+  <svg class="scene" id="scene" viewBox="-500 -230 2000 800" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <defs>
+      <filter id="haloBlur" x="-40%" y="-80%" width="180%" height="260%">
+        <feGaussianBlur id="haloDev" stdDeviation="14" result="wide"/>
+        <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="tight"/>
+        <feMerge><feMergeNode in="wide"/><feMergeNode in="wide"/><feMergeNode in="tight"/></feMerge>
+      </filter>
+      <radialGradient id="sparkGrad"><stop offset="0" stop-color="#FEE6B5"/><stop offset=".35" stop-color="#F8CF95" stop-opacity=".6"/><stop offset="1" stop-color="#F8CF95" stop-opacity="0"/></radialGradient>
+    </defs>
+    <circle id="sparkGlow" cx="500" cy="210" r="60" fill="url(#sparkGrad)" opacity="0"/>
+    <g id="light" class="sign" filter="url(#haloBlur)">
+      <g class="cleat" id="lightCleat"></g>
+      <text id="lightName" x="500" y="-62" font-size="96" textLength="1000" lengthAdjust="spacing">LLOYDS WHARF</text>
+      <text id="lightEst" x="500" y="432" font-size="72" letter-spacing="10">EST<tspan font-size="40" dy="-26">D</tspan><tspan dy="26"> 1857</tspan></text>
+    </g>
+    <g id="steel" class="sign">
+      <g class="cleat" id="steelCleat"></g>
+      <text id="steelName" x="500" y="-62" font-size="96" textLength="1000" lengthAdjust="spacing">LLOYDS WHARF</text>
+      <text id="steelEst" x="500" y="432" font-size="72" letter-spacing="10">EST<tspan font-size="40" dy="-26">D</tspan><tspan dy="26"> 1857</tspan></text>
+    </g>
+  </svg>
+
+  <div class="layer est-layer"><div><div class="est">EST<b>.</b> 1857</div><div class="rule"></div></div></div>
+
+  <div class="layer inside" style="opacity:0">
+    <video muted playsinline loop preload="auto" src="../../assets/video/arrive.mp4" poster="../../assets/video/arrive_poster.jpg"></video>
+    <div class="grade"></div>
+    <div class="pillars"><span>WORK</span><span>MEET</span><span>CREATE</span><span>CONNECT</span><span>BELONG</span></div>
+  </div>
+</div></div>
+
+<script type="module">
+import { run, ramp, easeOut, easeInOut, lerp, CLEAT } from './shared.js';
+import { PARTS } from './cleat.js';
+
+const $ = (id) => document.getElementById(id);
+$('lightCleat').innerHTML = PARTS;
+$('steelCleat').innerHTML = PARTS;
+const rule = document.querySelector('.rule');
+
+/** A tube light striking: off, catch, off, half, catch, hold. `x` is 0..1 through the strike. */
+function strike(x) {
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+  const steps = [[0.08, 0.55], [0.16, 0], [0.26, 0.18], [0.34, 0.8], [0.42, 0.1], [0.55, 0.9], [0.62, 0.7], [1, 1]];
+  for (const [end, v] of steps) if (x < end) return v;
+  return 1;
+}
+
+run((p) => {
+  const t = ramp(p, ...CLEAT);
+
+  // the gold line draws back into one point of light, which goes out
+  const gather = easeInOut(ramp(p, 0.1, 0.17));
+  rule.style.transform = `scaleX(${lerp(1, 0.02, gather)})`;
+  rule.style.filter = `brightness(${1 + 2 * gather})`;
+  const spark = ramp(p, 0.13, 0.17) * (1 - ramp(t, 0.12, 0.2));
+  $('sparkGlow').setAttribute('opacity', String(spark));
+  $('sparkGlow').setAttribute('r', String(20 + 40 * spark));
+
+  // the cleat's halo strikes, then settles and spreads
+  const cleatOn = strike(ramp(t, 0.2, 0.36));
+  const letters = strike(ramp(t, 0.42, 0.56));
+  const spread = easeOut(ramp(t, 0.32, 0.7));
+  $('lightCleat').style.opacity = String(cleatOn);
+  $('lightName').style.opacity = String(letters);
+  $('lightEst').style.opacity = String(letters);
+  $('haloDev').setAttribute('stdDeviation', String(lerp(8, 18, spread)));
+
+  // the steel only exists where there is light to see it by
+  const seen = Math.max(cleatOn * 0.9, ramp(t, 0.36, 0.5));
+  $('steelCleat').style.opacity = String(seen);
+  $('steelName').style.opacity = String(Math.max(letters, 0) * ramp(t, 0.42, 0.5));
+  $('steelEst').style.opacity = $('steelName').style.opacity;
+
+  // the brick warms outward from the sign
+  const brick = $('brick');
+  brick.style.setProperty('--r', `${lerp(18, 56, spread)}%`);
+  brick.style.opacity = String(0.85 * Math.min(1, cleatOn * 0.5 + spread * 0.7));
+  $('wash').style.opacity = String(cleatOn * 0.6 + spread * 0.4);
+
+  // a slow step towards the wall, then through it
+  const approach = easeInOut(ramp(t, 0.55, 1));
+  const push = easeInOut(ramp(p, 0.8, 0.93));
+  const s = (1 + 0.1 * approach) * (1 + 1.5 * push);
+  const fade = 1 - ramp(p, 0.82, 0.89);
+  for (const el of [$('scene'), brick, $('wash')]) {
+    el.style.transform = `scale(${s})`;
+    if (el === $('scene')) el.style.opacity = String(fade);
+  }
+  brick.style.opacity = String(Number(brick.style.opacity) * fade);
+  $('wash').style.opacity = String(Number($('wash').style.opacity) * fade);
+});
+</script>
+</body>
+</html>

@@ -12,7 +12,7 @@ Last updated: 2026-09-24.
 | Area | State | Evidence | Blocked on |
 | --- | --- | --- | --- |
 | Opening narrative | **Approved:** EST. 1857 → gold line → cleat → real walkthrough → WORK · MEET · CREATE · CONNECT · BELONG. HUB-letters photo beat **cut** on operator request (23 Sep) | `proto/opening.html` | — |
-| Cleat | Operator: "cool, but we can do more". Current liquid pass reads as shaky, not liquid | `docs/experience/CLEAT_DIRECTIONS.md` | Operator choice of direction |
+| Cleat | Operator: "cool, but we can do more". Current liquid pass reads as shaky, not liquid | `lab/cleat-studies/` | Operator choice of direction |
 | Opening tests A/B/C | **Rejected** ("good attempt but not looking cool"). Kept as evidence only | `lab/opening-tests/` | — |
 | Production opening (Next.js) | M2 foundation built; guards + typecheck pass. **Still contains the cut HUB-letters beat** | `src/experience/opening/` | Operator decision on logo + opening-shot design |
 | Logo / opening-shot design | **Operator deciding** | — | Operator |
@@ -52,7 +52,7 @@ Last updated: 2026-09-24.
 ## Next actions, in order
 
 1. **Operator:** pick the logo and opening-shot direction; pick a cleat direction
-   (`docs/experience/CLEAT_DIRECTIONS.md`).
+   (`lab/cleat-studies/`).
 2. **Operator:** answer the commerce questions below. They unblock C2.
 3. Restyle `/lab/floor` in the floor's own look from the operator's video and new photos; then
    link the end of the opening (the walkthrough) into it so the site is one journey.
@@ -71,7 +71,7 @@ Last updated: 2026-09-24.
 | # | Decision | Unblocks |
 | --- | --- | --- |
 | D1 | Logo + opening-shot design | M2 sync |
-| D2 | Cleat direction (A molten pour, B cast iron over the Neckinger, C the halo sign) | Opening |
+| D2 | Cleat direction: pick one of the four studies in `lab/cleat-studies/` (1 rope, 2 pour, 3 halo sign, 4 iron over the Neckinger) | Opening |
 | D3 | Approve the Supabase schema proposal (or amend) | C2 |
 | D4 | Approve the Stripe object mapping (or amend) | C2 |
 | D5 | Can visitors book anonymously, or sign in first? | Hold ownership, RLS |

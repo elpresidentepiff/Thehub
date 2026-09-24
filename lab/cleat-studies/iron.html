@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cleat study 4 — Iron over the Neckinger</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Black&display=swap">
+<link rel="stylesheet" href="shared.css">
+<style>
+  #gl{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .nogl{position:absolute;inset:0;display:none;place-items:center;color:var(--cream-dim);font-size:13px}
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "../../node_modules/three/build/three.module.js",
+  "three/addons/": "../../node_modules/three/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<p class="caption"><b>4 · Iron over the Neckinger.</b> A real cast-iron cleat on the quay edge in the dark. A raking
+light sweeps across it, the camera walks round it while a backlight comes up, then looks over the edge at the
+hidden river, where the lit cleat is reflected, and goes under, into the building.</p>
+
+<div class="scroller"><div class="stage">
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="nogl" id="nogl">WebGL is not available here: this study needs it.</div>
+  <div class="layer est-layer"><div><div class="est">EST<b>.</b> 1857</div><div class="rule"></div></div></div>
+  <div class="layer inside" style="opacity:0">
+    <video muted playsinline loop preload="auto" src="../../assets/video/arrive.mp4" poster="../../assets/video/arrive_poster.jpg"></video>
+    <div class="grade"></div>
+    <div class="pillars"><span>WORK</span><span>MEET</span><span>CREATE</span><span>CONNECT</span><span>BELONG</span></div>
+  </div>
+</div></div>
+
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { Reflector } from 'three/addons/objects/Reflector.js';
+import { run, ramp, easeOut, easeInOut, lerp, CLEAT } from './shared.js';
+
+const canvas = document.getElementById('gl');
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+} catch {
+  document.getElementById('nogl').style.display = 'grid';
+}
+
+// cleat.svg units → metres-ish: 100 svg units = 1 world unit, plinth on y = 0
+const P = (x, y) => [(x - 500) / 100, (288 - y) / 100];
+const V = (x, y, z = 0) => new THREE.Vector3(...P(x, y), z);
+
+function cubicPath(segments) {
+  const path = new THREE.CurvePath();
+  for (const [a, b, c, d] of segments) path.add(new THREE.CubicBezierCurve3(V(...a), V(...b), V(...c), V(...d)));
+  return path;
+}
+
+function buildCleat(material) {
+  const g = new THREE.Group();
+  const R = 0.095;
+  const bar = (curve, samples = 160, closed = false) => {
+    const m = new THREE.Mesh(new THREE.TubeGeometry(curve, samples, R, 18, closed), material);
+    m.scale.z = 2.6; // cut from thick plate: deeper than it is wide
+    m.castShadow = true;
+    g.add(m);
+  };
+  // horn (closed outline)
+  bar(cubicPath([
+    [[26, 52], [170, 22], [350, 14], [500, 14]],
+    [[500, 14], [650, 14], [830, 22], [974, 52]],
+    [[974, 52], [990, 62], [988, 82], [966, 88]],
+    [[966, 88], [830, 68], [650, 60], [500, 60]],
+    [[500, 60], [350, 60], [170, 68], [34, 88]],
+    [[34, 88], [12, 82], [10, 62], [26, 52]],
+  ]), 420, true);
+  // body
+  bar(cubicPath([
+    [[196, 62], [202, 122], [252, 172], [322, 200]],
+    [[322, 200], [394, 224], [606, 224], [678, 200]],
+    [[678, 200], [748, 172], [798, 122], [804, 62]],
+  ]), 240);
+  // stem and plinth
+  bar(new THREE.LineCurve3(V(500, 60), V(500, 288)), 8);
+  const plinth = new THREE.CurvePath();
+  [[240, 150, 190, 288], [190, 288, 810, 288], [810, 288, 760, 150]].forEach(([a, b, c, d]) =>
+    plinth.add(new THREE.LineCurve3(V(a, b), V(c, d))));
+  bar(plinth, 120);
+  // slots and bolts
+  for (const [cx, cy] of [[267, 212], [733, 212]]) {
+    const shape = new THREE.Path();
+    shape.absellipse(0, 0, 0.15, 0.22, 0, Math.PI * 2);
+    const pts = shape.getPoints(40).map((p) => V(cx + p.x * 100, cy - p.y * 100));
+    bar(new THREE.CatmullRomCurve3(pts, true), 60, true);
+  }
+  for (const cx of [238, 762]) {
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.14, R, 14, 40), material);
+    ring.position.set(...P(cx, 262), 0);
+    ring.scale.z = 2.6;
+    g.add(ring);
+  }
+  return g;
+}
+
+if (renderer) {
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  renderer.shadowMap.enabled = true;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0b0907);
+  scene.fog = new THREE.FogExp2(0x0b0907, 0.055);
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+  const iron = new THREE.MeshStandardMaterial({ color: 0x1d1816, metalness: 0.75, roughness: 0.52, envMapIntensity: 0 });
+  const cleat = buildCleat(iron);
+  cleat.position.set(0, 0.1, 0.6);
+  scene.add(cleat);
+
+  // the quay: dark stone, its front edge dropping to the river
+  const stone = new THREE.MeshStandardMaterial({ color: 0x0e0b0a, roughness: 0.97, metalness: 0, envMapIntensity: 0 });
+  const quay = new THREE.Mesh(new THREE.BoxGeometry(22, 3, 8), stone);
+  quay.position.set(0, -1.5, -1.6);
+  quay.receiveShadow = true;
+  scene.add(quay);
+  const kerb = new THREE.Mesh(new THREE.BoxGeometry(22, 0.35, 0.7), new THREE.MeshStandardMaterial({ color: 0x1a1512, roughness: 0.85, envMapIntensity: 0 }));
+  kerb.position.set(0, -0.12, 2.15);
+  kerb.receiveShadow = true;
+  scene.add(kerb);
+
+  // the Neckinger: still, black, and it reflects
+  const water = new Reflector(new THREE.PlaneGeometry(60, 40), {
+    color: 0x5a5048, textureWidth: innerWidth * 0.6, textureHeight: innerHeight * 0.6, clipBias: 0.003,
+  });
+  water.rotation.x = -Math.PI / 2;
+  water.position.set(0, -0.42, 22.4);
+  scene.add(water);
+
+  // light: a raking lamp that sweeps across the face, and the halo behind
+  scene.add(new THREE.HemisphereLight(0x3b2f25, 0x000000, 0.03));
+  const rake = new THREE.SpotLight(0xf8cf95, 0, 0, 0.32, 0.85, 2);
+  rake.castShadow = true;
+  rake.shadow.mapSize.set(1024, 1024);
+  scene.add(rake, rake.target);
+  rake.target.position.set(0, 1.3, 0.6);
+  const rim = new THREE.SpotLight(0xfee6b5, 0, 0, 0.7, 1, 2);
+  rim.position.set(0, 2.2, -4.5);
+  rim.target.position.set(0, 1.4, 2);
+  scene.add(rim, rim.target);
+
+  // the halo itself, seen past the edges of the iron
+  const haloTex = (() => {
+    const c = document.createElement('canvas');
+    c.width = c.height = 256;
+    const x = c.getContext('2d');
+    const gr = x.createRadialGradient(128, 128, 0, 128, 128, 128);
+    gr.addColorStop(0, 'rgba(254,230,181,1)');
+    gr.addColorStop(0.3, 'rgba(248,207,149,.45)');
+    gr.addColorStop(0.62, 'rgba(185,124,60,.12)');
+    gr.addColorStop(1, 'rgba(185,124,60,0)');
+    x.fillStyle = gr;
+    x.fillRect(0, 0, 256, 256);
+    return new THREE.CanvasTexture(c);
+  })();
+  const halo = new THREE.Mesh(
+    new THREE.PlaneGeometry(14, 6),
+    new THREE.MeshBasicMaterial({ map: haloTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 }),
+  );
+  halo.position.set(0, 1.4, -0.6);
+  scene.add(halo);
+
+  const camera = new THREE.PerspectiveCamera(34, 1, 0.05, 120);
+  // front on → round to the left → round to the right as the backlight comes up → out over
+  // the river, low, looking back: the lit cleat and its double in the water
+  const path = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(0, 1.5, 15),
+    new THREE.Vector3(-5.2, 2.2, 10.5),
+    new THREE.Vector3(5.6, 3.1, 9),
+    new THREE.Vector3(1.2, 1.0, 13.5),
+    new THREE.Vector3(0.2, -0.05, 14),
+  ], false, 'centripetal');
+  const looks = [
+    [0, new THREE.Vector3(0, 1.3, 0.6)],
+    [0.6, new THREE.Vector3(0, 1.2, 0.6)],
+    [0.85, new THREE.Vector3(0, 0.35, 0.6)],
+    [1, new THREE.Vector3(0, -0.15, 0.6)],
+  ];
+  const lookAt = (u) => {
+    for (let i = 1; i < looks.length; i++) {
+      const [u0, a] = looks[i - 1];
+      const [u1, b] = looks[i];
+      if (u <= u1) return a.clone().lerp(b, easeInOut(ramp(u, u0, u1)));
+    }
+    return looks[looks.length - 1][1].clone();
+  };
+
+  const size = () => {
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  };
+  size();
+  addEventListener('resize', size);
+
+  let p = 0;
+  run((next) => {
+    p = next;
+    const t = ramp(p, ...CLEAT);
+    canvas.style.opacity = String(ramp(p, 0.1, 0.16) * (1 - ramp(p, 0.84, 0.9)));
+  });
+
+  const render = (now) => {
+    const t = ramp(p, ...CLEAT);
+    const u = easeInOut(t);
+    camera.position.copy(path.getPointAt(u));
+    camera.lookAt(lookAt(u));
+
+    // the rake crosses the face left to right; the backlight comes up as we walk round
+    const sweep = easeInOut(ramp(t, 0.06, 0.5));
+    rake.position.set(lerp(-9, 9, sweep), 2.4, 5.2);
+    rake.intensity = 320 * ramp(t, 0.06, 0.16) * (1 - 0.55 * ramp(t, 0.5, 0.7));
+    const back = easeOut(ramp(t, 0.35, 0.62));
+    rim.intensity = 420 * back;
+    halo.material.opacity = 0.9 * back;
+    iron.envMapIntensity = 0.35 * back;
+    // a breath of life on the halo while you hold still
+    halo.scale.setScalar(1 + 0.02 * Math.sin(now / 900) * back);
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+  };
+  requestAnimationFrame(render);
+}
+</script>
+</body>
+</html>

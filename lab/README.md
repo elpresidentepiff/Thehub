@@ -8,6 +8,9 @@ looks impressive or because its library is listed in `docs/research/TECHNOLOGY_R
 - `/lab/opening-tests/` — rejected first-pass comparison of direct, particle and simulated
   spatial transitions. Retained as visual research; not approved production direction.
 
+- `/lab/cleat-studies/` — four answers to "what does the cleat do?" (rope, pour, halo sign, 3D iron
+  over the Neckinger). Same approved start and end as `proto/opening.html`; operator to pick (ROADMAP D2).
+
 ## Available mock product labs
 
 - `/lab/floor/` — measured plan with stable mock bookable-unit overlays, filters, status
