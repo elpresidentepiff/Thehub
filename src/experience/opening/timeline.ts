@@ -1,5 +1,5 @@
 import { gsap } from 'gsap';
-import { PUSH_BLUR, STROKE_STAGGER, W, type Window } from './choreography';
+import { CLEAT_TILT, PUSH_BLUR, STROKE_STAGGER, W, type Window } from './choreography';
 
 /**
  * The prototype's per-frame style arithmetic, restated as one GSAP timeline 1 unit long, so that
@@ -7,7 +7,8 @@ import { PUSH_BLUR, STROKE_STAGGER, W, type Window } from './choreography';
  *
  * `power2.inOut` is the prototype's cubic in-out. `none` is its linear `seg()`.
  *
- * Not in this timeline: the wordmark's scale. That is the camera's job (see useOpeningSequence).
+ * Not in this timeline: the cleat's scale during the push. That is the camera's job (see
+ * useOpeningSequence).
  */
 
 const E = 'power2.inOut';
@@ -53,37 +54,23 @@ export function buildOpeningTimeline(q: Query): gsap.core.Timeline {
     .fromTo(draw, { progress: 0 }, { progress: 1, ease: E, duration: span(W.cleatDraw) }, start(W.cleatDraw))
     .fromTo(q('[data-cleatglow]'), { opacity: 0 }, { opacity: 1, ease: E, duration: span(W.cleatLit) }, start(W.cleatLit))
     .fromTo(wrap, { '--lit': 0 }, { '--lit': 1, ease: E, duration: span(W.cleatLit) }, start(W.cleatLit))
-    // The prototype wrote scale(s) translateY(-40px·t); translate inside the scale lands at -36px.
-    .to(wrap, { scale: 0.9, y: -36, duration: span(W.cleatOut) }, start(W.cleatOut));
-
-  // 3 — THE HUB
-  const l3 = q('[data-l3]');
-  const wordmark = q('[data-wordmark]');
-  tl.fromTo(l3, { opacity: 0 }, { opacity: 1, ease: E, duration: span(W.hubIn) }, start(W.hubIn))
-    .to(l3, { opacity: 0, duration: span(W.hubOut) }, start(W.hubOut))
+    // The prototype's rotateX(5·lit − 12·push): it tips towards you as it lights, back as you pass.
     .fromTo(
-      q('[data-sheen]'),
-      { backgroundPosition: '150% 0%' },
-      { backgroundPosition: '-40% 0%', ease: E, duration: span(W.sheen) },
-      start(W.sheen),
+      wrap,
+      { rotationX: 0, transformPerspective: 900 },
+      { rotationX: CLEAT_TILT.lit, ease: E, duration: span(W.cleatLit) },
+      start(W.cleatLit),
     )
-    // The prototype's blur was 9·push², i.e. quadratic-in over the push.
+    .to(wrap, { rotationX: CLEAT_TILT.lit + CLEAT_TILT.push, ease: E, duration: span(W.push) }, start(W.push))
+    // …and its blur, 7·push², i.e. quadratic-in over the push.
     .fromTo(
-      wordmark,
-      { filter: 'blur(0px)' },
-      {
-        filter: `blur(${PUSH_BLUR}px)`,
-        ease: 'power1.in',
-        duration: span(W.push),
-        immediateRender: false,
-        onReverseComplete: () => {
-          gsap.set(wordmark, { clearProps: 'filter' });
-        },
-      },
+      wrap,
+      { '--blur': '0px' },
+      { '--blur': `${PUSH_BLUR}px`, ease: 'power1.in', duration: span(W.push), immediateRender: false },
       start(W.push),
     );
 
-  // 5 — inside
+  // 3 — inside
   tl.fromTo(
     q('[data-l5]'),
     { opacity: 0, scale: 1.14 },

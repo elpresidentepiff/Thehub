@@ -1,8 +1,7 @@
 import { VIDEO_WARM, videoShouldPlay } from './choreography';
 
-/** Real Lloyds Wharf walkthrough footage (720×1280 and 600×1066 portrait, H.264, faststart). */
+/** Real Lloyds Wharf walkthrough footage (720×1280 portrait, H.264, faststart). */
 export const MEDIA = {
-  type: { src: '/media/type.mp4', poster: '/media/type_poster.jpg' },
   arrive: { src: '/media/arrive.mp4', poster: '/media/arrive_poster.jpg' },
 } as const;
 
@@ -15,7 +14,6 @@ type Clip = keyof typeof MEDIA;
  */
 export function createMediaController(root: HTMLElement) {
   const clips = {
-    type: root.querySelector<HTMLVideoElement>('[data-video="type"]'),
     arrive: root.querySelector<HTMLVideoElement>('[data-video="arrive"]'),
   } satisfies Record<Clip, HTMLVideoElement | null>;
 
@@ -35,14 +33,11 @@ export function createMediaController(root: HTMLElement) {
 
   return {
     update(p: number, paused: boolean) {
-      if (p >= VIDEO_WARM.type) warm(clips.type);
       if (p >= VIDEO_WARM.arrive) warm(clips.arrive);
       const play = videoShouldPlay(p);
-      run(clips.type, play.type && !paused);
       run(clips.arrive, play.arrive && !paused);
     },
     stop() {
-      clips.type?.pause();
       clips.arrive?.pause();
     },
   };

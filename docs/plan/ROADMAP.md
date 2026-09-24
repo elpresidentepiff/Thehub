@@ -14,7 +14,7 @@ Last updated: 2026-09-24.
 | Opening narrative | **Approved:** EST. 1857 → gold line → cleat → real walkthrough → WORK · MEET · CREATE · CONNECT · BELONG. HUB-letters photo beat **cut** on operator request (23 Sep) | `proto/opening.html` | — |
 | Cleat | Operator: "cool, but we can do more". Current liquid pass reads as shaky, not liquid | `lab/cleat-studies/` | Operator choice of direction |
 | Opening tests A/B/C | **Rejected** ("good attempt but not looking cool"). Kept as evidence only | `lab/opening-tests/` | — |
-| Production opening (Next.js) | M2 foundation built; guards + typecheck pass. **Still contains the cut HUB-letters beat** | `src/experience/opening/` | Operator decision on logo + opening-shot design |
+| Production opening (Next.js) | **Synced to the approved prototype 24 Sep:** HUB-letters beat removed; the camera now pushes through the cleat (prototype timings, dolly ×4.8); build + camera test pass; frame-compared with `proto/opening.html` | `src/experience/opening/` | Cleat choice (D2) and logo (D1) slot into the same beat |
 | Logo / opening-shot design | **Operator deciding** | — | Operator |
 | Inventory registry | Draft from Rev B: 16 open-plan desks, 2 meeting rooms, 2 private offices. **Not yet walked on site** | `data/inventory/unit4-l2.json` | Floor walk; ACG/Iffy's decision |
 | Database schema | Migrations written and tested on a throwaway local Postgres (no-overlap proven under concurrency). **No Supabase project exists** | `supabase/` | Operator approval of schema proposal |
@@ -57,8 +57,7 @@ Last updated: 2026-09-24.
 3. Restyle `/lab/floor` in the floor's own look from the operator's video and new photos; then
    link the end of the opening (the walkthrough) into it so the site is one journey.
 4. C1.5 seat authoring tool; then walk the floor with it and mark the registry `verified`.
-5. After the opening decision: sync `src/experience/opening` to the approved prototype
-   (remove the HUB-letters beat, cleat → walkthrough direct), rebuild, re-measure.
+5. When a cleat study is chosen (D2): build it into `proto/opening.html` first, then `src/experience/opening`.
 6. After approval: create the dedicated Hub Supabase project, apply migrations, run the SQL
    tests against it, create `DEV — Hub` test-mode Stripe products.
 

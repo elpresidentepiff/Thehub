@@ -11,8 +11,8 @@
  *   evaluates the same JSON with the small evaluator below, so they never pay for the Theatre
  *   runtime. `scripts/test-camera.mjs` checks the two agree.
  *
- * `dolly` is the camera's magnification of the z = 0 plane (the plane the wordmark and the water
- * sit in): 1 at rest, 6.2 when the reader has passed through the letters.
+ * `dolly` is the camera's magnification of the z = 0 plane (the plane the cleat and the water
+ * sit in): 1 at rest, 4.8 when the reader has passed through the cleat.
  */
 
 import state from './opening.theatre.json';

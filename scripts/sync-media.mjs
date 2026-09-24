@@ -5,7 +5,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const files = ['arrive.mp4', 'arrive_poster.jpg', 'type.mp4', 'type_poster.jpg'];
+const files = ['arrive.mp4', 'arrive_poster.jpg'];
 const out = join(root, 'public', 'media');
 mkdirSync(out, { recursive: true });
 

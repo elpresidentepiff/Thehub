@@ -17,7 +17,7 @@ import { recordSpatial } from '../perf/store';
  * The spatial runtime: one R3F canvas behind the whole stage, one camera.
  *
  * World units are CSS pixels at z = 0, where the camera's rest distance makes one unit exactly
- * one pixel. The stage's DOM (the wordmark) lives in that same plane, so dolly = on-screen scale
+ * one pixel. The stage's DOM (the cleat) lives in that same plane, so dolly = on-screen scale
  * for both. Later spatial scenes join this canvas — never a second WebGL context.
  */
 

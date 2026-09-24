@@ -55,8 +55,7 @@
   min-height: 100svh;
 }
 
-.op-l2,
-.op-l3 {
+.op-l2 {
   padding: 12svh 16px;
 }
 
@@ -103,7 +102,8 @@
   --glow-max: 26px;
   position: relative;
   width: min(84vw, 860px);
-  filter: drop-shadow(0 0 calc(var(--lit) * var(--glow-max)) var(--hub-halo-warm));
+  --blur: 0px;
+  filter: drop-shadow(0 0 calc(var(--lit) * var(--glow-max)) var(--hub-halo-warm)) blur(var(--blur));
 }
 
 .op-cleatglow {
@@ -140,73 +140,7 @@
   vector-effect: non-scaling-stroke;
 }
 
-/* ——— 3 · THE HUB ——— */
-
-.op-wordmark {
-  display: flex;
-  justify-content: center;
-}
-
-.op-h1 {
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(6px, 1vw, 14px);
-  font-weight: inherit;
-}
-
-.op-the {
-  font-family: var(--hub-display);
-  font-size: clamp(28px, 5.2vw, 74px);
-  letter-spacing: 0.06em;
-  line-height: 1;
-  color: var(--hub-cream);
-}
-
-.op-hubtype {
-  position: relative;
-  display: block;
-  width: min(92vw, 1000px);
-  aspect-ratio: 1000 / 260;
-  overflow: hidden;
-}
-
-.op-typevideo {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: saturate(0.82) contrast(1.16) brightness(1.06);
-}
-
-.op-hubtype svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.op-sheen {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  mix-blend-mode: screen;
-  background: linear-gradient(105deg, transparent 38%, color-mix(in srgb, var(--hub-halo) 30%, transparent) 50%, transparent 62%);
-  background-size: 260% 100%;
-  background-position: 150% 0%;
-}
-
-.op-wharf {
-  font-weight: 600;
-  font-size: clamp(11px, 1.5vw, 19px);
-  letter-spacing: 0.34em;
-  text-indent: 0.34em;
-  color: var(--hub-cream-dim);
-}
-
-/* ——— 5 · inside ——— */
+/* ——— 3 · inside ——— */
 
 .op-arrivevideo {
   position: absolute;
@@ -322,7 +256,7 @@
    ================================================================ */
 
 [data-motion='full'] .op-scroller {
-  height: 560vh;
+  height: 430vh; /* the prototype's */
 }
 
 [data-motion='full'] .op-stage {
@@ -361,10 +295,6 @@
 
 [data-motion='full'] .op-cleatglow {
   opacity: 0;
-}
-
-[data-motion='full'] .op-wordmark {
-  transform: scale(0.9);
 }
 
 [data-motion='full'] .op-l5 {
@@ -460,7 +390,7 @@
   }
 
   [data-motion='full'] .op-scroller {
-    height: 480svh;
+    height: 370svh;
   }
 
   [data-motion='full'] .op-water {

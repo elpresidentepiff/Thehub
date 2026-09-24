@@ -5,7 +5,6 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import type { RefObject } from 'react';
-import { easeInOutCubic, seg, W } from './choreography';
 import { createMediaController } from './media';
 import { buildOpeningTimeline } from './timeline';
 import { cameraAt } from '../spatial/theatre/camera';
@@ -32,13 +31,13 @@ export function useOpeningSequence(root: RefObject<HTMLElement | null>, mode: Mo
       const tl = buildOpeningTimeline(q);
       const media = createMediaController(el);
 
-      // The push-through is a camera move, not a tween: the wordmark sits in the z = 0 plane, so
-      // its on-screen scale is the camera's dolly. The intro settle (0.9 → 1) is the prototype's.
-      const setWordmark = gsap.quickSetter(q('[data-wordmark]'), 'css');
+      // The push-through is a camera move, not a tween: the cleat sits in the z = 0 plane, so its
+      // on-screen scale is the camera's dolly, shared with the water beneath it.
+      const setCleat = gsap.quickSetter(q('[data-cleatwrap]'), 'css');
 
       const onProgress = (p: number) => {
         story.set(p);
-        setWordmark({ scale: (0.9 + 0.1 * easeInOutCubic(seg(p, W.hubIn))) * cameraAt(p).dolly });
+        setCleat({ scale: cameraAt(p).dolly });
         media.update(p, isMotionPaused());
       };
 
