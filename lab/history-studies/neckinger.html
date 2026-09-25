@@ -26,9 +26,8 @@
 </head>
 <body>
 <p class="caption"><b>The Neckinger.</b> EST. 1857 becomes the waterline. The camera follows the hidden river
-underground — real light falling through street gratings, three moments of the river's own history caught in that
-light — out into St Saviour's Dock at night, where the cleat waits, lit and roped, before the climb up the
-wharf wall and in.</p>
+underground, past nine real images of this ground's own history hung the length of the tunnel wall — out into
+St Saviour's Dock at night, where the cleat waits, lit and roped, before THE HUB @ LLOYDS WHARF and in.</p>
 <p class="credit">Archive images: Wikimedia Commons, public domain / CC — see archive/CREDITS.md</p>
 
 <div class="scroller"><div class="stage">
@@ -150,37 +149,55 @@ if (renderer) {
     return mesh;
   }
 
-  const SHAFTS_T = [0.16, 0.34];
+  // The whole tunnel wall, both sides, mouth to the dock opening — not two isolated moments.
+  // Two of the nine get the full grating-and-light-shaft treatment (the strongest images); the
+  // rest hang as a lit gallery, dim but never fully dark, brightening as the camera nears each.
   const HISTORY = [
-    ['jacobs-island-1855-web.jpg', 'circa 1855 — the wharves, watercolour, John Wykeham Archer'],
-    ['folly-ditch-wellcome-web.jpg', '1840s — Folly Ditch, the tidal channel before the dock'],
+    ['jacobs-island-map-1813-web.jpg', '1813 — the earliest surveyed plan of this ground'],
+    ['thames-tunnel-1843-web.jpg', '1843 — the Thames Tunnel, Rotherhithe'],
+    ['jacobs-island-1855-web.jpg', 'circa 1855 — the wharves, watercolour, John Wykeham Archer', 'hero'],
+    ['folly-ditch-mill-lane-1840-web.jpg', 'circa 1840 — Folly Ditch at Mill Lane'],
+    ['pool-of-london-1841-web.jpg', '1841 — the Pool of London, from London Bridge'],
+    ['pool-moonlight-pether-web.jpg', 'the Pool of London by moonlight, Henry Pether'],
+    ['folly-ditch-wellcome-web.jpg', '1840s — Folly Ditch, the tidal channel before the dock', 'hero'],
+    ['tower-bridge-works-1892-web.jpg', '1892 — Tower Bridge under construction'],
+    ['chamberlain-wharf-1949-web.jpg', '1949 — Chamberlain Wharf, Tooley Street'],
   ];
-  const plates = SHAFTS_T.map((t, i) => {
+  const GALLERY_T = HISTORY.map((_, i) => lerp(0.055, 0.56, i / (HISTORY.length - 1)));
+  const plates = HISTORY.map(([file, caption, kind], i) => {
+    const t = GALLERY_T[i];
+    const hero = kind === 'hero';
     const point = curve.getPointAt(t);
     const r = radiusAt(t);
+    const side = i % 2 === 0 ? 1 : -1;
+
+    let shaft = null;
+    const grate = new THREE.PointLight(0xfee6b5, 0, hero ? 8 : 3.4, hero ? 1.8 : 2);
     const top = point.clone().add(new THREE.Vector3(0, r * 0.92, 0));
-
-    const shaft = buildLightShaft();
-    shaft.position.copy(top);
-    shaft.scale.set(1.1, 2.8, 1.1);
-    scene.add(shaft);
-
-    const grate = new THREE.PointLight(0xfee6b5, 0, 8, 1.8);
-    grate.position.copy(top);
+    if (hero) {
+      shaft = buildLightShaft();
+      shaft.position.copy(top);
+      shaft.scale.set(1.1, 2.8, 1.1);
+      scene.add(shaft);
+      grate.position.copy(top);
+    } else {
+      // a small gallery light beside the picture, not a grating overhead
+      grate.position.copy(point).add(new THREE.Vector3(side * r * 0.5, r * 0.5, 0.5));
+    }
     scene.add(grate);
 
-    const side = i % 2 === 0 ? 1 : -1;
-    const photo = wallDecal(t, side, `archive/${HISTORY[i][0]}`, 2.6, 1.9);
+    const photo = wallDecal(t, side, `archive/${file}`, hero ? 2.6 : 1.7, hero ? 1.9 : 1.25);
 
     const label = new THREE.Mesh(
-      new THREE.PlaneGeometry(2.3, 0.4),
-      new THREE.MeshBasicMaterial({ map: paintedSignTexture([{ text: HISTORY[i][1], size: 30, dy: 6 }], { w: 900, h: 170 }), transparent: true, opacity: 0 }),
+      new THREE.PlaneGeometry(hero ? 2.3 : 1.6, 0.34),
+      new THREE.MeshBasicMaterial({ map: paintedSignTexture([{ text: caption, size: hero ? 30 : 24, dy: 6 }], { w: 900, h: 170 }), transparent: true, opacity: 0 }),
     );
-    label.position.copy(point).add(new THREE.Vector3(side * r * 0.5, r * 0.05 - 1.15, 0));
+    const labelDrop = (hero ? 1.9 : 1.25) / 2 + 0.28;
+    label.position.copy(point).add(new THREE.Vector3(side * r * 0.5, r * 0.05 - labelDrop, 0));
     label.lookAt(curve.getPointAt(clamp01(t - 0.12)).add(new THREE.Vector3(0, r * 0.05, 0)));
     scene.add(label);
 
-    return { t, shaft, grate, photo, label };
+    return { t, hero, shaft, grate, photo, label };
   });
 
   function vignetteTexture() {
@@ -388,17 +405,22 @@ if (renderer) {
     if (wallOn > 0) look.lerp(wallSign.position, wallOn * 0.85);
     camera.lookAt(look);
 
-    // the gratings: dormant until the camera nears them, then a lamp-strike catch like the halo study
+    // the gallery: the two heroes are dormant until the camera nears, then strike on like the
+    // halo study; the rest of the wall stays dimly lit throughout, so it reads as a corridor
+    // lined with pictures rather than pitch dark between two isolated reveals.
     for (const s of plates) {
       // Peaks a little before the camera reaches it — while it is still ahead and in frame,
       // not beside or behind — then falls away as we pass.
-      const near = 1 - Math.min(1, Math.abs(camT - (s.t - 0.04)) / 0.13);
-      const on = easeOut(Math.max(0, near));
-      s.shaft.material.uniforms.uOpacity.value = on * 0.6;
-      s.shaft.material.uniforms.uTime.value = now / 1000;
-      s.grate.intensity = 4 * on;
-      if (s.photo) s.photo.material.opacity = 0.95 * on;
-      s.label.material.opacity = 0.85 * on;
+      const near = 1 - Math.min(1, Math.abs(camT - (s.t - 0.04)) / (s.hero ? 0.13 : 0.16));
+      const approach = easeOut(Math.max(0, near));
+      const on = s.hero ? approach : 0.3 + 0.7 * approach;
+      if (s.shaft) {
+        s.shaft.material.uniforms.uOpacity.value = approach * 0.6;
+        s.shaft.material.uniforms.uTime.value = now / 1000;
+      }
+      s.grate.intensity = (s.hero ? 4 : 1.4) * on;
+      if (s.photo) s.photo.material.opacity = (s.hero ? 0.95 : 0.8) * on;
+      s.label.material.opacity = (s.hero ? 0.85 : 0.55) * on;
     }
     const signOn = easeOut(Math.max(0, 1 - Math.abs(camT - 0.5) / 0.1));
     sign.material.opacity = 0.95 * signOn;
