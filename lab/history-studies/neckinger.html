@@ -255,6 +255,30 @@ if (renderer) {
   rim.position.copy(halo.position).add(new THREE.Vector3(0, 0, 0.4));
   scene.add(rim);
 
+  // The wall above the cleat: the building's own name, as it actually reads at the entrance
+  // (constitution: LLOYDS WHARF, the cleat and ESTD 1857 — nothing else is really on that wall).
+  const wallSign = new THREE.Mesh(
+    new THREE.PlaneGeometry(3.4, 2.1),
+    new THREE.MeshBasicMaterial({
+      map: paintedSignTexture(
+        [
+          { text: 'LLOYDS WHARF', size: 96, weight: 800, dy: -140 },
+          { text: 'ESTD 1857', size: 48, dy: 60, dim: true },
+        ],
+        { w: 1400, h: 760 },
+      ),
+      transparent: true, opacity: 0,
+    }),
+  );
+  wallSign.position.copy(dockPoint).add(new THREE.Vector3(0, 1.9, -1.6));
+  scene.add(wallSign);
+  const wallGlow = new THREE.Mesh(
+    new THREE.PlaneGeometry(6.5, 4.2),
+    new THREE.MeshBasicMaterial({ map: haloTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 }),
+  );
+  wallGlow.position.copy(wallSign.position).add(new THREE.Vector3(0, 0, -0.15));
+  scene.add(wallGlow);
+
   // ——— camera ———
   const camera = new THREE.PerspectiveCamera(48, 1, 0.05, 140);
   const up = new THREE.Vector3(0, 1, 0);
@@ -295,7 +319,7 @@ if (renderer) {
   run(
     (next) => {
       p = next;
-      canvas.style.opacity = String(ramp(p, 0.07, 0.14) * (1 - ramp(p, 0.87, 0.94)));
+      canvas.style.opacity = String(ramp(p, 0.07, 0.14) * (1 - ramp(p, 0.9, 0.96)));
     },
     {
       studies: [['neckinger.html', 'Neckinger']],
@@ -304,7 +328,9 @@ if (renderer) {
       // EST. 1857 concludes well before the canvas fades in (0.07), not at the short studies' 0.17.
       estWindow: [0, 0.015, 0.045, 0.065],
       ruleWindow: [0.008, 0.035],
-      videoPlayAt: 0.86,
+      videoPlayAt: 0.9,
+      insideWindow: [0.92, 0.97],
+      pillarsWindow: [0.97, 1],
     },
   );
 
@@ -315,6 +341,9 @@ if (renderer) {
     const { eye, look } = camPose(camT);
     camera.position.copy(eye);
     camera.up.copy(up);
+    // Arrived: tilt up off the cleat to find the building's own name on the wall above it.
+    const wallOn = easeOut(ramp(p, 0.79, 0.9));
+    if (wallOn > 0) look.lerp(wallSign.position, wallOn * 0.85);
     camera.lookAt(look);
 
     // the gratings: dormant until the camera nears them, then a lamp-strike catch like the halo study
@@ -344,8 +373,13 @@ if (renderer) {
     // so this is a gentle vertical breathing of the halo standing in for a moving reflection)
     halo.scale.setScalar(1 + 0.015 * Math.sin(now / 1400));
 
+    // the wall sign strikes on like the real entrance sign, once we've tilted up to it
+    const wallLit = easeOut(ramp(p, 0.82, 0.93));
+    wallSign.material.opacity = 0.95 * wallLit;
+    wallGlow.material.opacity = 0.4 * wallLit;
+
     // push through at the very end, into the walkthrough
-    const push = easeInOut(ramp(p, 0.85, 0.95));
+    const push = easeInOut(ramp(p, 0.9, 0.98));
     camera.fov = 48 - 6 * push;
     camera.updateProjectionMatrix();
 
