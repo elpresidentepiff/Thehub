@@ -1,0 +1,44 @@
+/* Cleat studies — shared frame. Measured palette only (tokens/tokens.css); no accent yellow. */
+:root{
+  --ink:#0B0907; --ink-2:#14100C;
+  --halo:#FEE6B5; --halo-warm:#F8CF95; --brass:#B97C3C; --brass-deep:#7A4E22;
+  --brick:#79573B; --steel:#342D2F; --steel-2:#72747E;
+  --cream:#EFE7DA; --cream-dim:#A99C8B;
+  --display:"Archivo Black","Archivo",Impact,sans-serif;
+  --body:"Archivo",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--ink);color:var(--cream);font-family:var(--body);-webkit-font-smoothing:antialiased}
+body{overflow-x:hidden}
+
+.scroller{position:relative;height:620vh}
+.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--ink)}
+.layer{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.scene{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible}
+
+/* beat 1 — EST. 1857 and the gold line (identical to the approved prototype) */
+.est{font-weight:500;letter-spacing:.62em;text-indent:.62em;font-size:clamp(13px,1.6vw,20px);color:var(--cream-dim);text-align:center}
+.est b{font-weight:700;color:var(--cream)}
+.rule{width:min(58vw,460px);height:1px;margin:26px auto 0;transform-origin:50% 50%;
+  background:linear-gradient(90deg,transparent,var(--brass) 18%,var(--halo-warm) 50%,var(--brass) 82%,transparent)}
+
+/* last beat — into the building */
+.inside video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.inside .grade{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 42%,rgba(11,9,7,0) 34%,rgba(11,9,7,.8) 100%)}
+.pillars{position:relative;display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(14px,3.4vw,54px);padding:0 5vw}
+.pillars span{font-weight:600;letter-spacing:.3em;text-indent:.3em;font-size:clamp(10px,1.35vw,16px);text-shadow:0 2px 26px rgba(11,9,7,.9)}
+
+/* review chrome */
+.studies{position:fixed;z-index:50;top:14px;left:50%;transform:translateX(-50%);display:flex;gap:4px;align-items:center;
+  padding:5px;border-radius:999px;background:rgba(11,9,7,.72);border:1px solid rgba(254,230,181,.14);backdrop-filter:blur(10px)}
+.studies a,.studies button{all:unset;cursor:pointer;padding:8px 12px;border-radius:999px;font-size:10px;font-weight:600;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--cream-dim)}
+.studies a[aria-current=page]{background:var(--halo);color:var(--ink)}
+.studies button{color:var(--halo-warm);border-left:1px solid rgba(254,230,181,.14);border-radius:0 999px 999px 0}
+.studies :focus-visible{outline:2px solid var(--halo);outline-offset:2px}
+.caption{position:fixed;z-index:50;left:clamp(12px,2.2vw,28px);bottom:clamp(12px,2.2vw,24px);max-width:38ch;
+  font-size:11px;line-height:1.6;letter-spacing:.04em;color:#6d6155}
+.caption b{color:var(--cream-dim);font-weight:600}
+.progress{position:fixed;z-index:50;right:clamp(12px,2.2vw,28px);bottom:clamp(12px,2.2vw,24px);font:600 10px/1 var(--body);
+  letter-spacing:.2em;color:#6d6155;font-variant-numeric:tabular-nums}
+@media (max-width:640px){.studies a{padding:8px 8px;letter-spacing:.1em}.caption{display:none}}

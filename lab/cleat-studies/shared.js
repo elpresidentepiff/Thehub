@@ -25,13 +25,13 @@ const STUDIES = [
   ['iron.html', '4 Iron'],
 ];
 
-function chrome() {
+function chrome(studies, navLabel) {
   const here = location.pathname.split('/').pop();
   const nav = document.createElement('nav');
   nav.className = 'studies';
-  nav.setAttribute('aria-label', 'Cleat studies');
+  nav.setAttribute('aria-label', navLabel ?? 'Studies');
   nav.innerHTML =
-    STUDIES.map(([href, label]) => `<a href="${href}"${href === here ? ' aria-current="page"' : ''}>${label}</a>`).join('') +
+    studies.map(([href, label]) => `<a href="${href}"${href === here ? ' aria-current="page"' : ''}>${label}</a>`).join('') +
     '<button type="button" id="play">Play</button>';
   document.body.prepend(nav);
   const out = document.createElement('div');
@@ -40,12 +40,26 @@ function chrome() {
   return out;
 }
 
-export function run(render) {
-  const readout = chrome();
+/**
+ * @param render          (progress) => void, called whenever shown progress changes
+ * @param opts.studies    nav entries [[href, label], ...]; defaults to the four cleat studies
+ * @param opts.navLabel   aria-label for the nav
+ * @param opts.playMs     duration of the auto-play scroll (default 16s)
+ */
+export function run(render, opts = {}) {
+  const readout = chrome(opts.studies ?? STUDIES, opts.navLabel);
+  const playMs = opts.playMs ?? 16000;
+  // Every study keeps the same two beats, but a much longer piece needs them to conclude
+  // sooner (in scroll fraction) than the short four-beat cleat studies do.
+  const est = opts.estWindow ?? [0, 0.03, 0.12, 0.17];
+  const ruleWindow = opts.ruleWindow ?? [0.015, 0.09];
+  const insideWindow = opts.insideWindow ?? [0.84, 0.93];
+  const pillarsWindow = opts.pillarsWindow ?? [0.93, 0.99];
+  const videoPlayAt = opts.videoPlayAt ?? 0.8;
   const q = new URLSearchParams(location.search);
   const fixed = q.has('t') ? clamp(Number(q.get('t'))) : null;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const est = document.querySelector('.est-layer');
+  const estLayer = document.querySelector('.est-layer');
   const rule = document.querySelector('.rule');
   const inside = document.querySelector('.inside');
   const video = inside?.querySelector('video');
@@ -71,14 +85,14 @@ export function run(render) {
     if (Math.abs(p - shown) > 1e-4) {
       shown = Math.abs(p - goal) < 1e-4 ? goal : p;
       // beat 1: EST. 1857 and the gold line
-      if (est) est.style.opacity = String(ramp(shown, 0, 0.03) * (1 - ramp(shown, 0.12, 0.17)));
-      if (rule) rule.style.transform = `scaleX(${easeOut(ramp(shown, 0.015, 0.09))})`;
+      if (estLayer) estLayer.style.opacity = String(ramp(shown, est[0], est[1]) * (1 - ramp(shown, est[2], est[3])));
+      if (rule) rule.style.transform = `scaleX(${easeOut(ramp(shown, ...ruleWindow))})`;
       // last beat: the walkthrough
       if (inside) {
-        inside.style.opacity = String(ramp(shown, 0.84, 0.93));
+        inside.style.opacity = String(ramp(shown, ...insideWindow));
         const words = inside.querySelector('.pillars');
-        if (words) words.style.opacity = String(ramp(shown, 0.93, 0.99));
-        if (video) shown > 0.8 ? video.play().catch(() => {}) : video.pause();
+        if (words) words.style.opacity = String(ramp(shown, ...pillarsWindow));
+        if (video) shown > videoPlayAt ? video.play().catch(() => {}) : video.pause();
       }
       render(shown);
       readout.textContent = shown.toFixed(2);
@@ -91,9 +105,9 @@ export function run(render) {
   document.getElementById('play').addEventListener('click', () => {
     scrollTo(0, 0);
     shown = 0;
-    auto = { start: performance.now() + 400, ms: 16000 };
+    auto = { start: performance.now() + 400, ms: playMs };
   });
-  if (q.has('auto')) auto = { start: performance.now() + 800, ms: 16000 };
+  if (q.has('auto')) auto = { start: performance.now() + 800, ms: playMs };
   measure();
   requestAnimationFrame(frame);
 }

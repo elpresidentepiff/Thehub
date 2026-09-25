@@ -10,6 +10,10 @@ looks impressive or because its library is listed in `docs/research/TECHNOLOGY_R
 
 - `/lab/cleat-studies/` — four answers to "what does the cleat do?" (rope, pour, halo sign, 3D iron
   over the Neckinger). Same approved start and end as `proto/opening.html`; operator to pick (ROADMAP D2).
+- `/lab/history-studies/` — second pass after "none of the four wowed me": one real Three.js scene,
+  `neckinger.html` — a varying-radius brick tunnel, volumetric light shafts, real 1813/1855/1840s
+  archive images of the river caught in that light, bloom + grain, a long patient arrival at the
+  backlit cleat on the quay. Supersedes the four as the leading direction pending operator review.
 
 ## Available mock product labs
 
