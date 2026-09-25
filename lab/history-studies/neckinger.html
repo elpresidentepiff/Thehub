@@ -56,7 +56,7 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { run, ramp, easeOut, easeInOut, lerp } from '../cleat-studies/shared.js';
 import { buildCleat } from '../cleat-studies/cleat3d.js';
-import { buildVaryingTube, buildLightShaft, paintedSignTexture } from './tunnel.js';
+import { buildVaryingTube, buildLightShaft, paintedSignTexture, weatheredIronTextures } from './tunnel.js';
 
 const canvas = document.getElementById('gl');
 let renderer;
@@ -104,7 +104,9 @@ if (renderer) {
   brickTex.colorSpace = THREE.SRGBColorSpace;
   const brickMat = new THREE.MeshStandardMaterial({ map: brickTex, color: 0x4a4038, roughness: 0.97, metalness: 0, envMapIntensity: 0.02, side: THREE.FrontSide });
   const tunnelGeo = buildVaryingTube(curve, radiusAt, 260, 40, [5, 0.16]);
-  scene.add(new THREE.Mesh(tunnelGeo, brickMat));
+  const tunnelMesh = new THREE.Mesh(tunnelGeo, brickMat);
+  tunnelMesh.updateMatrixWorld(true);
+  scene.add(tunnelMesh);
 
   // the river itself: one long reflective strip along the floor of the whole journey
   const water = new Reflector(new THREE.PlaneGeometry(3.2, 54), {
@@ -114,8 +116,45 @@ if (renderer) {
   water.position.set(0, -1.0, -25);
   scene.add(water);
 
-  // ——— three gratings: real daylight falling into the dark, each lighting one piece of the river's history ———
-  const SHAFTS_T = [0.12, 0.28, 0.42];
+  // ——— two gratings: real daylight falling into the dark, each catching one real image of the
+  // river's own history — decalled flush onto the actual brick, following its curve, not
+  // floating in front of it. (The 1813 survey read as a pale, illegible blob at speed; dropped.)
+  const decalLoader = new THREE.TextureLoader();
+  const decalRay = new THREE.Raycaster();
+  function wallDecal(t, side, url, w, h) {
+    const point = curve.getPointAt(t);
+    const r = radiusAt(t);
+    // Raycast the real wall for its true position and normal — the tube's Frenet frame rolls
+    // along the S-curve, so a guessed orientation doesn't reliably match the actual surface
+    // (this is what produced the sliver-thin decals: the projection box landed edge-on to the
+    // brick). A flush flat panel held at the true hit point/normal gets the "on the wall" read
+    // without needing a projection box to align with a curved, twisting surface.
+    decalRay.set(point.clone().add(new THREE.Vector3(0, r * 0.05, 0)), new THREE.Vector3(side, 0, 0));
+    const hit = decalRay.intersectObject(tunnelMesh)[0];
+    if (!hit) return null;
+    const normal = hit.face.normal.clone().transformDirection(tunnelMesh.matrixWorld);
+    const mesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(w, h),
+      new THREE.MeshBasicMaterial({
+        alphaMap: vignetteTexture(), transparent: true, opacity: 0, depthTest: true, polygonOffset: true, polygonOffsetFactor: -4,
+      }),
+    );
+    mesh.position.copy(hit.point).addScaledVector(normal, 0.03);
+    mesh.lookAt(hit.point.clone().add(normal));
+    decalLoader.load(url, (tex) => {
+      tex.colorSpace = THREE.SRGBColorSpace;
+      mesh.material.map = tex;
+      mesh.material.needsUpdate = true;
+    });
+    scene.add(mesh);
+    return mesh;
+  }
+
+  const SHAFTS_T = [0.16, 0.34];
+  const HISTORY = [
+    ['jacobs-island-1855-web.jpg', 'circa 1855 — the wharves, watercolour, John Wykeham Archer'],
+    ['folly-ditch-wellcome-web.jpg', '1840s — Folly Ditch, the tidal channel before the dock'],
+  ];
   const plates = SHAFTS_T.map((t, i) => {
     const point = curve.getPointAt(t);
     const r = radiusAt(t);
@@ -130,36 +169,16 @@ if (renderer) {
     grate.position.copy(top);
     scene.add(grate);
 
-    const group = new THREE.Group();
     const side = i % 2 === 0 ? 1 : -1;
-    // On the wall, but not so far to the side that it leaves frame; angled back down the tunnel
-    // so it faces an approaching camera rather than looking along the tube.
-    group.position.copy(point).add(new THREE.Vector3(side * r * 0.5, r * 0.05, 0));
-    group.lookAt(curve.getPointAt(clamp01(t - 0.12)).add(new THREE.Vector3(0, r * 0.05, 0)));
-    scene.add(group);
-
-    const loader = new THREE.TextureLoader();
-    const photo = new THREE.Mesh(
-      new THREE.PlaneGeometry(2.1, 1.5),
-      new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, color: 0xffffff }),
-    );
-    loader.load(`archive/${['jacobs-island-map-1813-web.jpg', 'jacobs-island-1855-web.jpg', 'folly-ditch-wellcome-web.jpg'][i]}`, (tex) => {
-      tex.colorSpace = THREE.SRGBColorSpace;
-      photo.material.map = tex;
-      photo.material.alphaMap = vignetteTexture();
-      photo.material.needsUpdate = true;
-    });
-    group.add(photo);
+    const photo = wallDecal(t, side, `archive/${HISTORY[i][0]}`, 2.6, 1.9);
 
     const label = new THREE.Mesh(
-      new THREE.PlaneGeometry(2.1, 0.4),
-      new THREE.MeshBasicMaterial({
-        map: paintedSignTexture([{ text: ['1813 — the earliest surveyed plan', 'circa 1855 — the wharves, watercolour', '1840s — Folly Ditch by night'][i], size: 34, dy: 6 }], { w: 900, h: 170 }),
-        transparent: true, opacity: 0,
-      }),
+      new THREE.PlaneGeometry(2.3, 0.4),
+      new THREE.MeshBasicMaterial({ map: paintedSignTexture([{ text: HISTORY[i][1], size: 30, dy: 6 }], { w: 900, h: 170 }), transparent: true, opacity: 0 }),
     );
-    label.position.y = -1.1;
-    group.add(label);
+    label.position.copy(point).add(new THREE.Vector3(side * r * 0.5, r * 0.05 - 1.15, 0));
+    label.lookAt(curve.getPointAt(clamp01(t - 0.12)).add(new THREE.Vector3(0, r * 0.05, 0)));
+    scene.add(label);
 
     return { t, shaft, grate, photo, label };
   });
@@ -209,14 +228,35 @@ if (renderer) {
   scene.add(signLight);
 
   // ——— the dock: cleat on the quay edge, rope into the water, backlit like the sign ———
-  const iron = new THREE.MeshStandardMaterial({ color: 0x1d1816, metalness: 0.75, roughness: 0.52, envMapIntensity: 0 });
-  const cleat = buildCleat(iron);
+  // A real casting, not a bent tube: mottled, pitted iron (baked in canvas, not a bought PBR
+  // asset — same hand as the brick and the signs) and a thicker bar for real weight.
+  const { colorCanvas, roughCanvas } = weatheredIronTextures();
+  const ironColor = new THREE.CanvasTexture(colorCanvas);
+  ironColor.colorSpace = THREE.SRGBColorSpace;
+  const ironRough = new THREE.CanvasTexture(roughCanvas);
+  const iron = new THREE.MeshStandardMaterial({
+    map: ironColor, roughnessMap: ironRough, color: 0x2a2622, metalness: 0.7, roughness: 1, envMapIntensity: 0,
+  });
+  const cleat = buildCleat(iron, { radius: 0.13 });
   const dockPoint = curve.getPointAt(0.88);
   cleat.position.copy(dockPoint).add(new THREE.Vector3(1.1, -0.35, -0.6));
   cleat.scale.setScalar(1.4);
   cleat.rotation.y = -0.5;
   cleatLookTarget = cleat.position.clone().add(new THREE.Vector3(0, 0.5, 0));
   scene.add(cleat);
+
+  // A real cast plinth underneath it — the cleat sits ON the quay, bolted down, not floating.
+  const plinthSlab = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.14, 1.3), new THREE.MeshStandardMaterial({
+    map: ironColor, roughnessMap: ironRough, color: 0x201c19, metalness: 0.55, roughness: 1, envMapIntensity: 0,
+  }));
+  plinthSlab.position.copy(cleat.position).add(new THREE.Vector3(0, -0.15, 0));
+  scene.add(plinthSlab);
+
+  // A soft frontal fill so the horn and plinth read as solid volumes, not a pure backlit
+  // silhouette — dim until the halo strikes on, then settles alongside it.
+  const cleatFill = new THREE.PointLight(0xd9c9a8, 0, 5, 2);
+  cleatFill.position.copy(cleat.position).add(new THREE.Vector3(-0.6, 1.3, 2.4));
+  scene.add(cleatFill);
 
   const rope = new THREE.Mesh(
     new THREE.TubeGeometry(
@@ -255,17 +295,19 @@ if (renderer) {
   rim.position.copy(halo.position).add(new THREE.Vector3(0, 0, 0.4));
   scene.add(rim);
 
-  // The wall above the cleat: the building's own name, as it actually reads at the entrance
-  // (constitution: LLOYDS WHARF, the cleat and ESTD 1857 — nothing else is really on that wall).
+  // The wall above the cleat: the confirmed logo lockup (operator, 25 Sep) — THE HUB @ LLOYDS
+  // WHARF, ESTD 1857. (The bare brick today reads only LLOYDS WHARF + cleat + EST 1857; this
+  // is the lit, designed mark, which is what the operator asked to arrive at.)
   const wallSign = new THREE.Mesh(
-    new THREE.PlaneGeometry(3.4, 2.1),
+    new THREE.PlaneGeometry(3.6, 2.4),
     new THREE.MeshBasicMaterial({
       map: paintedSignTexture(
         [
-          { text: 'LLOYDS WHARF', size: 96, weight: 800, dy: -140 },
-          { text: 'ESTD 1857', size: 48, dy: 60, dim: true },
+          { text: 'THE HUB', size: 108, weight: 800, dy: -190 },
+          { text: '@ LLOYDS WHARF', size: 52, dy: -100 },
+          { text: 'ESTD 1857', size: 40, dy: 130, dim: true },
         ],
-        { w: 1400, h: 760 },
+        { w: 1400, h: 900 },
       ),
       transparent: true, opacity: 0,
     }),
@@ -355,7 +397,7 @@ if (renderer) {
       s.shaft.material.uniforms.uOpacity.value = on * 0.6;
       s.shaft.material.uniforms.uTime.value = now / 1000;
       s.grate.intensity = 4 * on;
-      s.photo.material.opacity = 0.95 * on;
+      if (s.photo) s.photo.material.opacity = 0.95 * on;
       s.label.material.opacity = 0.85 * on;
     }
     const signOn = easeOut(Math.max(0, 1 - Math.abs(camT - 0.5) / 0.1));
@@ -366,6 +408,7 @@ if (renderer) {
     const arrive = ramp(camT, 0.5, 0.74);
     const lit = easeOut(arrive);
     iron.envMapIntensity = 0.4 * lit;
+    cleatFill.intensity = 4.5 * lit;
     halo.material.opacity = 0.32 * lit;
     rim.intensity = 55 * lit;
 

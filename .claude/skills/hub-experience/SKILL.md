@@ -26,10 +26,12 @@ Three facts carry the brand. All three are physically present in the building �
 2. **The mark is a mooring cleat** — a wharf fitting you tie a boat to. Not a tin box,
    not an anchor. It means *hold fast, this is where you land*. The brand line that falls
    out of it: **things dock here**.
-   **The real entrance wall carries only: LLOYDS WHARF, the cleat, and ESTᴰ 1857** (black steel
-   letters on brick; photo `assets/brand/lloyds-wharf-cleat-wall.jpg`). `hub-sign-lit.jpg` is that
-   wall with project additions (THE HUB, the halo lighting, WORK CONNECT BELONG). Never present
-   the additions as if they are on the building (operator, 24 Sep).
+   **The bare brick wall today carries only: LLOYDS WHARF, the cleat, and ESTᴰ 1857** (black steel
+   letters, no backlight; photo `assets/brand/lloyds-wharf-cleat-wall.jpg`). **The confirmed logo**
+   (operator, 25 Sep, `assets/brand/hub-sign-lit.jpg`) is the same wall, lit, with the full lockup:
+   **THE HUB @ LLOYDS WHARF**, the cleat halo-lit, **ESTᴰ 1857**, **WORK CONNECT BELONG**. Use the
+   full lockup wherever the confirmed logo is called for; don't claim the *unlit brick* shows more
+   than its three bare elements.
 3. **The River Neckinger runs underneath.** A subterranean river that rises in Southwark
    and enters the Thames at St Saviour's Dock. There is a hand-painted sign about it on
    the wall. Water motifs are never decorative on this project — they are the Neckinger.

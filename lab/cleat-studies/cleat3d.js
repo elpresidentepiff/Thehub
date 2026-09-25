@@ -13,9 +13,9 @@ function cubicPath(segments) {
   return path;
 }
 
-export function buildCleat(material) {
+export function buildCleat(material, { radius = 0.095 } = {}) {
   const g = new THREE.Group();
-  const R = 0.095;
+  const R = radius;
   const bar = (curve, samples = 160, closed = false) => {
     const m = new THREE.Mesh(new THREE.TubeGeometry(curve, samples, R, 18, closed), material);
     m.scale.z = 2.6; // cut from thick plate: deeper than it is wide

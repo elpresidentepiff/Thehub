@@ -90,6 +90,74 @@ export function buildLightShaft() {
   return new THREE.Mesh(geo, mat);
 }
 
+/** Cast iron, not rubber: a canvas-baked mottle of pitting, casting-sand freckle and the odd
+ *  streak of rust bleed, used as both the colour and roughness map. No purchased PBR asset —
+ *  built the same way as the brick and the signs. */
+export function weatheredIronTextures({ size = 512 } = {}) {
+  const color = document.createElement('canvas');
+  const rough = document.createElement('canvas');
+  color.width = rough.width = color.height = rough.height = size;
+  const cx = color.getContext('2d');
+  const rx = rough.getContext('2d');
+  cx.fillStyle = '#141110';
+  cx.fillRect(0, 0, size, size);
+  rx.fillStyle = '#8a8a8a'; // mid roughness base
+  rx.fillRect(0, 0, size, size);
+
+  let seed = 7;
+  const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+
+  // casting-sand freckle: thousands of tiny flecks, lighter and darker than the base
+  for (let i = 0; i < 9000; i++) {
+    const x = rnd() * size;
+    const y = rnd() * size;
+    const r = 0.4 + rnd() * 1.1;
+    const dark = rnd() < 0.5;
+    cx.fillStyle = dark ? 'rgba(0,0,0,.35)' : 'rgba(120,108,92,.22)';
+    cx.beginPath();
+    cx.arc(x, y, r, 0, Math.PI * 2);
+    cx.fill();
+    rx.fillStyle = `rgba(255,255,255,${(dark ? 0.15 : 0.28) * rnd()})`;
+    rx.beginPath();
+    rx.arc(x, y, r * 1.3, 0, Math.PI * 2);
+    rx.fill();
+  }
+  // pitting: sparser, larger, darker pockmarks with a soft roughness halo
+  for (let i = 0; i < 260; i++) {
+    const x = rnd() * size;
+    const y = rnd() * size;
+    const r = 1.5 + rnd() * 4;
+    const g = cx.createRadialGradient(x, y, 0, x, y, r);
+    g.addColorStop(0, 'rgba(0,0,0,.6)');
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    cx.fillStyle = g;
+    cx.beginPath();
+    cx.arc(x, y, r, 0, Math.PI * 2);
+    cx.fill();
+    rx.fillStyle = `rgba(255,255,255,${0.35 * rnd()})`;
+    rx.beginPath();
+    rx.arc(x, y, r * 1.6, 0, Math.PI * 2);
+    rx.fill();
+  }
+  // rust bleed: a few soft warm streaks running with gravity
+  for (let i = 0; i < 5; i++) {
+    const x = rnd() * size;
+    const y0 = rnd() * size * 0.4;
+    const len = size * (0.25 + rnd() * 0.35);
+    const g = cx.createLinearGradient(x, y0, x + (rnd() - 0.5) * 30, y0 + len);
+    g.addColorStop(0, 'rgba(122,78,34,.28)');
+    g.addColorStop(1, 'rgba(122,78,34,0)');
+    cx.strokeStyle = g;
+    cx.lineWidth = 6 + rnd() * 10;
+    cx.beginPath();
+    cx.moveTo(x, y0);
+    cx.lineTo(x + (rnd() - 0.5) * 30, y0 + len);
+    cx.stroke();
+  }
+
+  return { colorCanvas: color, roughCanvas: rough };
+}
+
 /** A period-painted sign, canvas-rendered so no extra asset is needed. Same hand as the real
  *  "RIVER NECKINGER" wall inside the Hub. */
 export function paintedSignTexture(lines, { w = 1024, h = 512 } = {}) {
