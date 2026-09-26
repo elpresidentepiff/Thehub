@@ -2,6 +2,7 @@
 // TubeGeometry can't vary its radius along the path, so this builds the rings by hand from the
 // curve's Frenet frames — the same construction, with radius as a function of arc-length t.
 import * as THREE from 'three';
+import { PARTS } from '../cleat-studies/cleat.js';
 
 /**
  * @param curve       THREE.Curve, sampled 0..1
@@ -176,5 +177,45 @@ export function paintedSignTexture(lines, { w = 1024, h = 512 } = {}) {
   });
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+/** The confirmed logo lockup (operator, 25 Sep): THE HUB @ LLOYDS WHARF, the cleat, ESTD 1857,
+ *  WORK CONNECT BELONG — one sign, same as the real entrance wall, not a separate cleat object
+ *  and a separate wall text. The cleat icon is the same path data as everywhere else in the
+ *  project (cleat.js), rasterised once and drawn onto this canvas alongside the type. */
+export function wallLogoTexture({ w = 1400, h = 1500 } = {}) {
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = h;
+  const x = c.getContext('2d');
+  x.textAlign = 'center';
+  x.fillStyle = '#EFE7DA';
+  x.font = '800 130px Archivo, sans-serif';
+  x.fillText('THE HUB', w / 2, h * 0.145);
+  x.font = '600 58px Archivo, sans-serif';
+  x.fillText('@ LLOYDS WHARF', w / 2, h * 0.225);
+  x.font = '600 46px Archivo, sans-serif';
+  x.globalAlpha = 0.8;
+  x.fillText('ESTD 1857', w / 2, h * 0.79);
+  x.font = '600 34px Archivo, sans-serif';
+  x.fillText('WORK      CONNECT      BELONG', w / 2, h * 0.87);
+  x.globalAlpha = 1;
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const icon = new Image();
+  icon.onload = () => {
+    const iw = w * 0.5;
+    const ih = (iw * 340) / 1000;
+    x.drawImage(icon, (w - iw) / 2, h * 0.36, iw, ih);
+    tex.needsUpdate = true;
+  };
+  icon.src =
+    'data:image/svg+xml;utf8,' +
+    encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 340">` +
+        `<g fill="none" stroke="#EFE7DA" stroke-width="17" stroke-linecap="round" stroke-linejoin="round">${PARTS}</g></svg>`,
+    );
   return tex;
 }

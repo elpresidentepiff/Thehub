@@ -26,8 +26,8 @@
 </head>
 <body>
 <p class="caption"><b>The Neckinger.</b> EST. 1857 becomes the waterline. The camera follows the hidden river
-underground, past nine real images of this ground's own history hung the length of the tunnel wall — out into
-St Saviour's Dock at night, where the cleat waits, lit and roped, before THE HUB @ LLOYDS WHARF and in.</p>
+underground, past nine real images of this ground's own history hung the length of the tunnel wall, until it
+opens straight into the doorway of Lloyds Wharf — the confirmed logo, cleat and all, struck on in the dark — and in.</p>
 <p class="credit">Archive images: Wikimedia Commons, public domain / CC — see archive/CREDITS.md</p>
 
 <div class="scroller"><div class="stage">
@@ -54,8 +54,7 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { run, ramp, easeOut, easeInOut, lerp } from '../cleat-studies/shared.js';
-import { buildCleat } from '../cleat-studies/cleat3d.js';
-import { buildVaryingTube, buildLightShaft, paintedSignTexture, weatheredIronTextures } from './tunnel.js';
+import { buildVaryingTube, buildLightShaft, paintedSignTexture, wallLogoTexture } from './tunnel.js';
 
 const canvas = document.getElementById('gl');
 let renderer;
@@ -82,7 +81,6 @@ const curve = new THREE.CatmullRomCurve3(
 );
 /** The camera never reaches the curve's literal end (nothing is built past the dock). */
 const CAM_MAX_T = 0.74;
-let cleatLookTarget; // set once the cleat mesh exists
 const radiusAt = (t) => lerp(1.15, 4.6, easeInOut(ramp(t, TUNNEL_END, DOCK)));
 
 if (renderer) {
@@ -244,51 +242,10 @@ if (renderer) {
   signLight.position.copy(sign.position).add(new THREE.Vector3(0.3, 0, 0.3));
   scene.add(signLight);
 
-  // ——— the dock: cleat on the quay edge, rope into the water, backlit like the sign ———
-  // A real casting, not a bent tube: mottled, pitted iron (baked in canvas, not a bought PBR
-  // asset — same hand as the brick and the signs) and a thicker bar for real weight.
-  const { colorCanvas, roughCanvas } = weatheredIronTextures();
-  const ironColor = new THREE.CanvasTexture(colorCanvas);
-  ironColor.colorSpace = THREE.SRGBColorSpace;
-  const ironRough = new THREE.CanvasTexture(roughCanvas);
-  const iron = new THREE.MeshStandardMaterial({
-    map: ironColor, roughnessMap: ironRough, color: 0x2a2622, metalness: 0.7, roughness: 1, envMapIntensity: 0,
-  });
-  const cleat = buildCleat(iron, { radius: 0.13 });
-  const dockPoint = curve.getPointAt(0.88);
-  cleat.position.copy(dockPoint).add(new THREE.Vector3(1.1, -0.35, -0.6));
-  cleat.scale.setScalar(1.4);
-  cleat.rotation.y = -0.5;
-  cleatLookTarget = cleat.position.clone().add(new THREE.Vector3(0, 0.5, 0));
-  scene.add(cleat);
-
-  // A real cast plinth underneath it — the cleat sits ON the quay, bolted down, not floating.
-  const plinthSlab = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.14, 1.3), new THREE.MeshStandardMaterial({
-    map: ironColor, roughnessMap: ironRough, color: 0x201c19, metalness: 0.55, roughness: 1, envMapIntensity: 0,
-  }));
-  plinthSlab.position.copy(cleat.position).add(new THREE.Vector3(0, -0.15, 0));
-  scene.add(plinthSlab);
-
-  // A soft frontal fill so the horn and plinth read as solid volumes, not a pure backlit
-  // silhouette — dim until the halo strikes on, then settles alongside it.
-  const cleatFill = new THREE.PointLight(0xd9c9a8, 0, 5, 2);
-  cleatFill.position.copy(cleat.position).add(new THREE.Vector3(-0.6, 1.3, 2.4));
-  scene.add(cleatFill);
-
-  const rope = new THREE.Mesh(
-    new THREE.TubeGeometry(
-      new THREE.CatmullRomCurve3([
-        cleat.position.clone().add(new THREE.Vector3(0.15, 0.55, 0.9)),
-        cleat.position.clone().add(new THREE.Vector3(0.1, 0.35, 0.5)),
-        cleat.position.clone().add(new THREE.Vector3(0, 0.1, 0)),
-        cleat.position.clone().add(new THREE.Vector3(0.4, -1.1, -1.4)),
-      ]),
-      40, 0.045, 8,
-    ),
-    new THREE.MeshStandardMaterial({ color: 0x8a6a3c, roughness: 0.85 }),
-  );
-  scene.add(rope);
-
+  // ——— the entrance: out of the tunnel and straight into the doorway of Lloyds Wharf itself.
+  // One sign — the confirmed logo lockup, cleat and all (operator, 25 Sep) — not a separate 3D
+  // cleat object and a separate wall text. Struck on like the halo study, dead ahead where the
+  // tunnel opens out, the way you'd actually walk up to it.
   const haloTex = (() => {
     const c = document.createElement('canvas');
     c.width = c.height = 256;
@@ -301,44 +258,30 @@ if (renderer) {
     x.fillRect(0, 0, 256, 256);
     return new THREE.CanvasTexture(c);
   })();
-  const halo = new THREE.Mesh(
-    new THREE.PlaneGeometry(3.4, 2.4),
+
+  const entrancePoint = curve.getPointAt(0.94);
+  const entranceSign = new THREE.Mesh(
+    new THREE.PlaneGeometry(4.6, 4.9),
+    new THREE.MeshBasicMaterial({ map: wallLogoTexture(), transparent: true, opacity: 0 }),
+  );
+  entranceSign.position.copy(entrancePoint);
+  entranceSign.lookAt(curve.getPointAt(0.55));
+  scene.add(entranceSign);
+
+  const entranceGlow = new THREE.Mesh(
+    new THREE.PlaneGeometry(8, 7),
     new THREE.MeshBasicMaterial({ map: haloTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 }),
   );
-  halo.position.copy(cleat.position).add(new THREE.Vector3(0, 0.7, -1.8));
-  halo.lookAt(dockPoint);
-  scene.add(halo);
-  const rim = new THREE.PointLight(0xfee6b5, 0, 7, 2.2);
-  rim.position.copy(halo.position).add(new THREE.Vector3(0, 0, 0.4));
-  scene.add(rim);
+  entranceGlow.position.copy(entranceSign.position).add(new THREE.Vector3(0, 0, -0.15));
+  entranceGlow.lookAt(curve.getPointAt(0.55));
+  scene.add(entranceGlow);
 
-  // The wall above the cleat: the confirmed logo lockup (operator, 25 Sep) — THE HUB @ LLOYDS
-  // WHARF, ESTD 1857. (The bare brick today reads only LLOYDS WHARF + cleat + EST 1857; this
-  // is the lit, designed mark, which is what the operator asked to arrive at.)
-  const wallSign = new THREE.Mesh(
-    new THREE.PlaneGeometry(3.6, 2.4),
-    new THREE.MeshBasicMaterial({
-      map: paintedSignTexture(
-        [
-          { text: 'THE HUB', size: 108, weight: 800, dy: -190 },
-          { text: '@ LLOYDS WHARF', size: 52, dy: -100 },
-          { text: 'ESTD 1857', size: 40, dy: 130, dim: true },
-        ],
-        { w: 1400, h: 900 },
-      ),
-      transparent: true, opacity: 0,
-    }),
-  );
-  wallSign.position.copy(dockPoint).add(new THREE.Vector3(0, 1.9, -1.6));
-  scene.add(wallSign);
-  const wallGlow = new THREE.Mesh(
-    new THREE.PlaneGeometry(6.5, 4.2),
-    new THREE.MeshBasicMaterial({ map: haloTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 }),
-  );
-  wallGlow.position.copy(wallSign.position).add(new THREE.Vector3(0, 0, -0.15));
-  scene.add(wallGlow);
+  const entranceLight = new THREE.PointLight(0xfee6b5, 0, 9, 2);
+  entranceLight.position.copy(entrancePoint).add(new THREE.Vector3(0, 0.2, 1.2));
+  scene.add(entranceLight);
 
-  // ——— camera ———
+  // ——— camera: simply follows the curve and looks ahead — the entrance sits dead ahead of the
+  // tunnel's own path, so no special-cased look target is needed to arrive at it. ———
   const camera = new THREE.PerspectiveCamera(48, 1, 0.05, 140);
   const up = new THREE.Vector3(0, 1, 0);
   function camPose(t) {
@@ -346,13 +289,7 @@ if (renderer) {
     const ahead = curve.getPointAt(clamp01(t + 0.02));
     const r = radiusAt(t);
     const eyeHeight = Math.min(r * 0.35, 1.3);
-    const eye = point.clone().add(new THREE.Vector3(0, eyeHeight, 0));
-    // Arriving: the curve's own tangent would sail past the cleat (it sits off to one side),
-    // so the look target swings onto it as we close in — the shot actually arrives somewhere.
-    const straight = ahead.clone().add(new THREE.Vector3(0, eyeHeight * 0.9, 0));
-    const onCleat = easeInOut(ramp(t, 0.46, 0.74));
-    const look = onCleat > 0 && cleatLookTarget ? straight.clone().lerp(cleatLookTarget, onCleat) : straight;
-    return { eye, look };
+    return { eye: point.clone().add(new THREE.Vector3(0, eyeHeight, 0)), look: ahead.clone().add(new THREE.Vector3(0, eyeHeight * 0.9, 0)) };
   }
   function clamp01(v) {
     return v < 0 ? 0 : v > 1 ? 1 : v;
@@ -395,14 +332,11 @@ if (renderer) {
 
   const render = (now) => {
     // The whole journey lands by p = 0.78, well inside the built curve; the rest of the scroll
-    // holds at the dock while the cleat's own beat (rope, halo, push) plays out.
+    // holds facing the entrance while its own beat (the sign striking on, the push) plays out.
     const camT = Math.min(CAM_MAX_T, easeOut(ramp(p, 0.08, 0.78)) * CAM_MAX_T);
     const { eye, look } = camPose(camT);
     camera.position.copy(eye);
     camera.up.copy(up);
-    // Arrived: tilt up off the cleat to find the building's own name on the wall above it.
-    const wallOn = easeOut(ramp(p, 0.79, 0.9));
-    if (wallOn > 0) look.lerp(wallSign.position, wallOn * 0.85);
     camera.lookAt(look);
 
     // the gallery: the two heroes are dormant until the camera nears, then strike on like the
@@ -426,22 +360,13 @@ if (renderer) {
     sign.material.opacity = 0.95 * signOn;
     signLight.intensity = 3.5 * signOn;
 
-    // the dock: the cleat is dark iron until the halo strikes on as we arrive
-    const arrive = ramp(camT, 0.5, 0.74);
-    const lit = easeOut(arrive);
-    iron.envMapIntensity = 0.4 * lit;
-    cleatFill.intensity = 4.5 * lit;
-    halo.material.opacity = 0.32 * lit;
-    rim.intensity = 55 * lit;
-
-    // river current: a slow drift on the water's reflection edge (Reflector has no built-in ripple,
-    // so this is a gentle vertical breathing of the halo standing in for a moving reflection)
-    halo.scale.setScalar(1 + 0.015 * Math.sin(now / 1400));
-
-    // the wall sign strikes on like the real entrance sign, once we've tilted up to it
-    const wallLit = easeOut(ramp(p, 0.82, 0.93));
-    wallSign.material.opacity = 0.95 * wallLit;
-    wallGlow.material.opacity = 0.4 * wallLit;
+    // the entrance: dark until the sign strikes on as we arrive, like the halo study
+    const lit = easeOut(ramp(camT, 0.55, 0.74));
+    entranceSign.material.opacity = 0.95 * lit;
+    entranceGlow.material.opacity = 0.42 * lit;
+    entranceLight.intensity = 14 * lit;
+    // a slow breath on the glow, standing in for a light that isn't perfectly steady
+    entranceGlow.scale.setScalar(1 + 0.015 * Math.sin(now / 1400));
 
     // push through at the very end, into the walkthrough
     const push = easeInOut(ramp(p, 0.9, 0.98));
