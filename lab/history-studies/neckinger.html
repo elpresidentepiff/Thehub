@@ -54,7 +54,7 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { run, ramp, easeOut, easeInOut, lerp } from '../cleat-studies/shared.js';
-import { buildVaryingTube, buildLightShaft, paintedSignTexture, wallLogoTexture } from './tunnel.js';
+import { buildVaryingTube, buildLightShaft, paintedSignTexture } from './tunnel.js';
 
 const canvas = document.getElementById('gl');
 let renderer;
@@ -242,43 +242,41 @@ if (renderer) {
   signLight.position.copy(sign.position).add(new THREE.Vector3(0.3, 0, 0.3));
   scene.add(signLight);
 
-  // ——— the entrance: out of the tunnel and straight into the doorway of Lloyds Wharf itself.
-  // One sign — the confirmed logo lockup, cleat and all (operator, 25 Sep) — not a separate 3D
-  // cleat object and a separate wall text. Struck on like the halo study, dead ahead where the
-  // tunnel opens out, the way you'd actually walk up to it.
-  const haloTex = (() => {
-    const c = document.createElement('canvas');
-    c.width = c.height = 256;
-    const x = c.getContext('2d');
-    const g = x.createRadialGradient(128, 128, 0, 128, 128, 128);
-    g.addColorStop(0, 'rgba(254,230,181,1)');
-    g.addColorStop(0.32, 'rgba(248,207,149,.4)');
-    g.addColorStop(1, 'rgba(185,124,60,0)');
-    x.fillStyle = g;
-    x.fillRect(0, 0, 256, 256);
-    return new THREE.CanvasTexture(c);
-  })();
+  // ——— out of the tunnel, up through a manhole, onto the street, facing the real building.
+  // Not another sign floating underground: the tunnel ends, a shaft rises through a pothole
+  // in the road, and what's waiting at the top is the actual photograph of the entrance
+  // (assets/brand/hub-sign-lit.jpg, the confirmed logo) — real material, not a drawn one.
+  const riseBase = curve.getPointAt(CAM_MAX_T);
+  const riseTop = riseBase.clone().add(new THREE.Vector3(0, 5.4, 0.6));
 
-  const entrancePoint = curve.getPointAt(0.94);
-  const entranceSign = new THREE.Mesh(
-    new THREE.PlaneGeometry(4.6, 4.9),
-    new THREE.MeshBasicMaterial({ map: wallLogoTexture(), transparent: true, opacity: 0 }),
+  // the manhole itself: an iron ring with a real hole in it, lying in the road, that the
+  // camera rises straight through partway up the shaft
+  const manhole = new THREE.Mesh(
+    new THREE.RingGeometry(0.62, 1.15, 40),
+    new THREE.MeshStandardMaterial({ color: 0x1c1815, roughness: 0.9, metalness: 0.4, side: THREE.DoubleSide }),
   );
-  entranceSign.position.copy(entrancePoint);
-  entranceSign.lookAt(curve.getPointAt(0.55));
-  scene.add(entranceSign);
+  manhole.rotation.x = -Math.PI / 2;
+  manhole.position.copy(riseBase).add(new THREE.Vector3(0, 1.9, 0));
+  scene.add(manhole);
+  const manholeLight = new THREE.PointLight(0xd9c9a8, 0, 4, 2);
+  manholeLight.position.copy(manhole.position).add(new THREE.Vector3(0, 0.4, 0));
+  scene.add(manholeLight);
 
-  const entranceGlow = new THREE.Mesh(
-    new THREE.PlaneGeometry(8, 7),
-    new THREE.MeshBasicMaterial({ map: haloTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 }),
+  // the front of the building — a real photograph, not another canvas sign
+  const buildingTex = new THREE.TextureLoader().load('../../assets/brand/hub-sign-lit.jpg');
+  buildingTex.colorSpace = THREE.SRGBColorSpace;
+  const building = new THREE.Mesh(
+    new THREE.PlaneGeometry(7.6, 5.06), // the photograph's own 1280×853 aspect
+    new THREE.MeshBasicMaterial({ map: buildingTex, transparent: true, opacity: 0 }),
   );
-  entranceGlow.position.copy(entranceSign.position).add(new THREE.Vector3(0, 0, -0.15));
-  entranceGlow.lookAt(curve.getPointAt(0.55));
-  scene.add(entranceGlow);
-
-  const entranceLight = new THREE.PointLight(0xfee6b5, 0, 9, 2);
-  entranceLight.position.copy(entrancePoint).add(new THREE.Vector3(0, 0.2, 1.2));
-  scene.add(entranceLight);
+  building.position.copy(riseTop).add(new THREE.Vector3(0, 0.4, -3.2));
+  building.lookAt(riseBase);
+  scene.add(building);
+  const streetLight = new THREE.PointLight(0xe4d7bd, 0, 12, 1.7);
+  streetLight.position.copy(riseTop).add(new THREE.Vector3(0, 0.6, 1));
+  scene.add(streetLight);
+  const nightSky = new THREE.HemisphereLight(0x565048, 0x0a0806, 0); // fades in with the rise
+  scene.add(nightSky);
 
   // ——— camera: simply follows the curve and looks ahead — the entrance sits dead ahead of the
   // tunnel's own path, so no special-cased look target is needed to arrive at it. ———
@@ -335,9 +333,12 @@ if (renderer) {
     // holds facing the entrance while its own beat (the sign striking on, the push) plays out.
     const camT = Math.min(CAM_MAX_T, easeOut(ramp(p, 0.08, 0.78)) * CAM_MAX_T);
     const { eye, look } = camPose(camT);
-    camera.position.copy(eye);
+    // Tunnel travel ends at the foot of the manhole shaft; from here the camera leaves the
+    // curve and rises straight up through it, onto the street, facing the building.
+    const rise = easeInOut(ramp(p, 0.78, 0.94));
+    camera.position.copy(rise > 0 ? eye.lerp(riseTop, rise) : eye);
     camera.up.copy(up);
-    camera.lookAt(look);
+    camera.lookAt(rise > 0 ? look.lerp(building.position, rise) : look);
 
     // the gallery: the two heroes are dormant until the camera nears, then strike on like the
     // halo study; the rest of the wall stays dimly lit throughout, so it reads as a corridor
@@ -360,13 +361,16 @@ if (renderer) {
     sign.material.opacity = 0.95 * signOn;
     signLight.intensity = 3.5 * signOn;
 
-    // the entrance: dark until the sign strikes on as we arrive, like the halo study
-    const lit = easeOut(ramp(camT, 0.55, 0.74));
-    entranceSign.material.opacity = 0.95 * lit;
-    entranceGlow.material.opacity = 0.42 * lit;
-    entranceLight.intensity = 14 * lit;
-    // a slow breath on the glow, standing in for a light that isn't perfectly steady
-    entranceGlow.scale.setScalar(1 + 0.015 * Math.sin(now / 1400));
+    // the manhole catches a little light as we pass through its ring, mid-rise
+    const throughManhole = Math.max(0, 1 - Math.abs(rise - 0.3) / 0.22);
+    manholeLight.intensity = 6 * throughManhole;
+
+    // the street and the real building fade up as the rise completes
+    const surfaced = easeOut(ramp(rise, 0.55, 1));
+    building.material.opacity = surfaced;
+    streetLight.intensity = 9 * surfaced;
+    nightSky.intensity = 0.35 * surfaced;
+    scene.fog.density = lerp(0.026, 0.006, surfaced);
 
     // push through at the very end, into the walkthrough
     const push = easeInOut(ramp(p, 0.9, 0.98));
