@@ -180,6 +180,43 @@ export function paintedSignTexture(lines, { w = 1024, h = 512 } = {}) {
   return tex;
 }
 
+/** Worn London tarmac, canvas-baked like everything else here: an asphalt grey base, aggregate
+ *  speckle, and a couple of patched cracks — just enough to read as a real road surface once lit,
+ *  not another purchased ground texture. */
+export function tarmacTexture({ size = 512 } = {}) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const x = c.getContext('2d');
+  x.fillStyle = '#2c2924';
+  x.fillRect(0, 0, size, size);
+  let seed = 41;
+  const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+  for (let i = 0; i < 4000; i++) {
+    const r = 0.4 + rnd() * 1.4;
+    x.fillStyle = rnd() < 0.5 ? 'rgba(0,0,0,.3)' : 'rgba(150,145,135,.16)';
+    x.beginPath();
+    x.arc(rnd() * size, rnd() * size, r, 0, Math.PI * 2);
+    x.fill();
+  }
+  for (let i = 0; i < 3; i++) {
+    x.strokeStyle = 'rgba(10,10,10,.4)';
+    x.lineWidth = 1.5 + rnd() * 2;
+    x.beginPath();
+    let px = rnd() * size, py = rnd() * size;
+    x.moveTo(px, py);
+    for (let j = 0; j < 5; j++) {
+      px += (rnd() - 0.5) * size * 0.2;
+      py += (rnd() - 0.5) * size * 0.2;
+      x.lineTo(px, py);
+    }
+    x.stroke();
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  return tex;
+}
+
 /** The confirmed logo lockup (operator, 25 Sep): THE HUB @ LLOYDS WHARF, the cleat, ESTD 1857,
  *  WORK CONNECT BELONG — one sign, same as the real entrance wall, not a separate cleat object
  *  and a separate wall text. The cleat icon is the same path data as everywhere else in the
