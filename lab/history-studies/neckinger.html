@@ -348,8 +348,14 @@ if (renderer) {
   // dissolves to reveal right at the very end, the way stepping through actually would
   const buildingTex = new THREE.TextureLoader().load('../../assets/brand/hub-sign-lit.jpg');
   buildingTex.colorSpace = THREE.SRGBColorSpace;
+  // The full photograph is a room shot — most of its lower half is bench and cobblestone floor,
+  // not the sign. Cropped to the lockup itself (the part of the frame that's actually "our
+  // logo"), so a close-up doesn't cut THE HUB off the top while showing empty floor at the
+  // bottom. Crop is pixels (0,30)-(1280,640) of the 1280×853 source.
+  buildingTex.repeat.set(1, 610 / 853);
+  buildingTex.offset.set(0, 1 - 640 / 853);
   const building = new THREE.Mesh(
-    new THREE.PlaneGeometry(7.6, 5.06), // the photograph's own 1280×853 aspect
+    new THREE.PlaneGeometry(7.6, 7.6 / (1280 / 610)), // the crop's own pixel aspect
     new THREE.MeshBasicMaterial({ map: buildingTex, transparent: true, opacity: 0 }),
   );
   // same spot, same size as the wall it dissolves into — a full-frame cross-dissolve reads
@@ -411,11 +417,11 @@ if (renderer) {
   const render = (now) => {
     // The whole journey lands by p = 0.72, well inside the built curve, leaving room for the
     // climb, the street reveal, and a held beat on it before the canvas hands off to the video.
-    const camT = Math.min(CAM_MAX_T, easeOut(ramp(p, 0.08, 0.72)) * CAM_MAX_T);
+    const camT = Math.min(CAM_MAX_T, easeOut(ramp(p, 0.08, 0.64)) * CAM_MAX_T);
     const { eye, look } = camPose(camT);
     // Tunnel travel ends at the foot of the manhole shaft; from here the camera leaves the
     // curve and rises straight up through it, onto the street, facing the building.
-    const rise = easeInOut(ramp(p, 0.74, 0.88));
+    const rise = easeInOut(ramp(p, 0.66, 0.8));
     camera.position.copy(rise > 0 ? eye.lerp(riseTop, rise) : eye);
     camera.up.copy(up);
     camera.lookAt(rise > 0 ? look.lerp(facade.position, rise) : look);
@@ -471,9 +477,23 @@ if (renderer) {
     windows.forEach((w) => (w.material.opacity = 1 - facadeOut));
     building.material.opacity = facadeOut;
 
+    // The climb ends close to the wall — good for the burst of the dissolve — but too close to
+    // read the whole lockup. Settle back to a distance that clears the whole crop, finishing
+    // before p = 0.9 so there's a held, fully-framed beat before the canvas hands off to video.
+    const settle = easeInOut(ramp(p, 0.78, 0.88));
+    if (settle > 0) {
+      // Distance chosen so the whole cropped lockup (7.6 wide, width-bound at typical widescreen
+      // aspect) clears frame at the widened final FOV below, with margin — not eyeballed.
+      const standingAt = building.position.clone().add(new THREE.Vector3(0, 0, 4.6));
+      camera.position.lerp(standingAt, settle);
+      camera.lookAt(building.position);
+    }
+
     // push through at the very end, into the walkthrough
-    const push = easeInOut(ramp(p, 0.9, 0.98));
-    camera.fov = 48 - 6 * push;
+    // widens in step with the settle above (both finish by p = 0.88) — at 4.6m the crop only
+    // clears frame at the wider FOV, so they have to land together, not one after the other
+    const push = easeInOut(ramp(p, 0.78, 0.88));
+    camera.fov = 48 + 8 * push;
     camera.updateProjectionMatrix();
 
     composer.render();
