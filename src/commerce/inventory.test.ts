@@ -12,11 +12,11 @@ test('the Unit 4 L2 registry parses', () => {
   assert.ok(registry.units.every((u) => !u.verified), 'nothing is verified until the floor walk');
 
   const desks = registry.units.filter((u) => u.kind === 'desk');
-  assert.deepEqual(desks.slice(0, 9).map((u) => u.rotDeg), [81, 81, -9, 81, 81, -9, 81, 81, -9]);
+  assert.ok(desks.slice(0, 9).every((u) => u.rotDeg === -9), 'the wall blocks follow the drawing grid');
   for (let start = 0; start < 9; start += 3) {
     const [left, right, horizontal] = desks.slice(start, start + 3);
     assert.ok(left && right && horizontal);
-    assert.ok(horizontal.y > Math.max(left.y, right.y), 'each horizontal wall desk faces into the room');
+    assert.ok(horizontal.y > Math.max(left.y, right.y), 'each front wall position faces into the room');
   }
   assert.ok(desks.slice(9).every((u) => u.rotDeg === -9), 'the ten centre desks follow the drawing grid');
 });

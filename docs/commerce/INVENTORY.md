@@ -15,8 +15,8 @@ with it yet (BUILD_PLAN §2, step 4). What is installed is what people are buyin
 
 | ID | Label (provisional) | Kind | Capacity | Bookable | Source |
 | --- | --- | --- | --- | --- | --- |
-| `L2-D001`–`L2-D009` | Wall 1–9; three T-shaped banks of three | desk | 1 each | yes | operator photographs on 28 Sep 2026, aligned to the Rev B grid |
-| `L2-D010`–`L2-D019` | Centre 1–10; five banks of two | desk | 1 each | yes | operator photographs on 28 Sep 2026, aligned to detected Rev B desks |
+| `L2-D001`–`L2-D009` | Wall 1–9; three rectangular six-panel table blocks, each shared by left/front/right chair positions | desk | 1 each | yes | operator close-up on 28 Sep 2026, aligned to the Rev B grid |
+| `L2-D010`–`L2-D019` | Centre 1–10; one continuous double-sided five-by-two bench | desk | 1 each | yes | operator close-up on 28 Sep 2026, aligned to the Rev B grid |
 | `L2-MR01` | Meeting room (small), 8.2 m² | meeting_room | 4 | yes | drawing annotation |
 | `L2-MR02` | Meeting room (large), 17.6 m² | meeting_room | 8 | yes | drawing annotation |
 | `L2-OFFICE01` | Private office 1 (drawing says "ACG Offices", 6 desks) | private_office | 6 | **no, pending D6** | drawing annotation |

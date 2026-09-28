@@ -35,6 +35,13 @@ def rect(cx, cy, w, d, rot):
     return pts
 
 
+def moved(cx, cy, along, across, rot):
+    """Move in a rectangle's local axes: along its rotation, then across it."""
+    a = math.radians(rot)
+    return (round(cx + along * math.cos(a) - across * math.sin(a), 3),
+            round(cy + along * math.sin(a) + across * math.cos(a), 3))
+
+
 def zone(d):
     x, y = d['x_m'], d['y_m']
     if x > 24 and y < 7.2:
@@ -56,40 +63,40 @@ counts = {k: len(v) for k, v in by_zone.items()}
 if counts != expected:
     sys.exit(f'desk detection changed: {counts} != {expected}. Review before reissuing IDs.')
 
-# The actual wall banks are not the four pairs proposed in Rev B. Each photographed bank is
-# a compact T: two parallel desks, with chairs on their outside edges, and one horizontal desk
-# across their room-facing ends with its own chair. These centres stay on the drawing's -9/81°
-# grid and use the detector's proven 1.35 x 0.67 m desk size.
-wall_banks = [
-    ((12.599, 4.679), (13.265, 4.574), (13.082, 5.575)),
-    ((16.343, 4.085), (17.009, 3.980), (16.826, 4.981)),
-    ((20.087, 3.491), (20.753, 3.386), (20.570, 4.387)),
-]
+# The actual wall banks are not the four pairs proposed in Rev B. The 28 Sep close-up shows
+# each one as a 2.70 x 2.01 m rectangular six-panel tabletop against the wall, shared by three
+# bookable positions: left side, right side and the horizontal room-facing edge. The three
+# footprints below tile that rectangle without overlap; the UI draws one chair on each exposed
+# side. Bank centres follow the drawing's -9° grid and the detector's reliable wall anchors.
+wall_bank_centres = [(13.000, 4.958), (16.744, 4.364), (20.488, 3.770)]
 
-# Five photographed centre pairs. The middle three are detected Rev B rectangles; the outer
-# two continue the same measured 1.775 m bay spacing and -9° drawing grid.
-centre_pairs = [
-    ((17.488, 6.755), (17.593, 7.420)),
-    ((19.263, 6.473), (19.368, 7.138)),
-    ((21.038, 6.191), (21.143, 6.857)),
-    ((22.812, 5.909), (22.918, 6.575)),
-    ((24.587, 5.628), (24.692, 6.294)),
-]
+# The second close-up shows one continuous double-sided ten-seat bench. Five 1.35 m surfaces
+# touch along each side; the two rows share the same 0.67 m depth and -9° drawing grid.
+centre_pairs = []
+for bay in range(5):
+    along = (bay - 2) * 1.35
+    top = moved(21.100, 6.300, along, -0.335, -9.0)
+    bottom = moved(21.100, 6.300, along, 0.335, -9.0)
+    centre_pairs.append((top, bottom))
 
 units = []
 n = 0
-for bank in wall_banks:
-    for position, (cx, cy) in enumerate(bank):
+for bank_cx, bank_cy in wall_bank_centres:
+    positions = [
+        (*moved(bank_cx, bank_cy, -0.675, -0.335, -9.0), 1.35, 1.34),
+        (*moved(bank_cx, bank_cy, 0.675, -0.335, -9.0), 1.35, 1.34),
+        (*moved(bank_cx, bank_cy, 0.000, 0.670, -9.0), 2.70, 0.67),
+    ]
+    for cx, cy, width, depth in positions:
         n += 1
-        rot = 81.0 if position < 2 else -9.0
         units.append({
             'id': f'L2-D{n:03d}',
             'space_id': 'L2-MAIN',
             'kind': 'desk',
             'label': f'Wall {n}',
             'capacity': 1,
-            'x_m': cx, 'y_m': cy, 'rot_deg': rot,
-            'footprint': rect(cx, cy, 1.35, 0.67, rot),
+            'x_m': cx, 'y_m': cy, 'rot_deg': -9.0,
+            'footprint': rect(cx, cy, width, depth, -9.0),
             'source': 'operator-corrected:photos-2026-09-28',
             'verified': False,
         })
