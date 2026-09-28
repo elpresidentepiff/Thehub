@@ -20,7 +20,7 @@ Last updated: 2026-09-24.
 | Database schema | Migrations written and tested on a throwaway local Postgres (no-overlap proven under concurrency). **No Supabase project exists** | `supabase/` | Operator approval of schema proposal |
 | Commerce engine | Pure TypeScript, 26 tests (`npm test`): dev-only catalogue, London-time periods, quotes, hold tokens + DB refusal map, Stripe Checkout params, webhook signature check + reducer, mock availability that throws outside development. `check-boundaries` keeps it free of React/renderer imports | `src/commerce/` | — |
 | Stripe | Mapping proposed. **Nothing created** in Stripe | `docs/commerce/STRIPE_OBJECT_MAPPING.md` | Approval + prices |
-| Floor picker (lab) | `/lab/floor` in `npm run dev`: real plan + registry + engine; map (keyboard: arrows) and list (touch); server quotes; 404 in production. **Styling is a first pass.** A separate `/lab/floor-reality` test now pairs the measured plan with the real walkthrough and seven operator-supplied floor views; viewpoint positions remain provisional. | `src/app/lab/floor/`, `src/app/lab/floor-reality/` | Operator review; confirmed photo positions; spatial recapture |
+| Floor picker (lab) | `/lab/floor` in `npm run dev`: real plan + registry + engine; map (keyboard: arrows) and list (touch); server quotes; 404 in production. A separate `/lab/floor-reality` test turns the measured SVG itself into an interactive 3D floor: raised structure, plan detail, rooms and inventory-positioned desks with real floor materials. | `src/app/lab/floor/`, `src/app/lab/floor-reality/` | Operator review; floor walk to verify inventory and room treatment |
 | Static commerce mocks | Floor → booking → checkout click-through; invented desk positions | `lab/floor`, `lab/booking`, `lab/checkout` | Floor superseded by `/lab/floor`; booking/checkout still static |
 
 ---
@@ -54,9 +54,9 @@ Last updated: 2026-09-24.
 1. **Operator:** pick the logo and opening-shot direction; pick a cleat direction
    (`lab/cleat-studies/`).
 2. **Operator:** answer the commerce questions below. They unblock C2.
-3. Review `/lab/floor-reality`; confirm the seven photo positions on the plan and recapture the
-   floor for spatial reconstruction. Then use the approved visual treatment to restyle
-   `/lab/floor` and link the end of the opening into it so the site is one journey.
+3. Review the live 3D plan at `/lab/floor-reality`; correct structure, room and furniture details
+   against the operator's floor photographs. Then use the approved model to restyle `/lab/floor`
+   and link the end of the opening into it so the site is one journey.
 4. C1.5 seat authoring tool; then walk the floor with it and mark the registry `verified`.
 5. When a cleat study is chosen (D2): build it into `proto/opening.html` first, then `src/experience/opening`.
 6. After approval: create the dedicated Hub Supabase project, apply migrations, run the SQL
