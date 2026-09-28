@@ -354,8 +354,10 @@ if (renderer) {
   // bottom. Crop is pixels (0,30)-(1280,640) of the 1280×853 source.
   buildingTex.repeat.set(1, 610 / 853);
   buildingTex.offset.set(0, 1 - 640 / 853);
+  const buildingHalfW = 7.6 / 2;
+  const buildingHalfH = 7.6 / (1280 / 610) / 2; // used later to fit the final camera distance to it
   const building = new THREE.Mesh(
-    new THREE.PlaneGeometry(7.6, 7.6 / (1280 / 610)), // the crop's own pixel aspect
+    new THREE.PlaneGeometry(buildingHalfW * 2, buildingHalfH * 2), // the crop's own pixel aspect
     new THREE.MeshBasicMaterial({ map: buildingTex, transparent: true, opacity: 0 }),
   );
   // same spot, same size as the wall it dissolves into — a full-frame cross-dissolve reads
@@ -478,23 +480,25 @@ if (renderer) {
     building.material.opacity = facadeOut;
 
     // The climb ends close to the wall — good for the burst of the dissolve — but too close to
-    // read the whole lockup. Settle back to a distance that clears the whole crop, finishing
-    // before p = 0.9 so there's a held, fully-framed beat before the canvas hands off to video.
+    // read the whole lockup, and a fixed "eyeballed" distance only happens to fit the one aspect
+    // ratio it was tested at. Solved properly instead: at FINAL_FOV, work out the exact distance
+    // that clears the plane's actual width AND height against the camera's real, live aspect
+    // (whatever the visitor's window shape is), the same maths a DoP uses to check a frame will
+    // hold a flat graphic edge-to-edge. Settle finishes before p = 0.9 so there's a held, fully
+    // framed beat before the canvas hands off to the walkthrough video — a clean cut, not a crop.
+    const FINAL_FOV = 50;
     const settle = easeInOut(ramp(p, 0.78, 0.88));
+    camera.fov = lerp(48, FINAL_FOV, settle);
+    camera.updateProjectionMatrix();
     if (settle > 0) {
-      // Distance chosen so the whole cropped lockup (7.6 wide, width-bound at typical widescreen
-      // aspect) clears frame at the widened final FOV below, with margin — not eyeballed.
-      const standingAt = building.position.clone().add(new THREE.Vector3(0, 0, 4.6));
+      const halfV = Math.tan((FINAL_FOV * Math.PI) / 180 / 2);
+      const halfH = halfV * camera.aspect;
+      const margin = 1.15; // breathing room at the edges, not a razor-tight fit
+      const fitDist = Math.max((buildingHalfH * margin) / halfV, (buildingHalfW * margin) / halfH);
+      const standingAt = building.position.clone().add(new THREE.Vector3(0, 0, fitDist));
       camera.position.lerp(standingAt, settle);
       camera.lookAt(building.position);
     }
-
-    // push through at the very end, into the walkthrough
-    // widens in step with the settle above (both finish by p = 0.88) — at 4.6m the crop only
-    // clears frame at the wider FOV, so they have to land together, not one after the other
-    const push = easeInOut(ramp(p, 0.78, 0.88));
-    camera.fov = 48 + 8 * push;
-    camera.updateProjectionMatrix();
 
     composer.render();
     requestAnimationFrame(render);
