@@ -141,8 +141,13 @@
   transition: fill var(--hub-dur-fast) var(--hub-ease), stroke-width var(--hub-dur-fast) var(--hub-ease), filter var(--hub-dur-fast) var(--hub-ease);
 }
 .fl-unit .fl-ring { fill: none; stroke: none; stroke-width: 9px; }
-.fl-unit .fl-chair { fill: var(--hub-panel); stroke: var(--hub-steel); stroke-width: .045px; pointer-events: none; }
-.fl-unit .fl-chair path { fill: none; stroke: var(--hub-panel); stroke-width: .11px; stroke-linecap: round; }
+.fl-unit .fl-furniture { pointer-events: none; }
+.fl-unit .fl-chair-seat { fill: var(--hub-panel); stroke: var(--hub-steel); stroke-width: .04px; }
+.fl-unit .fl-chair-back { fill: none; stroke: var(--hub-panel); stroke-width: .13px; stroke-linecap: round; }
+.fl-unit .fl-chair-arms { fill: none; stroke: var(--hub-steel); stroke-width: .055px; stroke-linecap: round; }
+.fl-unit .fl-chair-base { fill: none; stroke: var(--hub-steel); stroke-width: .045px; stroke-linecap: round; stroke-linejoin: round; }
+.fl-unit .fl-desk-legs { fill: none; stroke: var(--hub-steel-2); stroke-width: .055px; stroke-linecap: square; opacity: .82; }
+.fl-unit .fl-grommet { fill: var(--hub-steel); stroke: var(--hub-plaster); stroke-width: .025px; }
 .fl-unit .fl-status-dot { stroke: var(--hub-plaster); stroke-width: 1.25px; pointer-events: none; }
 .fl-unit.is-available .fl-shape { fill: color-mix(in srgb, var(--hub-plaster) 86%, var(--hub-halo-warm)); stroke: var(--hub-brass-deep); }
 .fl-unit.is-available .fl-status-dot { fill: var(--hub-brass); }

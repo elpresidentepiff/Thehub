@@ -315,14 +315,20 @@ export function FloorLab(props: FloorLabProps) {
                         onClick={inFilter ? () => choose(u.id) : undefined}
                         onKeyDown={inFilter ? (e) => onMapKey(e, u.id) : undefined}
                       >
-                        {u.kind === 'desk' && (
-                          <g className="fl-chair" transform={`translate(${u.x} ${u.y}) rotate(${u.rotDeg})`} aria-hidden="true">
-                            <circle cy={chairSide * .62} r=".2" />
-                            <path d={`M-.22 ${chairSide * .78} Q0 ${chairSide * .9} .22 ${chairSide * .78}`} />
-                          </g>
-                        )}
                         <polygon className="fl-ring" points={points(u.footprint)} vectorEffect="non-scaling-stroke" />
                         <polygon className="fl-shape" points={points(u.footprint)} vectorEffect="non-scaling-stroke" />
+                        {u.kind === 'desk' && (
+                          <g className="fl-furniture" transform={`translate(${u.x} ${u.y}) rotate(${u.rotDeg})`} aria-hidden="true">
+                            <g className="fl-chair" transform={`translate(0 ${chairSide * .66}) scale(1 ${chairSide})`}>
+                              <rect className="fl-chair-seat" x="-.2" y="-.15" width=".4" height=".32" rx=".07" />
+                              <path className="fl-chair-back" d="M-.27 .12 Q0 .3 .27 .12" />
+                              <path className="fl-chair-arms" d="M-.2 -.05L-.3 .03M.2 -.05L.3 .03" />
+                              <path className="fl-chair-base" d="M0 .13V.35M0 .3L-.22 .41M0 .3L.22 .41M0 .3L-.3 .27M0 .3L.3 .27" />
+                            </g>
+                            <path className="fl-desk-legs" d="M-.48 -.24V.24M.48 -.24V.24" />
+                            <circle className="fl-grommet" cx=".44" cy="0" r=".07" />
+                          </g>
+                        )}
                         <circle className="fl-status-dot" cx={u.x} cy={u.y} r=".1" vectorEffect="non-scaling-stroke" />
                         {u.kind !== 'desk' && (
                           <text x={u.x} y={u.y}>
