@@ -16,11 +16,11 @@ Last updated: 2026-09-28.
 | Opening tests A/B/C | **Rejected** ("good attempt but not looking cool"). Kept as evidence only | `lab/opening-tests/` | — |
 | Production opening (Next.js) | **Synced to the approved prototype 24 Sep:** HUB-letters beat removed; the camera now pushes through the cleat (prototype timings, dolly ×4.8); build + camera test pass; frame-compared with `proto/opening.html` | `src/experience/opening/` | Cleat choice (D2) and logo (D1) slot into the same beat |
 | Logo / opening-shot design | **Operator deciding** | — | Operator |
-| Inventory registry | Draft from Rev B, corrected by operator against floor photos on 28 Sep: 9 wall desks in three banks (two facing chairs plus a perpendicular end desk), 10 centre desks, 2 meeting rooms, 2 private offices. **Not yet walked on site** | `data/inventory/unit4-l2.json` | Floor walk for exact positions; ACG/Iffy's decision |
+| Inventory registry | Draft from Rev B: 16 open-plan desks, 2 meeting rooms, 2 private offices. **Not yet walked on site** | `data/inventory/unit4-l2.json` | Floor walk; ACG/Iffy's decision |
 | Database schema | Migrations written and tested on a throwaway local Postgres (no-overlap proven under concurrency). **No Supabase project exists** | `supabase/` | Operator approval of schema proposal |
 | Commerce engine | Pure TypeScript, 26 tests (`npm test`): dev-only catalogue, London-time periods, quotes, hold tokens + DB refusal map, Stripe Checkout params, webhook signature check + reducer, mock availability that throws outside development. `check-boundaries` keeps it free of React/renderer imports | `src/commerce/` | — |
 | Stripe | Mapping proposed. **Nothing created** in Stripe | `docs/commerce/STRIPE_OBJECT_MAPPING.md` | Approval + prices |
-| Floor picker (lab) | `/lab/floor` in `npm run dev`: real plan + registry + engine; map (keyboard: arrows) and list (touch); server quotes; 404 in production. The default material view uses photo-derived oak, brick and black-panel surfaces while preserving the measured drawing, stable IDs and click-to-book flow. Furniture symbols now follow the real photographs: joined white desk banks, cable grommets, grey legs and black task chairs; a Drawing switch provides direct comparison. A separate `/lab/floor-reality` test retains the earlier interactive 3D study. | `src/app/lab/floor/`, `public/lab/floor-materials/`, `src/app/lab/floor-reality/` | Operator review of the photo-material pass; floor walk to verify inventory and room treatment |
+| Floor picker (lab) | `/lab/floor` restored on 28 Sep to the original architectural drawing, clickable registry overlay and server quote flow after the photo-material/furniture reconstruction was rejected. No new furniture treatment is approved. A separate `/lab/floor-reality` experiment remains outside the booking picker. | `src/app/lab/floor/` | Correct the layout from evidence before any further visual treatment; floor walk to verify inventory |
 | Static commerce mocks | Floor → booking → checkout click-through; invented desk positions | `lab/floor`, `lab/booking`, `lab/checkout` | Floor superseded by `/lab/floor`; booking/checkout still static |
 
 ---
@@ -41,10 +41,10 @@ Last updated: 2026-09-28.
 
 | Step | Delivers | State |
 | --- | --- | --- |
-| C1.1 | `data/inventory/unit4-l2.json` — stable IDs placed on real Rev B geometry | Count/grouping operator-corrected 28 Sep (19 desks); exact positions need floor walk |
+| C1.1 | `data/inventory/unit4-l2.json` — stable IDs placed on real Rev B geometry | Draft done; needs floor walk |
 | C1.2 | `supabase/migrations` — `hub` / `private` / `api` schemas, exclusion-constraint no-overlap, holds, RLS, grants | Done locally; `npm run db:test` |
 | C1.3 | `src/commerce` — engine + unit tests; mock availability that cannot run in production | Done 24 Sep; `npm test` (the 23 Sep board said done before the tests existed) |
-| C1.4 | `src/app/lab/floor` — the real plan + registry + engine, touch/keyboard states | Built 24 Sep; photo-material pass built 28 Sep from the operator's floor photographs, with original drawing comparison retained |
+| C1.4 | `src/app/lab/floor` — the real plan + registry + engine, touch/keyboard states | Original 24 Sep version restored 28 Sep; layout correction must come before restyling |
 | C1.5 | Seat authoring tool (BUILD_PLAN §2): place/nudge/name seats on the plan, export registry | Next |
 
 ---
@@ -54,9 +54,8 @@ Last updated: 2026-09-28.
 1. **Operator:** pick the logo and opening-shot direction; pick a cleat direction
    (`lab/cleat-studies/`).
 2. **Operator:** answer the commerce questions below. They unblock C2.
-3. Review the photo-material booking plan at `/lab/floor`; tune material placement against the
-   operator's corrections, then link the end of the opening into this same clickable plan so the
-   site is one journey. Keep `/lab/floor-reality` only as a separate spatial study unless approved.
+3. Correct the `/lab/floor` layout against the original plan and operator evidence. Do not add
+   furniture styling, materials or 3D treatment until the layout itself is approved.
 4. C1.5 seat authoring tool; then walk the floor with it and mark the registry `verified`.
 5. When a cleat study is chosen (D2): build it into `proto/opening.html` first, then `src/experience/opening`.
 6. After approval: create the dedicated Hub Supabase project, apply migrations, run the SQL

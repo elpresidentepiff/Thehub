@@ -58,75 +58,17 @@
 .fl-notice { margin: 0 0 14px; padding: 12px 14px; border-left: 2px solid var(--hub-brass); background: var(--hub-ink-2); color: var(--hub-halo-warm); }
 
 /* — layout — */
-.fl-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 340px); gap: 20px; align-items: start; }
+.fl-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 380px); gap: 24px; align-items: start; }
 .fl-main { min-width: 0; }
 
 /* — the plan — */
-.fl-planbar {
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  min-height: 58px; padding: 8px 10px 8px 15px;
-  background: var(--hub-ink-2); border: 1px solid var(--fl-line); border-bottom: 0;
-}
-.fl-planbar > div:first-child { display: grid; gap: 3px; }
-.fl-planbar strong { font-size: 13px; font-weight: 600; }
-.fl-planbar-kicker {
-  color: var(--hub-brass); font-size: 9px; font-weight: 700;
-  letter-spacing: .19em; text-transform: uppercase;
-}
-.fl-view-switch { display: flex; padding: 3px; border: 1px solid var(--fl-line); }
-.fl-view-switch button {
-  min-height: 36px; padding: 0 13px; border: 0; cursor: pointer;
-  background: transparent; color: var(--hub-cream-dim);
-  font-size: 9px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
-}
-.fl-view-switch button[aria-pressed='true'] { background: var(--hub-cream); color: var(--hub-ink); }
-
 .fl-mapscroll { overflow-x: auto; overscroll-behavior-x: contain; background: var(--hub-plaster); border: 1px solid var(--fl-line); }
-.fl-map {
-  position: relative; isolation: isolate; min-width: 960px; overflow: hidden;
-  background: var(--hub-plaster);
-}
-.fl-map::before, .fl-map::after {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  transition: opacity var(--hub-dur) var(--hub-ease);
-}
-/* The material view is made from the operator's floor photographs: the plan remains the
-   measured hit-map while the photography supplies the oak and brick surface information. */
-.fl-map::before {
-  z-index: 0;
-  background-image:
-    linear-gradient(115deg, color-mix(in srgb, var(--hub-daylight) 17%, transparent), transparent 42%),
-    url('/lab/floor-materials/oak-herringbone.webp');
-  background-size: 100% 100%, cover;
-  background-repeat: no-repeat;
-  filter: saturate(.68) brightness(1.08);
-}
-.fl-map::after {
-  z-index: 2;
-  background:
-    linear-gradient(90deg, color-mix(in srgb, var(--hub-ink) 12%, transparent), transparent 8% 89%, color-mix(in srgb, var(--hub-ink) 16%, transparent)),
-    url('/lab/floor-materials/exposed-brick.webp');
-  background-size: 100% 100%, 280px auto;
-  background-repeat: no-repeat, repeat;
-  background-blend-mode: normal, multiply;
-  opacity: .16;
-  -webkit-mask-image: linear-gradient(90deg, #000 0 5%, transparent 13% 86%, #000 96% 100%);
-  mask-image: linear-gradient(90deg, #000 0 5%, transparent 13% 86%, #000 96% 100%);
-}
-.fl-map.is-drawing::before, .fl-map.is-drawing::after { opacity: 0; }
+.fl-map { position: relative; min-width: 720px; }
 .fl-map[aria-busy='true'] .fl-overlay { opacity: .85; }
-.fl-plan {
-  position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%;
-  mix-blend-mode: multiply; pointer-events: none; user-select: none;
-  opacity: .7; filter: sepia(.22) saturate(.62) contrast(1.18);
-  transition: opacity var(--hub-dur) var(--hub-ease), filter var(--hub-dur) var(--hub-ease);
-}
-.fl-map.is-drawing .fl-plan { opacity: 1; filter: none; }
-.fl-overlay { position: absolute; z-index: 3; inset: 0; width: 100%; height: 100%; overflow: visible; transition: opacity var(--hub-dur-fast) var(--hub-ease); }
+.fl-plan { position: absolute; inset: 0; width: 100%; height: 100%; mix-blend-mode: multiply; pointer-events: none; user-select: none; }
+.fl-overlay { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; transition: opacity var(--hub-dur-fast) var(--hub-ease); }
 
-.fl-space polygon { fill: color-mix(in srgb, var(--hub-oak) 10%, transparent); stroke: color-mix(in srgb, var(--hub-steel) 22%, transparent); stroke-width: .025px; }
-.fl-map.is-material .fl-space.is-l2-kitchen polygon { fill: color-mix(in srgb, var(--hub-plaster) 64%, transparent); }
-.fl-map.is-material .fl-space.is-l2-pods polygon { fill: url('#fl-panel-photo'); opacity: .84; }
+.fl-space polygon { fill: color-mix(in srgb, var(--hub-oak) 16%, transparent); }
 .fl-space text, .fl-unit text {
   font-family: var(--hub-body); font-size: .3px; font-weight: 600; letter-spacing: .04px;
   text-anchor: middle; dominant-baseline: middle; pointer-events: none; text-transform: uppercase;
@@ -135,38 +77,16 @@
 .fl-unit text { fill: var(--hub-ink); }
 
 .fl-unit { cursor: pointer; outline: none; }
-.fl-unit .fl-shape {
-  stroke-width: 1.5px;
-  filter: drop-shadow(0 .09px .08px color-mix(in srgb, var(--hub-ink) 45%, transparent));
-  transition: fill var(--hub-dur-fast) var(--hub-ease), stroke-width var(--hub-dur-fast) var(--hub-ease), filter var(--hub-dur-fast) var(--hub-ease);
-}
+.fl-unit .fl-shape { stroke-width: 1.5px; transition: fill var(--hub-dur-fast) var(--hub-ease), stroke-width var(--hub-dur-fast) var(--hub-ease); }
 .fl-unit .fl-ring { fill: none; stroke: none; stroke-width: 9px; }
-.fl-unit .fl-furniture { pointer-events: none; }
-.fl-unit .fl-chair-seat { fill: var(--hub-panel); stroke: var(--hub-steel); stroke-width: .04px; }
-.fl-unit .fl-chair-back { fill: none; stroke: var(--hub-panel); stroke-width: .13px; stroke-linecap: round; }
-.fl-unit .fl-chair-arms { fill: none; stroke: var(--hub-steel); stroke-width: .055px; stroke-linecap: round; }
-.fl-unit .fl-chair-base { fill: none; stroke: var(--hub-steel); stroke-width: .045px; stroke-linecap: round; stroke-linejoin: round; }
-.fl-unit .fl-desk-legs { fill: none; stroke: var(--hub-steel-2); stroke-width: .055px; stroke-linecap: square; opacity: .82; }
-.fl-unit .fl-grommet { fill: var(--hub-steel); stroke: var(--hub-plaster); stroke-width: .025px; }
-.fl-unit .fl-status-dot { stroke: var(--hub-plaster); stroke-width: 1.25px; pointer-events: none; }
-.fl-unit.is-available .fl-shape { fill: color-mix(in srgb, var(--hub-plaster) 86%, var(--hub-halo-warm)); stroke: var(--hub-brass-deep); }
-.fl-unit.is-available .fl-status-dot { fill: var(--hub-brass); }
+.fl-unit.is-available .fl-shape { fill: var(--hub-halo-warm); stroke: var(--hub-brass-deep); }
 .fl-unit.is-held .fl-shape { fill: color-mix(in srgb, var(--hub-steel-2) 30%, transparent); stroke: var(--hub-steel-2); stroke-dasharray: 4 3; }
-.fl-unit.is-held .fl-status-dot { fill: var(--hub-steel-2); }
 .fl-unit.is-unavailable .fl-shape { fill: color-mix(in srgb, var(--hub-steel) 62%, transparent); stroke: var(--hub-steel); }
-.fl-unit.is-unavailable .fl-status-dot { fill: var(--hub-steel); }
 .fl-unit.is-closed .fl-shape { fill: none; stroke: var(--hub-steel-2); stroke-dasharray: 2 3; }
-.fl-unit.is-closed .fl-status-dot { fill: var(--hub-steel-2); }
 .fl-unit.is-not_bookable .fl-shape { fill: color-mix(in srgb, var(--hub-steel) 12%, transparent); stroke: var(--hub-steel-2); stroke-width: 1px; }
-.fl-unit.is-not_bookable .fl-status-dot { fill: var(--hub-steel-2); }
 .fl-unit.is-yours .fl-shape { fill: var(--hub-daylight); stroke: var(--hub-ink); stroke-width: 2.5px; }
-.fl-unit.is-yours .fl-status-dot { fill: var(--hub-daylight); }
 .fl-unit.is-unavailable text { fill: var(--hub-plaster); }
 .fl-unit.is-selected .fl-shape { fill: var(--hub-brass); stroke: var(--hub-ink); stroke-width: 3px; }
-.fl-unit.is-selected .fl-status-dot { fill: var(--hub-ink); }
-.fl-map.is-material .fl-unit.is-meeting_room:not(.is-selected) .fl-shape { fill: url('#fl-glass'); stroke: var(--hub-steel); }
-.fl-map.is-material .fl-unit.is-private_office:not(.is-selected) .fl-shape { fill: url('#fl-panel-photo'); stroke: var(--hub-steel); opacity: .78; }
-.fl-map.is-material .fl-unit.is-desk.is-available .fl-shape { filter: drop-shadow(0 .11px .09px color-mix(in srgb, var(--hub-ink) 52%, transparent)) drop-shadow(0 0 .1px var(--hub-halo)); }
 .fl-unit:hover .fl-shape { stroke-width: 3px; }
 .fl-unit:focus-visible { outline: none; }
 .fl-unit:focus-visible .fl-ring { stroke: var(--hub-ink); }
@@ -237,9 +157,6 @@
   .fl-mock { margin-left: 0; }
   .fl-grid { grid-template-columns: 1fr; gap: 0; }
   .fl-filters { margin-left: 0; }
-  .fl-planbar { align-items: flex-start; }
-  .fl-planbar strong { font-size: 12px; }
-  .fl-view-switch button { min-height: 34px; padding: 0 10px; }
   .fl-detail {
     position: sticky; top: auto; bottom: 0; z-index: 10;
     max-height: 42svh; overflow-y: auto; margin: 24px -16px 0; padding: 18px 16px calc(18px + env(safe-area-inset-bottom));
@@ -247,8 +164,4 @@
   }
   .fl-detail h2 { font-size: 22px; }
   .fl-detail.is-empty h2, .fl-detail.is-empty .fl-muted { display: none; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .fl-map::before, .fl-map::after, .fl-plan, .fl-overlay, .fl-unit .fl-shape { transition: none; }
 }

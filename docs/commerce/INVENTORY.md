@@ -5,9 +5,8 @@ can be booked, or that the floor picker needs to draw. It holds **identity and g
 only**. Prices, availability, holds, bookings and occupants live in the database and are
 joined by ID.
 
-Status: **DRAFT.** Built from the architect's *proposed* Rev B layout and corrected by the
-operator against the floor photographs on 28 September 2026. Nobody has walked the floor
-with it yet (BUILD_PLAN §2, step 4). What is installed is what people are buying.
+Status: **DRAFT.** Built from the architect's *proposed* Rev B layout. Nobody has walked the
+floor with it yet (BUILD_PLAN §2, step 4). What is installed is what people are buying.
 
 ![Draft registry over the corrected Rev B plan](img/inventory-draft-unit4-l2.jpg)
 
@@ -15,8 +14,9 @@ with it yet (BUILD_PLAN §2, step 4). What is installed is what people are buyin
 
 | ID | Label (provisional) | Kind | Capacity | Bookable | Source |
 | --- | --- | --- | --- | --- | --- |
-| `L2-D001`–`L2-D009` | Wall 1–9, three banks: two facing positions plus a perpendicular end desk | desk | 1 each | yes | operator correction from floor photographs |
-| `L2-D010`–`L2-D019` | Centre 1–10, five banks of two | desk | 1 each | yes | operator correction from floor photographs |
+| `L2-D001`–`L2-D008` | Window 1–8 | desk | 1 each | yes | detected in Rev B |
+| `L2-D009`–`L2-D014` | Centre 1–6 | desk | 1 each | yes | detected in Rev B |
+| `L2-D015`–`L2-D016` | Corner 1–2 | desk | 1 each | yes | detected in Rev B |
 | `L2-MR01` | Meeting room (small), 8.2 m² | meeting_room | 4 | yes | drawing annotation |
 | `L2-MR02` | Meeting room (large), 17.6 m² | meeting_room | 8 | yes | drawing annotation |
 | `L2-OFFICE01` | Private office 1 (drawing says "ACG Offices", 6 desks) | private_office | 6 | **no, pending D6** | drawing annotation |

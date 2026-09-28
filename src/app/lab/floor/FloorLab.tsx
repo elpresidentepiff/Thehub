@@ -80,7 +80,6 @@ export function FloorLab(props: FloorLabProps) {
   const [period, setPeriod] = useState(props.initialPeriod);
   const [view, setView] = useState(props.initialView);
   const [kind, setKind] = useState<UnitKind | 'all'>('all');
-  const [materialView, setMaterialView] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [focusId, setFocusId] = useState(units[0]?.id ?? '');
   const [addOns, setAddOns] = useState<string[]>([]);
@@ -243,26 +242,8 @@ export function FloorLab(props: FloorLabProps) {
 
         <div className="fl-grid">
           <div className="fl-main">
-            <div className="fl-planbar">
-              <div>
-                <span className="fl-planbar-kicker">The real floor</span>
-                <strong>Photo-material plan</strong>
-              </div>
-              <div className="fl-view-switch" role="group" aria-label="Plan appearance">
-                <button type="button" aria-pressed={materialView} onClick={() => setMaterialView(true)}>
-                  Materials
-                </button>
-                <button type="button" aria-pressed={!materialView} onClick={() => setMaterialView(false)}>
-                  Drawing
-                </button>
-              </div>
-            </div>
             <div className="fl-mapscroll" ref={scroller}>
-              <div
-                className={`fl-map ${materialView ? 'is-material' : 'is-drawing'}`}
-                style={{ aspectRatio: `${floor.width} / ${floor.height}` }}
-                aria-busy={pending}
-              >
+              <div className="fl-map" style={{ aspectRatio: `${floor.width} / ${floor.height}` }} aria-busy={pending}>
                 <img className="fl-plan" src={props.planSrc} alt="" draggable={false} />
                 <svg
                   className="fl-overlay"
@@ -270,17 +251,6 @@ export function FloorLab(props: FloorLabProps) {
                   role="radiogroup"
                   aria-label={`${floor.name} plan. Arrow keys move between places.`}
                 >
-                  <defs>
-                    <linearGradient id="fl-glass" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0" stopColor="var(--hub-plaster)" stopOpacity=".82" />
-                      <stop offset=".42" stopColor="var(--hub-daylight)" stopOpacity=".48" />
-                      <stop offset=".46" stopColor="var(--hub-plaster)" stopOpacity=".66" />
-                      <stop offset="1" stopColor="var(--hub-daylight)" stopOpacity=".28" />
-                    </linearGradient>
-                    <pattern id="fl-panel-photo" width="2.8" height="2.8" patternUnits="userSpaceOnUse">
-                      <image href="/lab/floor-materials/black-ribbed-wall.webp" width="2.8" height="2.8" preserveAspectRatio="xMidYMid slice" />
-                    </pattern>
-                  </defs>
                   {spaces
                     .filter((s) => s.footprint)
                     .map((s) => {
@@ -288,7 +258,7 @@ export function FloorLab(props: FloorLabProps) {
                       const cx = fp.reduce((t, p) => t + p[0], 0) / fp.length;
                       const cy = fp.reduce((t, p) => t + p[1], 0) / fp.length;
                       return (
-                        <g key={s.id} className={`fl-space is-${s.id.toLowerCase()}`} aria-hidden="true">
+                        <g key={s.id} className="fl-space" aria-hidden="true">
                           <polygon points={points(fp)} />
                           <text x={cx} y={cy}>{s.name}</text>
                         </g>
@@ -297,10 +267,6 @@ export function FloorLab(props: FloorLabProps) {
                   {units.map((u) => {
                     const state = stateOf(u.id);
                     const inFilter = kind === 'all' || u.kind === kind;
-                    const deskNumber = u.kind === 'desk' ? Number(u.id.slice(-3)) : 0;
-                    const chairSide = deskNumber <= 9
-                      ? (deskNumber % 3 === 2 ? -1 : 1)
-                      : ((deskNumber - 10) % 2 === 0 ? -1 : 1);
                     return (
                       <g
                         key={u.id}
@@ -308,7 +274,7 @@ export function FloorLab(props: FloorLabProps) {
                           if (el) unitEls.current.set(u.id, el);
                           else unitEls.current.delete(u.id);
                         }}
-                        className={`fl-unit is-${u.kind} is-${state}${u.id === selectedId ? ' is-selected' : ''}${inFilter ? '' : ' is-dim'}`}
+                        className={`fl-unit is-${state}${u.id === selectedId ? ' is-selected' : ''}${inFilter ? '' : ' is-dim'}`}
                         role={inFilter ? 'radio' : undefined}
                         aria-checked={inFilter ? u.id === selectedId : undefined}
                         aria-label={inFilter ? `${u.label}, ${KIND[u.kind].toLowerCase()}, ${STATE_WORD[state].toLowerCase()}` : undefined}
@@ -319,19 +285,6 @@ export function FloorLab(props: FloorLabProps) {
                       >
                         <polygon className="fl-ring" points={points(u.footprint)} vectorEffect="non-scaling-stroke" />
                         <polygon className="fl-shape" points={points(u.footprint)} vectorEffect="non-scaling-stroke" />
-                        {u.kind === 'desk' && (
-                          <g className="fl-furniture" transform={`translate(${u.x} ${u.y}) rotate(${u.rotDeg})`} aria-hidden="true">
-                            <g className="fl-chair" transform={`translate(0 ${chairSide * .66}) scale(1 ${chairSide})`}>
-                              <rect className="fl-chair-seat" x="-.2" y="-.15" width=".4" height=".32" rx=".07" />
-                              <path className="fl-chair-back" d="M-.27 .12 Q0 .3 .27 .12" />
-                              <path className="fl-chair-arms" d="M-.2 -.05L-.3 .03M.2 -.05L.3 .03" />
-                              <path className="fl-chair-base" d="M0 .13V.35M0 .3L-.22 .41M0 .3L.22 .41M0 .3L-.3 .27M0 .3L.3 .27" />
-                            </g>
-                            <path className="fl-desk-legs" d="M-.48 -.24V.24M.48 -.24V.24" />
-                            <circle className="fl-grommet" cx=".44" cy="0" r=".07" />
-                          </g>
-                        )}
-                        <circle className="fl-status-dot" cx={u.x} cy={u.y} r=".1" vectorEffect="non-scaling-stroke" />
                         {u.kind !== 'desk' && (
                           <text x={u.x} y={u.y}>
                             {labelLines(u.label).map((line, i, all) => (
