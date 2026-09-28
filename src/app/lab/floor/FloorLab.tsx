@@ -80,6 +80,7 @@ export function FloorLab(props: FloorLabProps) {
   const [period, setPeriod] = useState(props.initialPeriod);
   const [view, setView] = useState(props.initialView);
   const [kind, setKind] = useState<UnitKind | 'all'>('all');
+  const [materialView, setMaterialView] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [focusId, setFocusId] = useState(units[0]?.id ?? '');
   const [addOns, setAddOns] = useState<string[]>([]);
@@ -242,8 +243,26 @@ export function FloorLab(props: FloorLabProps) {
 
         <div className="fl-grid">
           <div className="fl-main">
+            <div className="fl-planbar">
+              <div>
+                <span className="fl-planbar-kicker">The real floor</span>
+                <strong>Photo-material plan</strong>
+              </div>
+              <div className="fl-view-switch" role="group" aria-label="Plan appearance">
+                <button type="button" aria-pressed={materialView} onClick={() => setMaterialView(true)}>
+                  Materials
+                </button>
+                <button type="button" aria-pressed={!materialView} onClick={() => setMaterialView(false)}>
+                  Drawing
+                </button>
+              </div>
+            </div>
             <div className="fl-mapscroll" ref={scroller}>
-              <div className="fl-map" style={{ aspectRatio: `${floor.width} / ${floor.height}` }} aria-busy={pending}>
+              <div
+                className={`fl-map ${materialView ? 'is-material' : 'is-drawing'}`}
+                style={{ aspectRatio: `${floor.width} / ${floor.height}` }}
+                aria-busy={pending}
+              >
                 <img className="fl-plan" src={props.planSrc} alt="" draggable={false} />
                 <svg
                   className="fl-overlay"
@@ -251,6 +270,17 @@ export function FloorLab(props: FloorLabProps) {
                   role="radiogroup"
                   aria-label={`${floor.name} plan. Arrow keys move between places.`}
                 >
+                  <defs>
+                    <linearGradient id="fl-glass" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0" stopColor="var(--hub-plaster)" stopOpacity=".82" />
+                      <stop offset=".42" stopColor="var(--hub-daylight)" stopOpacity=".48" />
+                      <stop offset=".46" stopColor="var(--hub-plaster)" stopOpacity=".66" />
+                      <stop offset="1" stopColor="var(--hub-daylight)" stopOpacity=".28" />
+                    </linearGradient>
+                    <pattern id="fl-panel-photo" width="2.8" height="2.8" patternUnits="userSpaceOnUse">
+                      <image href="/lab/floor-materials/black-ribbed-wall.webp" width="2.8" height="2.8" preserveAspectRatio="xMidYMid slice" />
+                    </pattern>
+                  </defs>
                   {spaces
                     .filter((s) => s.footprint)
                     .map((s) => {
@@ -258,7 +288,7 @@ export function FloorLab(props: FloorLabProps) {
                       const cx = fp.reduce((t, p) => t + p[0], 0) / fp.length;
                       const cy = fp.reduce((t, p) => t + p[1], 0) / fp.length;
                       return (
-                        <g key={s.id} className="fl-space" aria-hidden="true">
+                        <g key={s.id} className={`fl-space is-${s.id.toLowerCase()}`} aria-hidden="true">
                           <polygon points={points(fp)} />
                           <text x={cx} y={cy}>{s.name}</text>
                         </g>
@@ -274,7 +304,7 @@ export function FloorLab(props: FloorLabProps) {
                           if (el) unitEls.current.set(u.id, el);
                           else unitEls.current.delete(u.id);
                         }}
-                        className={`fl-unit is-${state}${u.id === selectedId ? ' is-selected' : ''}${inFilter ? '' : ' is-dim'}`}
+                        className={`fl-unit is-${u.kind} is-${state}${u.id === selectedId ? ' is-selected' : ''}${inFilter ? '' : ' is-dim'}`}
                         role={inFilter ? 'radio' : undefined}
                         aria-checked={inFilter ? u.id === selectedId : undefined}
                         aria-label={inFilter ? `${u.label}, ${KIND[u.kind].toLowerCase()}, ${STATE_WORD[state].toLowerCase()}` : undefined}
@@ -285,6 +315,7 @@ export function FloorLab(props: FloorLabProps) {
                       >
                         <polygon className="fl-ring" points={points(u.footprint)} vectorEffect="non-scaling-stroke" />
                         <polygon className="fl-shape" points={points(u.footprint)} vectorEffect="non-scaling-stroke" />
+                        <circle className="fl-status-dot" cx={u.x} cy={u.y} r=".1" vectorEffect="non-scaling-stroke" />
                         {u.kind !== 'desk' && (
                           <text x={u.x} y={u.y}>
                             {labelLines(u.label).map((line, i, all) => (

@@ -3,7 +3,7 @@
 The single living plan. Update the status board and next actions whenever work lands.
 `BUILD_PLAN.md` beside this file is the original rationale (22 Sep) and still holds.
 
-Last updated: 2026-09-24.
+Last updated: 2026-09-28.
 
 ---
 
@@ -20,7 +20,7 @@ Last updated: 2026-09-24.
 | Database schema | Migrations written and tested on a throwaway local Postgres (no-overlap proven under concurrency). **No Supabase project exists** | `supabase/` | Operator approval of schema proposal |
 | Commerce engine | Pure TypeScript, 26 tests (`npm test`): dev-only catalogue, London-time periods, quotes, hold tokens + DB refusal map, Stripe Checkout params, webhook signature check + reducer, mock availability that throws outside development. `check-boundaries` keeps it free of React/renderer imports | `src/commerce/` | — |
 | Stripe | Mapping proposed. **Nothing created** in Stripe | `docs/commerce/STRIPE_OBJECT_MAPPING.md` | Approval + prices |
-| Floor picker (lab) | `/lab/floor` in `npm run dev`: real plan + registry + engine; map (keyboard: arrows) and list (touch); server quotes; 404 in production. A separate `/lab/floor-reality` test turns the measured SVG itself into an interactive 3D floor: raised structure, plan detail, rooms and inventory-positioned desks with real floor materials. | `src/app/lab/floor/`, `src/app/lab/floor-reality/` | Operator review; floor walk to verify inventory and room treatment |
+| Floor picker (lab) | `/lab/floor` in `npm run dev`: real plan + registry + engine; map (keyboard: arrows) and list (touch); server quotes; 404 in production. The default material view now uses photo-derived oak, brick and black-panel surfaces from the real floor while preserving the measured drawing, stable IDs and click-to-book flow; a Drawing switch provides direct comparison. A separate `/lab/floor-reality` test retains the earlier interactive 3D study. | `src/app/lab/floor/`, `public/lab/floor-materials/`, `src/app/lab/floor-reality/` | Operator review of the photo-material pass; floor walk to verify inventory and room treatment |
 | Static commerce mocks | Floor → booking → checkout click-through; invented desk positions | `lab/floor`, `lab/booking`, `lab/checkout` | Floor superseded by `/lab/floor`; booking/checkout still static |
 
 ---
@@ -44,7 +44,7 @@ Last updated: 2026-09-24.
 | C1.1 | `data/inventory/unit4-l2.json` — stable IDs placed on real Rev B geometry | Draft done; needs floor walk |
 | C1.2 | `supabase/migrations` — `hub` / `private` / `api` schemas, exclusion-constraint no-overlap, holds, RLS, grants | Done locally; `npm run db:test` |
 | C1.3 | `src/commerce` — engine + unit tests; mock availability that cannot run in production | Done 24 Sep; `npm test` (the 23 Sep board said done before the tests existed) |
-| C1.4 | `src/app/lab/floor` — the real plan + registry + engine, touch/keyboard states | Built 24 Sep (Playwright-checked desktop + phone); restyle to the floor's look pending |
+| C1.4 | `src/app/lab/floor` — the real plan + registry + engine, touch/keyboard states | Built 24 Sep; photo-material pass built 28 Sep from the operator's floor photographs, with original drawing comparison retained |
 | C1.5 | Seat authoring tool (BUILD_PLAN §2): place/nudge/name seats on the plan, export registry | Next |
 
 ---
@@ -54,9 +54,9 @@ Last updated: 2026-09-24.
 1. **Operator:** pick the logo and opening-shot direction; pick a cleat direction
    (`lab/cleat-studies/`).
 2. **Operator:** answer the commerce questions below. They unblock C2.
-3. Review the live 3D plan at `/lab/floor-reality`; correct structure, room and furniture details
-   against the operator's floor photographs. Then use the approved model to restyle `/lab/floor`
-   and link the end of the opening into it so the site is one journey.
+3. Review the photo-material booking plan at `/lab/floor`; tune material placement against the
+   operator's corrections, then link the end of the opening into this same clickable plan so the
+   site is one journey. Keep `/lab/floor-reality` only as a separate spatial study unless approved.
 4. C1.5 seat authoring tool; then walk the floor with it and mark the registry `verified`.
 5. When a cleat study is chosen (D2): build it into `proto/opening.html` first, then `src/experience/opening`.
 6. After approval: create the dedicated Hub Supabase project, apply migrations, run the SQL
