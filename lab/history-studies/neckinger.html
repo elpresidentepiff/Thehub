@@ -325,7 +325,10 @@ if (renderer) {
   door.position.set(0, -1.05, -0.02); // in front of the wall too, same reason
   facade.add(door);
   facade.position.copy(riseTop).add(new THREE.Vector3(0, 0.3, -2.6));
-  facade.lookAt(riseBase);
+  // riseBase sits 5.4m below: lookAt(riseBase) directly pitches the whole wall backward to face
+  // down at it, like a ceiling rather than a wall — a real facade stands vertical. Look at a
+  // point levelled to the wall's own height instead, so only yaw (which way it faces) changes.
+  facade.lookAt(riseBase.x, facade.position.y, riseBase.z);
   scene.add(facade);
 
   const lamp = new THREE.Group();
@@ -363,7 +366,7 @@ if (renderer) {
   // same spot, same size as the wall it dissolves into — a full-frame cross-dissolve reads
   // correctly regardless of exact camera framing, unlike a small door cut into the brick
   building.position.copy(facade.position).add(new THREE.Vector3(0, 0, 0.01));
-  building.lookAt(riseBase);
+  building.lookAt(riseBase.x, building.position.y, riseBase.z); // same fix: stand it up vertical
   scene.add(building);
 
   // ——— camera: simply follows the curve and looks ahead — the entrance sits dead ahead of the
