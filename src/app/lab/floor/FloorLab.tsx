@@ -298,7 +298,9 @@ export function FloorLab(props: FloorLabProps) {
                     const state = stateOf(u.id);
                     const inFilter = kind === 'all' || u.kind === kind;
                     const deskNumber = u.kind === 'desk' ? Number(u.id.slice(-3)) : 0;
-                    const chairSide = deskNumber >= 10 && (deskNumber - 10) % 2 === 0 ? -1 : 1;
+                    const chairSide = deskNumber <= 9
+                      ? (deskNumber % 3 === 2 ? -1 : 1)
+                      : ((deskNumber - 10) % 2 === 0 ? -1 : 1);
                     return (
                       <g
                         key={u.id}

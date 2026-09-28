@@ -15,7 +15,7 @@ with it yet (BUILD_PLAN §2, step 4). What is installed is what people are buyin
 
 | ID | Label (provisional) | Kind | Capacity | Bookable | Source |
 | --- | --- | --- | --- | --- | --- |
-| `L2-D001`–`L2-D009` | Wall 1–9, three banks of three | desk | 1 each | yes | operator correction from floor photographs |
+| `L2-D001`–`L2-D009` | Wall 1–9, three banks: two facing positions plus a perpendicular end desk | desk | 1 each | yes | operator correction from floor photographs |
 | `L2-D010`–`L2-D019` | Centre 1–10, five banks of two | desk | 1 each | yes | operator correction from floor photographs |
 | `L2-MR01` | Meeting room (small), 8.2 m² | meeting_room | 4 | yes | drawing annotation |
 | `L2-MR02` | Meeting room (large), 17.6 m² | meeting_room | 8 | yes | drawing annotation |
