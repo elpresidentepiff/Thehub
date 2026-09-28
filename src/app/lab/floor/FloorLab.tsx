@@ -267,6 +267,10 @@ export function FloorLab(props: FloorLabProps) {
                   {units.map((u) => {
                     const state = stateOf(u.id);
                     const inFilter = kind === 'all' || u.kind === kind;
+                    const deskNumber = u.kind === 'desk' ? Number(u.id.slice(-3)) : 0;
+                    const chairSide = deskNumber <= 9
+                      ? (deskNumber % 3 === 1 ? 1 : deskNumber % 3 === 2 ? -1 : 1)
+                      : ((deskNumber - 10) % 2 === 0 ? -1 : 1);
                     return (
                       <g
                         key={u.id}
@@ -274,7 +278,7 @@ export function FloorLab(props: FloorLabProps) {
                           if (el) unitEls.current.set(u.id, el);
                           else unitEls.current.delete(u.id);
                         }}
-                        className={`fl-unit is-${state}${u.id === selectedId ? ' is-selected' : ''}${inFilter ? '' : ' is-dim'}`}
+                        className={`fl-unit is-${u.kind} is-${state}${u.id === selectedId ? ' is-selected' : ''}${inFilter ? '' : ' is-dim'}`}
                         role={inFilter ? 'radio' : undefined}
                         aria-checked={inFilter ? u.id === selectedId : undefined}
                         aria-label={inFilter ? `${u.label}, ${KIND[u.kind].toLowerCase()}, ${STATE_WORD[state].toLowerCase()}` : undefined}
@@ -285,6 +289,13 @@ export function FloorLab(props: FloorLabProps) {
                       >
                         <polygon className="fl-ring" points={points(u.footprint)} vectorEffect="non-scaling-stroke" />
                         <polygon className="fl-shape" points={points(u.footprint)} vectorEffect="non-scaling-stroke" />
+                        {u.kind === 'desk' && (
+                          <g className="fl-chair" transform={`translate(${u.x} ${u.y}) rotate(${u.rotDeg}) translate(0 ${chairSide * .69}) scale(1 ${chairSide})`} aria-hidden="true">
+                            <rect className="fl-chair-seat" x="-.21" y="-.14" width=".42" height=".3" rx=".06" />
+                            <path className="fl-chair-back" d="M-.28 .13 Q0 .34 .28 .13" />
+                            <path className="fl-chair-base" d="M0 .15V.34M0 .29L-.24 .4M0 .29L.24 .4M0 .29L-.28 .25M0 .29L.28 .25" />
+                          </g>
+                        )}
                         {u.kind !== 'desk' && (
                           <text x={u.x} y={u.y}>
                             {labelLines(u.label).map((line, i, all) => (

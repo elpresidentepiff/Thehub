@@ -1,8 +1,9 @@
 """Build data/inventory/unit4-l2.json — the stable bookable-unit registry for Unit 4 L2.
 
-Desks come from tools/detect_desks.py (proven 2:1 rectangles in Rev B). Rooms are read
-from the drawing's own annotations (dimension strings and labelled areas) and placed by eye
-on a metric grid, so their footprints are approximate (+/- 0.2 m) until the floor walk.
+The Rev B detector supplies the measured grid and reliable desk anchors. The main-office
+layout is corrected from the operator's 28 Sep 2026 photographs: three three-seat banks
+along the side wall and five two-seat banks in the centre. Rooms are read from the drawing's
+own annotations and remain approximate (+/- 0.2 m) until the floor walk.
 
 Identity rules (never break these):
   - An ID, once issued, is never reused or renumbered. Retire it with "retired": true.
@@ -55,25 +56,56 @@ counts = {k: len(v) for k, v in by_zone.items()}
 if counts != expected:
     sys.exit(f'desk detection changed: {counts} != {expected}. Review before reissuing IDs.')
 
-# Reading order: window row left to right; centre row pair by pair; corner pair.
-window = sorted(by_zone['window'], key=lambda d: d['x_m'])
-centre = sorted(by_zone['centre'], key=lambda d: (round(d['x_m']), d['y_m']))
-corner = sorted(by_zone['corner'], key=lambda d: d['x_m'])
+# The actual wall banks are not the four pairs proposed in Rev B. Each photographed bank is
+# a compact T: two parallel desks, with chairs on their outside edges, and one horizontal desk
+# across their room-facing ends with its own chair. These centres stay on the drawing's -9/81°
+# grid and use the detector's proven 1.35 x 0.67 m desk size.
+wall_banks = [
+    ((12.599, 4.679), (13.265, 4.574), (13.082, 5.575)),
+    ((16.343, 4.085), (17.009, 3.980), (16.826, 4.981)),
+    ((20.087, 3.491), (20.753, 3.386), (20.570, 4.387)),
+]
+
+# Five photographed centre pairs. The middle three are detected Rev B rectangles; the outer
+# two continue the same measured 1.775 m bay spacing and -9° drawing grid.
+centre_pairs = [
+    ((17.488, 6.755), (17.593, 7.420)),
+    ((19.263, 6.473), (19.368, 7.138)),
+    ((21.038, 6.191), (21.143, 6.857)),
+    ((22.812, 5.909), (22.918, 6.575)),
+    ((24.587, 5.628), (24.692, 6.294)),
+]
 
 units = []
 n = 0
-for label, row in (('Window', window), ('Centre', centre), ('Corner', corner)):
-    for i, d in enumerate(row, 1):
+for bank in wall_banks:
+    for position, (cx, cy) in enumerate(bank):
+        n += 1
+        rot = 81.0 if position < 2 else -9.0
+        units.append({
+            'id': f'L2-D{n:03d}',
+            'space_id': 'L2-MAIN',
+            'kind': 'desk',
+            'label': f'Wall {n}',
+            'capacity': 1,
+            'x_m': cx, 'y_m': cy, 'rot_deg': rot,
+            'footprint': rect(cx, cy, 1.35, 0.67, rot),
+            'source': 'operator-corrected:photos-2026-09-28',
+            'verified': False,
+        })
+
+for pair in centre_pairs:
+    for cx, cy in pair:
         n += 1
         units.append({
             'id': f'L2-D{n:03d}',
             'space_id': 'L2-MAIN',
             'kind': 'desk',
-            'label': f'{label} {i}',
+            'label': f'Centre {n - 9}',
             'capacity': 1,
-            'x_m': d['x_m'], 'y_m': d['y_m'], 'rot_deg': d['rot_deg'],
-            'footprint': rect(d['x_m'], d['y_m'], d['w_m'], d['d_m'], d['rot_deg']),
-            'source': 'rev-b:detected',
+            'x_m': cx, 'y_m': cy, 'rot_deg': -9.0,
+            'footprint': rect(cx, cy, 1.35, 0.67, -9.0),
+            'source': 'operator-corrected:photos-2026-09-28',
             'verified': False,
         })
 
@@ -117,7 +149,7 @@ registry = {
         'width_m': meta['extent_m']['w'],
         'height_m': meta['extent_m']['h'],
     },
-    'status': 'DRAFT: drawn from the proposed Rev B layout. Walk the floor and set verified=true per unit.',
+    'status': 'DRAFT: main-office grouping corrected from operator photographs on 28 Sep 2026; exact positions still require the floor walk.',
     'spaces': spaces,
     'units': units,
 }

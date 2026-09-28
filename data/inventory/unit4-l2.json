@@ -8,7 +8,7 @@
   "width_m": 31.707,
   "height_m": 18.442
  },
- "status": "DRAFT: drawn from the proposed Rev B layout. Walk the floor and set verified=true per unit.",
+ "status": "DRAFT: main-office grouping corrected from operator photographs on 28 Sep 2026; exact positions still require the floor walk.",
  "spaces": [
   {
    "id": "L2-MAIN",
@@ -86,7 +86,7 @@
    "id": "L2-D001",
    "space_id": "L2-MAIN",
    "kind": "desk",
-   "label": "Window 1",
+   "label": "Wall 1",
    "capacity": 1,
    "x_m": 12.599,
    "y_m": 4.679,
@@ -109,14 +109,14 @@
      4.065
     ]
    ],
-   "source": "rev-b:detected",
+   "source": "operator-corrected:photos-2026-09-28",
    "verified": false
   },
   {
    "id": "L2-D002",
    "space_id": "L2-MAIN",
    "kind": "desk",
-   "label": "Window 2",
+   "label": "Wall 2",
    "capacity": 1,
    "x_m": 13.265,
    "y_m": 4.574,
@@ -139,44 +139,44 @@
      3.96
     ]
    ],
-   "source": "rev-b:detected",
+   "source": "operator-corrected:photos-2026-09-28",
    "verified": false
   },
   {
    "id": "L2-D003",
    "space_id": "L2-MAIN",
    "kind": "desk",
-   "label": "Window 3",
+   "label": "Wall 3",
    "capacity": 1,
-   "x_m": 15.677,
-   "y_m": 4.191,
-   "rot_deg": 81.0,
+   "x_m": 13.082,
+   "y_m": 5.575,
+   "rot_deg": -9.0,
    "footprint": [
     [
-     15.902,
-     3.472
+     12.363,
+     5.35
     ],
     [
-     16.113,
-     4.805
+     13.696,
+     5.139
     ],
     [
-     15.452,
-     4.91
+     13.801,
+     5.8
     ],
     [
-     15.241,
-     3.577
+     12.468,
+     6.011
     ]
    ],
-   "source": "rev-b:detected",
+   "source": "operator-corrected:photos-2026-09-28",
    "verified": false
   },
   {
    "id": "L2-D004",
    "space_id": "L2-MAIN",
    "kind": "desk",
-   "label": "Window 4",
+   "label": "Wall 4",
    "capacity": 1,
    "x_m": 16.343,
    "y_m": 4.085,
@@ -199,134 +199,224 @@
      3.471
     ]
    ],
-   "source": "rev-b:detected",
+   "source": "operator-corrected:photos-2026-09-28",
    "verified": false
   },
   {
    "id": "L2-D005",
    "space_id": "L2-MAIN",
    "kind": "desk",
-   "label": "Window 5",
+   "label": "Wall 5",
    "capacity": 1,
-   "x_m": 18.755,
-   "y_m": 3.703,
+   "x_m": 17.009,
+   "y_m": 3.98,
    "rot_deg": 81.0,
    "footprint": [
     [
-     18.98,
-     2.984
+     17.234,
+     3.261
     ],
     [
-     19.191,
-     4.317
+     17.445,
+     4.594
     ],
     [
-     18.53,
-     4.422
+     16.784,
+     4.699
     ],
     [
-     18.319,
-     3.089
+     16.573,
+     3.366
     ]
    ],
-   "source": "rev-b:detected",
+   "source": "operator-corrected:photos-2026-09-28",
    "verified": false
   },
   {
    "id": "L2-D006",
    "space_id": "L2-MAIN",
    "kind": "desk",
-   "label": "Window 6",
+   "label": "Wall 6",
    "capacity": 1,
-   "x_m": 19.421,
-   "y_m": 3.597,
-   "rot_deg": 81.0,
+   "x_m": 16.826,
+   "y_m": 4.981,
+   "rot_deg": -9.0,
    "footprint": [
     [
-     19.646,
-     2.878
+     16.107,
+     4.756
     ],
     [
-     19.857,
-     4.211
+     17.44,
+     4.545
     ],
     [
-     19.196,
-     4.316
+     17.545,
+     5.206
     ],
     [
-     18.985,
-     2.983
+     16.212,
+     5.417
     ]
    ],
-   "source": "rev-b:detected",
+   "source": "operator-corrected:photos-2026-09-28",
    "verified": false
   },
   {
    "id": "L2-D007",
    "space_id": "L2-MAIN",
    "kind": "desk",
-   "label": "Window 7",
+   "label": "Wall 7",
    "capacity": 1,
-   "x_m": 21.833,
-   "y_m": 3.214,
+   "x_m": 20.087,
+   "y_m": 3.491,
    "rot_deg": 81.0,
    "footprint": [
     [
-     22.058,
-     2.495
+     20.312,
+     2.772
     ],
     [
-     22.269,
-     3.828
+     20.523,
+     4.105
     ],
     [
-     21.608,
-     3.933
+     19.862,
+     4.21
     ],
     [
-     21.397,
-     2.6
+     19.651,
+     2.877
     ]
    ],
-   "source": "rev-b:detected",
+   "source": "operator-corrected:photos-2026-09-28",
    "verified": false
   },
   {
    "id": "L2-D008",
    "space_id": "L2-MAIN",
    "kind": "desk",
-   "label": "Window 8",
+   "label": "Wall 8",
    "capacity": 1,
-   "x_m": 22.499,
-   "y_m": 3.108,
+   "x_m": 20.753,
+   "y_m": 3.386,
    "rot_deg": 81.0,
    "footprint": [
     [
-     22.724,
-     2.389
+     20.978,
+     2.667
     ],
     [
-     22.935,
-     3.722
+     21.189,
+     4.0
     ],
     [
-     22.274,
-     3.827
+     20.528,
+     4.105
     ],
     [
-     22.063,
-     2.494
+     20.317,
+     2.772
     ]
    ],
-   "source": "rev-b:detected",
+   "source": "operator-corrected:photos-2026-09-28",
    "verified": false
   },
   {
    "id": "L2-D009",
    "space_id": "L2-MAIN",
    "kind": "desk",
+   "label": "Wall 9",
+   "capacity": 1,
+   "x_m": 20.57,
+   "y_m": 4.387,
+   "rot_deg": -9.0,
+   "footprint": [
+    [
+     19.851,
+     4.162
+    ],
+    [
+     21.184,
+     3.951
+    ],
+    [
+     21.289,
+     4.612
+    ],
+    [
+     19.956,
+     4.823
+    ]
+   ],
+   "source": "operator-corrected:photos-2026-09-28",
+   "verified": false
+  },
+  {
+   "id": "L2-D010",
+   "space_id": "L2-MAIN",
+   "kind": "desk",
    "label": "Centre 1",
+   "capacity": 1,
+   "x_m": 17.488,
+   "y_m": 6.755,
+   "rot_deg": -9.0,
+   "footprint": [
+    [
+     16.769,
+     6.53
+    ],
+    [
+     18.102,
+     6.319
+    ],
+    [
+     18.207,
+     6.98
+    ],
+    [
+     16.874,
+     7.191
+    ]
+   ],
+   "source": "operator-corrected:photos-2026-09-28",
+   "verified": false
+  },
+  {
+   "id": "L2-D011",
+   "space_id": "L2-MAIN",
+   "kind": "desk",
+   "label": "Centre 2",
+   "capacity": 1,
+   "x_m": 17.593,
+   "y_m": 7.42,
+   "rot_deg": -9.0,
+   "footprint": [
+    [
+     16.874,
+     7.195
+    ],
+    [
+     18.207,
+     6.984
+    ],
+    [
+     18.312,
+     7.645
+    ],
+    [
+     16.979,
+     7.856
+    ]
+   ],
+   "source": "operator-corrected:photos-2026-09-28",
+   "verified": false
+  },
+  {
+   "id": "L2-D012",
+   "space_id": "L2-MAIN",
+   "kind": "desk",
+   "label": "Centre 3",
    "capacity": 1,
    "x_m": 19.263,
    "y_m": 6.473,
@@ -349,14 +439,14 @@
      6.909
     ]
    ],
-   "source": "rev-b:detected",
+   "source": "operator-corrected:photos-2026-09-28",
    "verified": false
   },
   {
-   "id": "L2-D010",
+   "id": "L2-D013",
    "space_id": "L2-MAIN",
    "kind": "desk",
-   "label": "Centre 2",
+   "label": "Centre 4",
    "capacity": 1,
    "x_m": 19.368,
    "y_m": 7.138,
@@ -379,14 +469,14 @@
      7.574
     ]
    ],
-   "source": "rev-b:detected",
+   "source": "operator-corrected:photos-2026-09-28",
    "verified": false
   },
   {
-   "id": "L2-D011",
+   "id": "L2-D014",
    "space_id": "L2-MAIN",
    "kind": "desk",
-   "label": "Centre 3",
+   "label": "Centre 5",
    "capacity": 1,
    "x_m": 21.038,
    "y_m": 6.191,
@@ -409,14 +499,14 @@
      6.627
     ]
    ],
-   "source": "rev-b:detected",
+   "source": "operator-corrected:photos-2026-09-28",
    "verified": false
   },
   {
-   "id": "L2-D012",
+   "id": "L2-D015",
    "space_id": "L2-MAIN",
    "kind": "desk",
-   "label": "Centre 4",
+   "label": "Centre 6",
    "capacity": 1,
    "x_m": 21.143,
    "y_m": 6.857,
@@ -439,14 +529,14 @@
      7.293
     ]
    ],
-   "source": "rev-b:detected",
+   "source": "operator-corrected:photos-2026-09-28",
    "verified": false
   },
   {
-   "id": "L2-D013",
+   "id": "L2-D016",
    "space_id": "L2-MAIN",
    "kind": "desk",
-   "label": "Centre 5",
+   "label": "Centre 7",
    "capacity": 1,
    "x_m": 22.812,
    "y_m": 5.909,
@@ -469,14 +559,14 @@
      6.345
     ]
    ],
-   "source": "rev-b:detected",
+   "source": "operator-corrected:photos-2026-09-28",
    "verified": false
   },
   {
-   "id": "L2-D014",
+   "id": "L2-D017",
    "space_id": "L2-MAIN",
    "kind": "desk",
-   "label": "Centre 6",
+   "label": "Centre 8",
    "capacity": 1,
    "x_m": 22.918,
    "y_m": 6.575,
@@ -499,67 +589,67 @@
      7.011
     ]
    ],
-   "source": "rev-b:detected",
+   "source": "operator-corrected:photos-2026-09-28",
    "verified": false
   },
   {
-   "id": "L2-D015",
+   "id": "L2-D018",
    "space_id": "L2-MAIN",
    "kind": "desk",
-   "label": "Corner 1",
+   "label": "Centre 9",
    "capacity": 1,
-   "x_m": 23.318,
-   "y_m": 9.972,
-   "rot_deg": 81.0,
+   "x_m": 24.587,
+   "y_m": 5.628,
+   "rot_deg": -9.0,
    "footprint": [
     [
-     23.543,
-     9.253
+     23.868,
+     5.403
     ],
     [
-     23.754,
-     10.586
+     25.201,
+     5.192
     ],
     [
-     23.093,
-     10.691
+     25.306,
+     5.853
     ],
     [
-     22.882,
-     9.358
+     23.973,
+     6.064
     ]
    ],
-   "source": "rev-b:detected",
+   "source": "operator-corrected:photos-2026-09-28",
    "verified": false
   },
   {
-   "id": "L2-D016",
+   "id": "L2-D019",
    "space_id": "L2-MAIN",
    "kind": "desk",
-   "label": "Corner 2",
+   "label": "Centre 10",
    "capacity": 1,
-   "x_m": 23.984,
-   "y_m": 9.867,
-   "rot_deg": 81.0,
+   "x_m": 24.692,
+   "y_m": 6.294,
+   "rot_deg": -9.0,
    "footprint": [
     [
-     24.209,
-     9.148
+     23.973,
+     6.069
     ],
     [
-     24.42,
-     10.481
+     25.306,
+     5.858
     ],
     [
-     23.759,
-     10.586
+     25.411,
+     6.519
     ],
     [
-     23.548,
-     9.253
+     24.078,
+     6.73
     ]
    ],
-   "source": "rev-b:detected",
+   "source": "operator-corrected:photos-2026-09-28",
    "verified": false
   },
   {

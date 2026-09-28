@@ -5,8 +5,9 @@ can be booked, or that the floor picker needs to draw. It holds **identity and g
 only**. Prices, availability, holds, bookings and occupants live in the database and are
 joined by ID.
 
-Status: **DRAFT.** Built from the architect's *proposed* Rev B layout. Nobody has walked the
-floor with it yet (BUILD_PLAN §2, step 4). What is installed is what people are buying.
+Status: **DRAFT.** The drawing geometry comes from Rev B; the main-office grouping was
+corrected from the operator's photographs on 28 September 2026. Nobody has walked the floor
+with it yet (BUILD_PLAN §2, step 4). What is installed is what people are buying.
 
 ![Draft registry over the corrected Rev B plan](img/inventory-draft-unit4-l2.jpg)
 
@@ -14,9 +15,8 @@ floor with it yet (BUILD_PLAN §2, step 4). What is installed is what people are
 
 | ID | Label (provisional) | Kind | Capacity | Bookable | Source |
 | --- | --- | --- | --- | --- | --- |
-| `L2-D001`–`L2-D008` | Window 1–8 | desk | 1 each | yes | detected in Rev B |
-| `L2-D009`–`L2-D014` | Centre 1–6 | desk | 1 each | yes | detected in Rev B |
-| `L2-D015`–`L2-D016` | Corner 1–2 | desk | 1 each | yes | detected in Rev B |
+| `L2-D001`–`L2-D009` | Wall 1–9; three T-shaped banks of three | desk | 1 each | yes | operator photographs on 28 Sep 2026, aligned to the Rev B grid |
+| `L2-D010`–`L2-D019` | Centre 1–10; five banks of two | desk | 1 each | yes | operator photographs on 28 Sep 2026, aligned to detected Rev B desks |
 | `L2-MR01` | Meeting room (small), 8.2 m² | meeting_room | 4 | yes | drawing annotation |
 | `L2-MR02` | Meeting room (large), 17.6 m² | meeting_room | 8 | yes | drawing annotation |
 | `L2-OFFICE01` | Private office 1 (drawing says "ACG Offices", 6 desks) | private_office | 6 | **no, pending D6** | drawing annotation |
@@ -49,8 +49,9 @@ python3 tools/detect_desks.py      # proves every 2:1 desk rectangle in the Rev 
 python3 tools/build_inventory.py   # assigns IDs, adds rooms, writes the registry
 ```
 
-`build_inventory.py` refuses to run if the detector's count per zone changes, so a new
-drawing can never silently renumber desks.
+`build_inventory.py` refuses to run if the detector's count per zone changes, then applies
+the photographed 19-desk main-office grouping on the same measured grid. A new drawing can
+therefore never silently shift or renumber the corrected layout.
 
 Room footprints are read from the drawing's dimension strings and placed by eye on a metric
 grid. They are accurate to about ±0.2 m, which is enough for a hit area. The seat authoring

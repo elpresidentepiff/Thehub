@@ -6,10 +6,19 @@ import { registry, registryJson } from './test-fixtures.ts';
 test('the Unit 4 L2 registry parses', () => {
   assert.equal(registry.floor.id, 'unit4-l2');
   const count = (kind: string) => registry.units.filter((u) => u.kind === kind).length;
-  assert.deepEqual([count('desk'), count('meeting_room'), count('private_office')], [16, 2, 2]);
+  assert.deepEqual([count('desk'), count('meeting_room'), count('private_office')], [19, 2, 2]);
   assert.equal(unitById(registry, 'L2-MR02')?.capacity, 8);
   assert.equal(unitById(registry, 'L2-OFFICE01')?.bookable, false); // ACG/Iffy's pending (D6)
   assert.ok(registry.units.every((u) => !u.verified), 'nothing is verified until the floor walk');
+
+  const desks = registry.units.filter((u) => u.kind === 'desk');
+  assert.deepEqual(desks.slice(0, 9).map((u) => u.rotDeg), [81, 81, -9, 81, 81, -9, 81, 81, -9]);
+  for (let start = 0; start < 9; start += 3) {
+    const [left, right, horizontal] = desks.slice(start, start + 3);
+    assert.ok(left && right && horizontal);
+    assert.ok(horizontal.y > Math.max(left.y, right.y), 'each horizontal wall desk faces into the room');
+  }
+  assert.ok(desks.slice(9).every((u) => u.rotDeg === -9), 'the ten centre desks follow the drawing grid');
 });
 
 test('unit ids follow the database constraint', () => {
