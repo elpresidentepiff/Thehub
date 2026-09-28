@@ -65,9 +65,9 @@ if counts != expected:
 
 # The close-up is unambiguous: each wall station contains exactly three standard tables. Two
 # 1.35 x .67 m tables run vertically side-by-side; a third runs horizontally across the room-
-# facing bottom. Use the first three measured vertical pairs from Rev B and exclude the fourth
-# pair: the operator has confirmed that only three of these stations exist.
-window_desks = sorted(by_zone['window'], key=lambda d: d['x_m'])[:6]
+# facing bottom. Use the three measured pairs nearest Private Office 1 and exclude the pair
+# nearest the small meeting room, matching the operator's placement correction.
+window_desks = sorted(by_zone['window'], key=lambda d: d['x_m'])[-6:]
 wall_vertical_pairs = [(window_desks[i], window_desks[i + 1]) for i in range(0, 6, 2)]
 
 # The second close-up shows one continuous double-sided ten-seat bench. Five 1.35 m surfaces
