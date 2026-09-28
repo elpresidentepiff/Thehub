@@ -297,6 +297,8 @@ export function FloorLab(props: FloorLabProps) {
                   {units.map((u) => {
                     const state = stateOf(u.id);
                     const inFilter = kind === 'all' || u.kind === kind;
+                    const deskNumber = u.kind === 'desk' ? Number(u.id.slice(-3)) : 0;
+                    const chairSide = deskNumber >= 10 && (deskNumber - 10) % 2 === 0 ? -1 : 1;
                     return (
                       <g
                         key={u.id}
@@ -313,6 +315,12 @@ export function FloorLab(props: FloorLabProps) {
                         onClick={inFilter ? () => choose(u.id) : undefined}
                         onKeyDown={inFilter ? (e) => onMapKey(e, u.id) : undefined}
                       >
+                        {u.kind === 'desk' && (
+                          <g className="fl-chair" transform={`translate(${u.x} ${u.y}) rotate(${u.rotDeg})`} aria-hidden="true">
+                            <circle cy={chairSide * .62} r=".2" />
+                            <path d={`M-.22 ${chairSide * .78} Q0 ${chairSide * .9} .22 ${chairSide * .78}`} />
+                          </g>
+                        )}
                         <polygon className="fl-ring" points={points(u.footprint)} vectorEffect="non-scaling-stroke" />
                         <polygon className="fl-shape" points={points(u.footprint)} vectorEffect="non-scaling-stroke" />
                         <circle className="fl-status-dot" cx={u.x} cy={u.y} r=".1" vectorEffect="non-scaling-stroke" />

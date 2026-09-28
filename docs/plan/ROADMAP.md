@@ -16,7 +16,7 @@ Last updated: 2026-09-28.
 | Opening tests A/B/C | **Rejected** ("good attempt but not looking cool"). Kept as evidence only | `lab/opening-tests/` | — |
 | Production opening (Next.js) | **Synced to the approved prototype 24 Sep:** HUB-letters beat removed; the camera now pushes through the cleat (prototype timings, dolly ×4.8); build + camera test pass; frame-compared with `proto/opening.html` | `src/experience/opening/` | Cleat choice (D2) and logo (D1) slot into the same beat |
 | Logo / opening-shot design | **Operator deciding** | — | Operator |
-| Inventory registry | Draft from Rev B: 16 open-plan desks, 2 meeting rooms, 2 private offices. **Not yet walked on site** | `data/inventory/unit4-l2.json` | Floor walk; ACG/Iffy's decision |
+| Inventory registry | Draft from Rev B, corrected by operator against floor photos on 28 Sep: 9 wall desks in three banks of three, 10 centre desks, 2 meeting rooms, 2 private offices. **Not yet walked on site** | `data/inventory/unit4-l2.json` | Floor walk for exact positions; ACG/Iffy's decision |
 | Database schema | Migrations written and tested on a throwaway local Postgres (no-overlap proven under concurrency). **No Supabase project exists** | `supabase/` | Operator approval of schema proposal |
 | Commerce engine | Pure TypeScript, 26 tests (`npm test`): dev-only catalogue, London-time periods, quotes, hold tokens + DB refusal map, Stripe Checkout params, webhook signature check + reducer, mock availability that throws outside development. `check-boundaries` keeps it free of React/renderer imports | `src/commerce/` | — |
 | Stripe | Mapping proposed. **Nothing created** in Stripe | `docs/commerce/STRIPE_OBJECT_MAPPING.md` | Approval + prices |
@@ -41,7 +41,7 @@ Last updated: 2026-09-28.
 
 | Step | Delivers | State |
 | --- | --- | --- |
-| C1.1 | `data/inventory/unit4-l2.json` — stable IDs placed on real Rev B geometry | Draft done; needs floor walk |
+| C1.1 | `data/inventory/unit4-l2.json` — stable IDs placed on real Rev B geometry | Count/grouping operator-corrected 28 Sep (19 desks); exact positions need floor walk |
 | C1.2 | `supabase/migrations` — `hub` / `private` / `api` schemas, exclusion-constraint no-overlap, holds, RLS, grants | Done locally; `npm run db:test` |
 | C1.3 | `src/commerce` — engine + unit tests; mock availability that cannot run in production | Done 24 Sep; `npm test` (the 23 Sep board said done before the tests existed) |
 | C1.4 | `src/app/lab/floor` — the real plan + registry + engine, touch/keyboard states | Built 24 Sep; photo-material pass built 28 Sep from the operator's floor photographs, with original drawing comparison retained |

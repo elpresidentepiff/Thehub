@@ -6,7 +6,7 @@ import { registry, registryJson } from './test-fixtures.ts';
 test('the Unit 4 L2 registry parses', () => {
   assert.equal(registry.floor.id, 'unit4-l2');
   const count = (kind: string) => registry.units.filter((u) => u.kind === kind).length;
-  assert.deepEqual([count('desk'), count('meeting_room'), count('private_office')], [16, 2, 2]);
+  assert.deepEqual([count('desk'), count('meeting_room'), count('private_office')], [19, 2, 2]);
   assert.equal(unitById(registry, 'L2-MR02')?.capacity, 8);
   assert.equal(unitById(registry, 'L2-OFFICE01')?.bookable, false); // ACG/Iffy's pending (D6)
   assert.ok(registry.units.every((u) => !u.verified), 'nothing is verified until the floor walk');

@@ -14,7 +14,7 @@ on a throwaway local Postgres 16 (Supabase runs 17; nothing used is version-spec
 | Check | Result |
 | --- | --- |
 | Migrations apply cleanly, in order, each in one transaction | 3/3 |
-| Real registry (`data/inventory/unit4-l2.json`) seeds, twice (idempotent) | 16 desks, 4 rooms/offices |
+| Real registry (`data/inventory/unit4-l2.json`) seeds, twice (idempotent) | 19 desks, 4 rooms/offices |
 | Structural guarantees (`01_structure.test.sql`) | 12/12 |
 | Booking behaviour (`02_booking.test.sql`) | 35/35 |
 | Who can see and do what (`03_access.test.sql`) | 21/21 |
@@ -308,4 +308,3 @@ policy must have the required SELECT policy. Views must be tested as carefully a
 - Row Level Security: https://supabase.com/docs/guides/database/postgres/row-level-security
 - Database functions: https://supabase.com/docs/guides/database/functions
 - Realtime authorisation: https://supabase.com/docs/guides/realtime/authorization
-

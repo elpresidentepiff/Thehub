@@ -58,7 +58,7 @@
 .fl-notice { margin: 0 0 14px; padding: 12px 14px; border-left: 2px solid var(--hub-brass); background: var(--hub-ink-2); color: var(--hub-halo-warm); }
 
 /* — layout — */
-.fl-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 380px); gap: 24px; align-items: start; }
+.fl-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 340px); gap: 20px; align-items: start; }
 .fl-main { min-width: 0; }
 
 /* — the plan — */
@@ -83,7 +83,7 @@
 
 .fl-mapscroll { overflow-x: auto; overscroll-behavior-x: contain; background: var(--hub-plaster); border: 1px solid var(--fl-line); }
 .fl-map {
-  position: relative; isolation: isolate; min-width: 720px; overflow: hidden;
+  position: relative; isolation: isolate; min-width: 960px; overflow: hidden;
   background: var(--hub-plaster);
 }
 .fl-map::before, .fl-map::after {
@@ -141,6 +141,8 @@
   transition: fill var(--hub-dur-fast) var(--hub-ease), stroke-width var(--hub-dur-fast) var(--hub-ease), filter var(--hub-dur-fast) var(--hub-ease);
 }
 .fl-unit .fl-ring { fill: none; stroke: none; stroke-width: 9px; }
+.fl-unit .fl-chair { fill: var(--hub-panel); stroke: var(--hub-steel); stroke-width: .045px; pointer-events: none; }
+.fl-unit .fl-chair path { fill: none; stroke: var(--hub-panel); stroke-width: .11px; stroke-linecap: round; }
 .fl-unit .fl-status-dot { stroke: var(--hub-plaster); stroke-width: 1.25px; pointer-events: none; }
 .fl-unit.is-available .fl-shape { fill: color-mix(in srgb, var(--hub-plaster) 86%, var(--hub-halo-warm)); stroke: var(--hub-brass-deep); }
 .fl-unit.is-available .fl-status-dot { fill: var(--hub-brass); }
