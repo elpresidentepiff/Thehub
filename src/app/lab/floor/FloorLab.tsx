@@ -52,6 +52,24 @@ const DIRS: Record<string, readonly [number, number]> = { ArrowRight: [1, 0], Ar
 
 const points = (fp: Unit['footprint']) => fp.map(([x, y]) => `${x},${y}`).join(' ');
 
+/** Convex outline of touching desk panels, used only to draw the real shared tabletop. */
+const hull = (units: readonly Unit[]) => {
+  const pts = units.flatMap((u) => u.footprint.map(([x, y]) => [x, y] as const));
+  if (pts.length < 3) return pts;
+  const sorted = [...pts].sort(([ax, ay], [bx, by]) => ax - bx || ay - by);
+  const cross = (a: readonly number[], b: readonly number[], c: readonly number[]) =>
+    (b[0]! - a[0]!) * (c[1]! - a[1]!) - (b[1]! - a[1]!) * (c[0]! - a[0]!);
+  const half = (input: typeof sorted) => {
+    const out: typeof sorted = [];
+    for (const p of input) {
+      while (out.length >= 2 && cross(out[out.length - 2]!, out[out.length - 1]!, p) <= 0) out.pop();
+      out.push(p);
+    }
+    return out;
+  };
+  return [...half(sorted).slice(0, -1), ...half([...sorted].reverse()).slice(0, -1)];
+};
+
 /** "Meeting room (small)" → two lines, so a label fits inside its room on the plan. */
 const labelLines = (label: string) => {
   const m = /^(.*?)\s*\((.+)\)$/.exec(label);
@@ -175,6 +193,9 @@ export function FloorLab(props: FloorLabProps) {
   const dayLabel = days.find((d) => d.date === period.date)?.label ?? period.date;
   const unitAddOns = selected ? props.addOns.filter((a) => a.unitKinds.includes(selected.kind)) : [];
   const selectedState = selected ? stateOf(selected.id) : undefined;
+  const desks = units.filter((u) => u.kind === 'desk');
+  const wallBanks = [desks.slice(0, 3), desks.slice(3, 6), desks.slice(6, 9)];
+  const centreBench = desks.slice(9, 19);
 
   return (
     <div className="fl-root" data-hub-lab={LAB_MARKER}>
@@ -258,12 +279,24 @@ export function FloorLab(props: FloorLabProps) {
                       const cx = fp.reduce((t, p) => t + p[0], 0) / fp.length;
                       const cy = fp.reduce((t, p) => t + p[1], 0) / fp.length;
                       return (
-                        <g key={s.id} className="fl-space" aria-hidden="true">
+                        <g key={s.id} className={`fl-space is-${s.kind}`} aria-hidden="true">
                           <polygon points={points(fp)} />
                           <text x={cx} y={cy}>{s.name}</text>
                         </g>
                       );
                     })}
+                  <g className="fl-furniture-layer" aria-hidden="true">
+                    {wallBanks.map((bank, index) => (
+                      <g key={`wall-bank-${index + 1}`} className="fl-furniture is-wall-bank">
+                        <polygon className="fl-tabletop" points={points(hull(bank))} />
+                        {bank.map((u) => <polygon key={u.id} className="fl-panel-seam" points={points(u.footprint)} />)}
+                      </g>
+                    ))}
+                    <g className="fl-furniture is-centre-bench">
+                      <polygon className="fl-tabletop" points={points(hull(centreBench))} />
+                      {centreBench.map((u) => <polygon key={u.id} className="fl-panel-seam" points={points(u.footprint)} />)}
+                    </g>
+                  </g>
                   {units.map((u) => {
                     const state = stateOf(u.id);
                     const inFilter = kind === 'all' || u.kind === kind;
@@ -296,9 +329,10 @@ export function FloorLab(props: FloorLabProps) {
                         <polygon className="fl-shape" points={points(u.footprint)} vectorEffect="non-scaling-stroke" />
                         {u.kind === 'desk' && (
                           <g className="fl-chair" transform={`translate(${u.x} ${u.y}) rotate(${u.rotDeg}) ${chairTransform}`} aria-hidden="true">
-                            <rect className="fl-chair-seat" x="-.21" y="-.14" width=".42" height=".3" rx=".06" />
-                            <path className="fl-chair-back" d="M-.28 .13 Q0 .34 .28 .13" />
-                            <path className="fl-chair-base" d="M0 .15V.34M0 .29L-.24 .4M0 .29L.24 .4M0 .29L-.28 .25M0 .29L.28 .25" />
+                            <circle className="fl-chair-status" cx="0" cy=".04" r=".37" />
+                            <rect className="fl-chair-seat" x="-.25" y="-.16" width=".5" height=".34" rx=".08" />
+                            <path className="fl-chair-back" d="M-.32 .13 Q0 .38 .32 .13" />
+                            <path className="fl-chair-base" d="M0 .17V.39M0 .33L-.28 .46M0 .33L.28 .46M0 .33L-.32 .28M0 .33L.32 .28" />
                           </g>
                         )}
                         {u.kind !== 'desk' && (

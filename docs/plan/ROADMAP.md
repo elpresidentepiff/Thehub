@@ -18,9 +18,9 @@ Last updated: 2026-09-28.
 | Logo / opening-shot design | **Operator deciding** | — | Operator |
 | Inventory registry | Rev B metric grid corrected from operator close-ups on 28 Sep: three rectangular six-panel wall blocks with three bookable chair positions each (left/front/right), one continuous double-sided centre bench with 10 positions, 2 meeting rooms and 2 private offices. **Not yet walked on site** | `data/inventory/unit4-l2.json`, `tools/build_inventory.py` | Floor walk for exact positions; ACG/Iffy's decision |
 | Database schema | Migrations written and tested on a throwaway local Postgres (no-overlap proven under concurrency). **No Supabase project exists** | `supabase/` | Operator approval of schema proposal |
-| Commerce engine | Pure TypeScript, 26 tests (`npm test`): dev-only catalogue, London-time periods, quotes, hold tokens + DB refusal map, Stripe Checkout params, webhook signature check + reducer, mock availability that throws outside development. `check-boundaries` keeps it free of React/renderer imports | `src/commerce/` | — |
+| Commerce engine | Pure TypeScript, 27 tests (`npm test`): dev-only catalogue, London-time periods, quotes, hold tokens + DB refusal map, Stripe Checkout params, webhook signature check + reducer, mock availability that throws outside development. `check-boundaries` keeps it free of React/renderer imports | `src/commerce/` | — |
 | Stripe | Mapping proposed. **Nothing created** in Stripe | `docs/commerce/STRIPE_OBJECT_MAPPING.md` | Approval + prices |
-| Floor picker (lab) | Original architectural drawing retained. The 19-position overlay now reflects the close-ups: rectangular three-chair wall blocks and a continuous double-sided 10-chair centre bench. The plan occupies the full content width instead of being squeezed beside the booking panel. No material or 3D treatment is approved. | `src/app/lab/floor/` | Operator layout review; floor walk to verify exact positions |
+| Floor picker (lab) | Original architectural drawing retained. Physical furniture is now separate from booking hit areas: three coherent white wall blocks with left/front/right chairs, and one continuous grey double-sided 10-chair bench. Photo-derived pale oak, black-chair, glass and warm masonry colours replace the old grey treatment. The plan occupies the full content width instead of being squeezed beside the booking panel. | `src/app/lab/floor/` | Operator layout review; floor walk to verify exact positions |
 | Static commerce mocks | Floor → booking → checkout click-through; invented desk positions | `lab/floor`, `lab/booking`, `lab/checkout` | Floor superseded by `/lab/floor`; booking/checkout still static |
 
 ---
@@ -44,7 +44,7 @@ Last updated: 2026-09-28.
 | C1.1 | `data/inventory/unit4-l2.json` — stable IDs placed on real Rev B geometry | Draft done; needs floor walk |
 | C1.2 | `supabase/migrations` — `hub` / `private` / `api` schemas, exclusion-constraint no-overlap, holds, RLS, grants | Done locally; `npm run db:test` |
 | C1.3 | `src/commerce` — engine + unit tests; mock availability that cannot run in production | Done 24 Sep; `npm test` (the 23 Sep board said done before the tests existed) |
-| C1.4 | `src/app/lab/floor` — the real plan + registry + engine, touch/keyboard states | Original drawing retained; photo-corrected 19-desk overlay and full-width plan under operator review |
+| C1.4 | `src/app/lab/floor` — the real plan + registry + engine, touch/keyboard states | Original drawing retained; photo-corrected 19-seat furniture, material palette and full-width plan under operator review |
 | C1.5 | Seat authoring tool (BUILD_PLAN §2): place/nudge/name seats on the plan, export registry | Next |
 
 ---
@@ -54,8 +54,9 @@ Last updated: 2026-09-28.
 1. **Operator:** pick the logo and opening-shot direction; pick a cleat direction
    (`lab/cleat-studies/`).
 2. **Operator:** answer the commerce questions below. They unblock C2.
-3. Correct the `/lab/floor` layout against the original plan and operator evidence. Do not add
-   furniture styling, materials or 3D treatment until the layout itself is approved.
+3. Review the photo-corrected `/lab/floor`: coherent furniture blocks, 19 independent chair
+   selectors and the material palette now follow the operator evidence. Record only measured
+   position changes during the floor walk; do not infer dimensions from perspective photographs.
 4. C1.5 seat authoring tool; then walk the floor with it and mark the registry `verified`.
 5. When a cleat study is chosen (D2): build it into `proto/opening.html` first, then `src/experience/opening`.
 6. After approval: create the dedicated Hub Supabase project, apply migrations, run the SQL

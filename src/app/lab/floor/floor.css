@@ -63,12 +63,22 @@
 
 /* — the plan — */
 .fl-mapscroll { overflow: hidden; background: var(--hub-plaster); border: 1px solid var(--fl-line); }
-.fl-map { position: relative; width: 100%; min-width: 0; }
+.fl-map {
+  position: relative; width: 100%; min-width: 0;
+  /* The photographs show a pale oak herringbone floor throughout. Keeping this beneath the
+     drawing preserves every architectural line while replacing the old grey-paper feeling. */
+  background-color: #d7c5a9;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%237b6246' stroke-opacity='.17' stroke-width='.8'%3E%3Cpath d='M-16 16 0 0l16 16L32 0l16 16L64 0l16 16M-16 48 0 32l16 16 16-16 16 16 16-16 16 16'/%3E%3Cpath d='M0 0v7m16 9v7m16-23v7m16 9v7m16-23v7M0 32v7m16 9v7m16-23v7m16 9v7m16-23v7' stroke-opacity='.1'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 32px 32px;
+}
 .fl-map[aria-busy='true'] .fl-overlay { opacity: .85; }
 .fl-plan { position: absolute; inset: 0; width: 100%; height: 100%; mix-blend-mode: multiply; pointer-events: none; user-select: none; }
 .fl-overlay { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; transition: opacity var(--hub-dur-fast) var(--hub-ease); }
 
-.fl-space polygon { fill: color-mix(in srgb, var(--hub-oak) 16%, transparent); }
+.fl-space polygon { fill: color-mix(in srgb, var(--hub-oak) 13%, transparent); }
+.fl-space.is-meeting_zone polygon { fill: rgb(126 157 166 / 18%); }
+.fl-space.is-office_suite polygon { fill: rgb(62 69 70 / 13%); }
+.fl-space.is-communal polygon { fill: rgb(199 171 127 / 15%); }
 .fl-space text, .fl-unit text {
   font-family: var(--hub-body); font-size: .3px; font-weight: 600; letter-spacing: .04px;
   text-anchor: middle; dominant-baseline: middle; pointer-events: none; text-transform: uppercase;
@@ -92,13 +102,41 @@
 .fl-unit:focus-visible .fl-ring { stroke: var(--hub-ink); }
 .fl-unit:focus-visible .fl-shape { stroke: var(--hub-halo); stroke-width: 3px; }
 .fl-unit.is-dim { opacity: .2; pointer-events: none; }
-.fl-unit .fl-chair { pointer-events: none; color: var(--hub-ink); }
-.fl-unit .fl-chair-seat { fill: var(--hub-panel); stroke: var(--hub-ink); stroke-width: .035px; }
-.fl-unit .fl-chair-back, .fl-unit .fl-chair-base {
-  fill: none; stroke: currentColor; stroke-width: .055px; stroke-linecap: round; stroke-linejoin: round;
+
+/* Furniture and booking are deliberately separate layers. A bank is one physical object in
+   the photos; three or ten availability states must not break it into coloured fragments. */
+.fl-furniture { pointer-events: none; }
+.fl-furniture .fl-tabletop {
+  fill: #f4f2ec;
+  stroke: #4c4d4b;
+  stroke-width: .075px;
+  filter: drop-shadow(.11px .16px .1px rgb(28 25 21 / 42%));
 }
-.fl-unit.is-unavailable .fl-chair, .fl-unit.is-not_bookable .fl-chair { color: var(--hub-steel); }
-.fl-unit.is-selected .fl-chair { color: var(--hub-brass-deep); }
+.fl-furniture.is-centre-bench .fl-tabletop { fill: #777976; }
+.fl-furniture .fl-panel-seam {
+  fill: none;
+  stroke: rgb(64 63 59 / 52%);
+  stroke-width: .025px;
+}
+.fl-furniture.is-centre-bench .fl-panel-seam { stroke: rgb(239 237 227 / 44%); }
+
+.fl-unit.is-desk .fl-shape { fill: transparent; stroke: transparent; stroke-width: .07px; }
+.fl-unit.is-desk:hover .fl-shape { fill: rgb(250 225 170 / 18%); stroke: var(--hub-brass-deep); stroke-width: .09px; }
+.fl-unit.is-desk.is-selected .fl-shape { fill: rgb(226 167 76 / 22%); stroke: var(--hub-brass-deep); stroke-width: .12px; }
+.fl-unit.is-desk:focus-visible .fl-shape { fill: rgb(255 248 218 / 18%); stroke: var(--hub-ink); stroke-width: .12px; }
+
+.fl-unit .fl-chair { pointer-events: none; color: var(--hub-ink); }
+.fl-unit .fl-chair-status { stroke: #f7f2e7; stroke-width: .07px; }
+.fl-unit.is-available .fl-chair-status { fill: var(--hub-halo-warm); }
+.fl-unit.is-held .fl-chair-status { fill: var(--hub-steel-2); }
+.fl-unit.is-unavailable .fl-chair-status { fill: var(--hub-steel); }
+.fl-unit.is-closed .fl-chair-status, .fl-unit.is-not_bookable .fl-chair-status { fill: #b5b2aa; }
+.fl-unit.is-yours .fl-chair-status { fill: var(--hub-daylight); }
+.fl-unit.is-selected .fl-chair-status { fill: var(--hub-brass); stroke: var(--hub-ink); stroke-width: .1px; }
+.fl-unit .fl-chair-seat { fill: #171918; stroke: #050605; stroke-width: .04px; }
+.fl-unit .fl-chair-back, .fl-unit .fl-chair-base {
+  fill: none; stroke: #111312; stroke-width: .06px; stroke-linecap: round; stroke-linejoin: round;
+}
 
 .fl-legend { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 12px 0 0; padding: 0; list-style: none; color: var(--hub-cream-dim); font-size: 13px; }
 .fl-legend li { display: flex; align-items: center; gap: 8px; }

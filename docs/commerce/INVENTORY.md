@@ -41,6 +41,10 @@ for events, that becomes `L2-EVENT01` once the operator says so (ROADMAP D10).
 3. Coordinates are plan metres, the same system as `assets/plan/floor_unit4_l2.svg`.
    `x_m`, `y_m` is the centre; `footprint` is the hit area polygon; `rot_deg` is the long axis.
 4. The CAD paths are never clickable. The picker draws `footprint` polygons over the plan.
+5. A footprint is a booking hit area, not a furniture rendering. The picker unions touching
+   footprints into the coherent wall blocks and centre bench seen in the photographs, then
+   puts availability on the corresponding chair marker. This prevents mixed availability
+   from making one real table look like several unrelated coloured tables.
 
 ## How it is built
 
