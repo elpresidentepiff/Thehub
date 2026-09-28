@@ -1,8 +1,8 @@
 """Build data/inventory/unit4-l2.json — the stable bookable-unit registry for Unit 4 L2.
 
 The Rev B detector supplies the measured grid and reliable desk anchors. The main-office
-layout is corrected from the operator's 28 Sep 2026 photographs: three three-seat banks
-along the side wall and five two-seat banks in the centre. Rooms are read from the drawing's
+layout is corrected from the operator's 28 Sep 2026 photographs: three three-table stations
+along the side wall and one continuous ten-seat bench in the centre. Rooms are read from the drawing's
 own annotations and remain approximate (+/- 0.2 m) until the floor walk.
 
 Identity rules (never break these):
@@ -63,12 +63,12 @@ counts = {k: len(v) for k, v in by_zone.items()}
 if counts != expected:
     sys.exit(f'desk detection changed: {counts} != {expected}. Review before reissuing IDs.')
 
-# The actual wall banks are not the four pairs proposed in Rev B. The 28 Sep close-up shows
-# each one as a 2.70 x 2.01 m rectangular six-panel tabletop against the wall, shared by three
-# bookable positions: left side, right side and the horizontal room-facing edge. The three
-# footprints below tile that rectangle without overlap; the UI draws one chair on each exposed
-# side. Bank centres follow the drawing's -9° grid and the detector's reliable wall anchors.
-wall_bank_centres = [(13.000, 4.958), (16.744, 4.364), (20.488, 3.770)]
+# The close-up is unambiguous: each wall station contains exactly three standard tables. Two
+# 1.35 x .67 m tables run vertically side-by-side; a third runs horizontally across the room-
+# facing bottom. Use the first three measured vertical pairs from Rev B and exclude the fourth
+# pair: the operator has confirmed that only three of these stations exist.
+window_desks = sorted(by_zone['window'], key=lambda d: d['x_m'])[:6]
+wall_vertical_pairs = [(window_desks[i], window_desks[i + 1]) for i in range(0, 6, 2)]
 
 # The second close-up shows one continuous double-sided ten-seat bench. Five 1.35 m surfaces
 # touch along each side; the two rows share the same 0.67 m depth and -9° drawing grid.
@@ -81,13 +81,16 @@ for bay in range(5):
 
 units = []
 n = 0
-for bank_cx, bank_cy in wall_bank_centres:
+for left, right in wall_vertical_pairs:
+    pair_cx = (left['x_m'] + right['x_m']) / 2
+    pair_cy = (left['y_m'] + right['y_m']) / 2
+    front_cx, front_cy = moved(pair_cx, pair_cy, 0.0, 1.01, -9.0)
     positions = [
-        (*moved(bank_cx, bank_cy, -0.675, -0.335, -9.0), 1.35, 1.34),
-        (*moved(bank_cx, bank_cy, 0.675, -0.335, -9.0), 1.35, 1.34),
-        (*moved(bank_cx, bank_cy, 0.000, 0.670, -9.0), 2.70, 0.67),
+        (left['x_m'], left['y_m'], 1.35, 0.67, 81.0),
+        (right['x_m'], right['y_m'], 1.35, 0.67, 81.0),
+        (front_cx, front_cy, 1.35, 0.67, -9.0),
     ]
-    for cx, cy, width, depth in positions:
+    for cx, cy, width, depth, rotation in positions:
         n += 1
         units.append({
             'id': f'L2-D{n:03d}',
@@ -95,8 +98,8 @@ for bank_cx, bank_cy in wall_bank_centres:
             'kind': 'desk',
             'label': f'Wall {n}',
             'capacity': 1,
-            'x_m': cx, 'y_m': cy, 'rot_deg': -9.0,
-            'footprint': rect(cx, cy, width, depth, -9.0),
+            'x_m': cx, 'y_m': cy, 'rot_deg': rotation,
+            'footprint': rect(cx, cy, width, depth, rotation),
             'source': 'operator-corrected:photos-2026-09-28',
             'verified': False,
         })

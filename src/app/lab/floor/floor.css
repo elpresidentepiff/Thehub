@@ -113,6 +113,7 @@
   filter: drop-shadow(.11px .16px .1px rgb(28 25 21 / 42%));
 }
 .fl-furniture.is-centre-bench .fl-tabletop { fill: #777976; }
+.fl-furniture.is-wall-bank .fl-table-piece { stroke-width: .1px; }
 .fl-furniture .fl-panel-seam {
   fill: none;
   stroke: rgb(64 63 59 / 52%);

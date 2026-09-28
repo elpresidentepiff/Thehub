@@ -15,7 +15,7 @@ with it yet (BUILD_PLAN §2, step 4). What is installed is what people are buyin
 
 | ID | Label (provisional) | Kind | Capacity | Bookable | Source |
 | --- | --- | --- | --- | --- | --- |
-| `L2-D001`–`L2-D009` | Wall 1–9; three rectangular six-panel table blocks, each shared by left/front/right chair positions | desk | 1 each | yes | operator close-up on 28 Sep 2026, aligned to the Rev B grid |
+| `L2-D001`–`L2-D009` | Wall 1–9; three stations, each containing exactly two vertical tables and one horizontal bottom table with left/front/right chair positions | desk | 1 each | yes | operator close-up on 28 Sep 2026, aligned to the Rev B grid |
 | `L2-D010`–`L2-D019` | Centre 1–10; one continuous double-sided five-by-two bench | desk | 1 each | yes | operator close-up on 28 Sep 2026, aligned to the Rev B grid |
 | `L2-MR01` | Meeting room (small), 8.2 m² | meeting_room | 4 | yes | drawing annotation |
 | `L2-MR02` | Meeting room (large), 17.6 m² | meeting_room | 8 | yes | drawing annotation |
@@ -41,10 +41,10 @@ for events, that becomes `L2-EVENT01` once the operator says so (ROADMAP D10).
 3. Coordinates are plan metres, the same system as `assets/plan/floor_unit4_l2.svg`.
    `x_m`, `y_m` is the centre; `footprint` is the hit area polygon; `rot_deg` is the long axis.
 4. The CAD paths are never clickable. The picker draws `footprint` polygons over the plan.
-5. A footprint is a booking hit area, not a furniture rendering. The picker unions touching
-   footprints into the coherent wall blocks and centre bench seen in the photographs, then
-   puts availability on the corresponding chair marker. This prevents mixed availability
-   from making one real table look like several unrelated coloured tables.
+5. A footprint is a booking hit area as well as the measured outline of its physical table.
+   The picker renders the wall stations as exactly three separate pieces and unions the ten
+   touching centre footprints into the continuous bench seen in the photographs. Availability
+   sits on the corresponding chair marker, so it never invents extra coloured furniture.
 
 ## How it is built
 

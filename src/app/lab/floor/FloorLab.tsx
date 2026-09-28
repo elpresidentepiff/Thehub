@@ -288,8 +288,7 @@ export function FloorLab(props: FloorLabProps) {
                   <g className="fl-furniture-layer" aria-hidden="true">
                     {wallBanks.map((bank, index) => (
                       <g key={`wall-bank-${index + 1}`} className="fl-furniture is-wall-bank">
-                        <polygon className="fl-tabletop" points={points(hull(bank))} />
-                        {bank.map((u) => <polygon key={u.id} className="fl-panel-seam" points={points(u.footprint)} />)}
+                        {bank.map((u) => <polygon key={u.id} className="fl-tabletop fl-table-piece" points={points(u.footprint)} />)}
                       </g>
                     ))}
                     <g className="fl-furniture is-centre-bench">
@@ -302,12 +301,13 @@ export function FloorLab(props: FloorLabProps) {
                     const inFilter = kind === 'all' || u.kind === kind;
                     const deskNumber = u.kind === 'desk' ? Number(u.id.slice(-3)) : 0;
                     const wallPosition = (deskNumber - 1) % 3;
+                    const chairRotation = deskNumber <= 9 ? -9 : u.rotDeg;
                     const chairTransform = deskNumber <= 9
                       ? wallPosition === 0
-                        ? 'translate(-.96 0) rotate(90)'
+                        ? 'translate(-.7 0) rotate(90)'
                         : wallPosition === 1
-                          ? 'translate(.96 0) rotate(-90)'
-                          : 'translate(0 .78)'
+                          ? 'translate(.7 0) rotate(-90)'
+                          : 'translate(0 .7)'
                       : `translate(0 ${((deskNumber - 10) % 2 === 0 ? -1 : 1) * .69}) scale(1 ${((deskNumber - 10) % 2 === 0 ? -1 : 1)})`;
                     return (
                       <g
@@ -328,7 +328,7 @@ export function FloorLab(props: FloorLabProps) {
                         <polygon className="fl-ring" points={points(u.footprint)} vectorEffect="non-scaling-stroke" />
                         <polygon className="fl-shape" points={points(u.footprint)} vectorEffect="non-scaling-stroke" />
                         {u.kind === 'desk' && (
-                          <g className="fl-chair" transform={`translate(${u.x} ${u.y}) rotate(${u.rotDeg}) ${chairTransform}`} aria-hidden="true">
+                          <g className="fl-chair" transform={`translate(${u.x} ${u.y}) rotate(${chairRotation}) ${chairTransform}`} aria-hidden="true">
                             <circle className="fl-chair-status" cx="0" cy=".04" r=".37" />
                             <rect className="fl-chair-seat" x="-.25" y="-.16" width=".5" height=".34" rx=".08" />
                             <path className="fl-chair-back" d="M-.32 .13 Q0 .38 .32 .13" />
