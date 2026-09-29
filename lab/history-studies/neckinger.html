@@ -26,8 +26,9 @@
 </head>
 <body>
 <p class="caption"><b>The Neckinger.</b> EST. 1857 becomes the waterline. The camera follows the hidden river
-underground, past nine real images of this ground's own history hung the length of the tunnel wall, up an iron-runged
-shaft and through a broken manhole cover into a street built of the tunnel's own real brick — then through the door,
+underground, past thirteen real images of this ground's own history — ending in two of it today — hung the length
+of the tunnel wall, up an iron-runged
+shaft and through a broken coal-hole cover into a street built of the tunnel's own real brick — then through the door,
 to the confirmed logo and cleat, lit inside.</p>
 <p class="credit">Archive images: Wikimedia Commons, public domain / CC — see archive/CREDITS.md</p>
 
@@ -82,7 +83,7 @@ const curve = new THREE.CatmullRomCurve3(
 );
 /** The camera never reaches the curve's literal end (nothing is built past the dock). */
 const CAM_MAX_T = 0.74;
-// The old ending opened into a wide dock chamber; the manhole-rise ending no longer needs one,
+// The old ending opened into a wide dock chamber; the coal-hole-rise ending no longer needs one,
 // and a big radius there bled into the street reveal above it (visible brick in the corner of the
 // surfaced shot). A small taper is enough to feel like the culvert is still widening slightly.
 const radiusAt = (t) => lerp(1.15, 1.6, easeInOut(ramp(t, TUNNEL_END, DOCK)));
@@ -156,14 +157,18 @@ if (renderer) {
   // rest hang as a lit gallery, dim but never fully dark, brightening as the camera nears each.
   const HISTORY = [
     ['jacobs-island-map-1813-web.jpg', '1813 — the earliest surveyed plan of this ground'],
+    ['jacobs-island-1813-wise-web.jpg', '1813 — the wharves and shacks of Jacob’s Island'],
+    ['folly-ditch-mill-lane-1840-web.jpg', 'circa 1840 — Folly Ditch at Mill Lane'],
+    ['folly-ditch-wellcome-web.jpg', '1840s — Folly Ditch, the tidal channel before the dock', 'hero'],
+    ['pool-of-london-1841-web.jpg', '1841 — the Pool of London, from London Bridge'],
     ['thames-tunnel-1843-web.jpg', '1843 — the Thames Tunnel, Rotherhithe'],
     ['jacobs-island-1855-web.jpg', 'circa 1855 — the wharves, watercolour, John Wykeham Archer', 'hero'],
-    ['folly-ditch-mill-lane-1840-web.jpg', 'circa 1840 — Folly Ditch at Mill Lane'],
-    ['pool-of-london-1841-web.jpg', '1841 — the Pool of London, from London Bridge'],
+    ['tooley-street-fire-1861-web.jpg', '1861 — the Great Fire of Tooley Street, Cotton’s Wharf', 'hero'],
     ['pool-moonlight-pether-web.jpg', 'the Pool of London by moonlight, Henry Pether'],
-    ['folly-ditch-wellcome-web.jpg', '1840s — Folly Ditch, the tidal channel before the dock', 'hero'],
     ['tower-bridge-works-1892-web.jpg', '1892 — Tower Bridge under construction'],
     ['chamberlain-wharf-1949-web.jpg', '1949 — Chamberlain Wharf, Tooley Street'],
+    ['st-saviours-dock-today-web.jpg', 'today — St Saviour’s Dock, where the river surfaces'],
+    ['new-concordia-wharf-today-web.jpg', 'today — the same wharves, still standing'],
   ];
   const GALLERY_T = HISTORY.map((_, i) => lerp(0.055, 0.56, i / (HISTORY.length - 1)));
   const plates = HISTORY.map(([file, caption, kind], i) => {
@@ -246,7 +251,7 @@ if (renderer) {
   signLight.position.copy(sign.position).add(new THREE.Vector3(0.3, 0, 0.3));
   scene.add(signLight);
 
-  // ——— out of the tunnel, up a brick shaft, through a broken manhole cover, onto the street.
+  // ——— out of the tunnel, up a brick shaft, through a broken coal-hole cover, onto the street.
   // There is no real photograph of Lloyds Wharf's actual exterior in the archive yet — only the
   // confirmed interior entrance shot (hub-sign-lit.jpg). Rather than pass that lobby photo off as
   // an outdoor facade (the earlier version's mistake), the street front here is built from the
@@ -255,7 +260,7 @@ if (renderer) {
   // interior shot, the way actually walking up and through a door would reveal it.
   const riseBase = curve.getPointAt(CAM_MAX_T);
   const riseTop = riseBase.clone().add(new THREE.Vector3(0, 5.4, 0.6));
-  const shaftTop = riseBase.clone().lerp(riseTop, 0.75); // where the manhole collar sits
+  const shaftTop = riseBase.clone().lerp(riseTop, 0.75); // where the coal-hole collar sits
   const shaftHeight = shaftTop.distanceTo(riseBase);
 
   // the brick shaft itself: camera climbs straight up the inside of it
@@ -278,22 +283,24 @@ if (renderer) {
   }
   scene.add(rungs);
 
-  // the manhole collar: an iron ring set into the road, the cover levered off and left leaning
-  // beside the hole — a real pothole, not a tidy opening
+  // the coal-hole collar: an iron ring set into the road, the cover levered off and left leaning
+  // beside the hole — a real broken opening, not a tidy one. Coal holes, not manholes: small
+  // round iron hatches let into Victorian London pavements for coal delivery straight into the
+  // cellar below — the period-correct thing to be climbing out of in 1857 Bermondsey.
   const ironMat = new THREE.MeshStandardMaterial({ color: 0x1c1815, roughness: 0.85, metalness: 0.45 });
   const ringMat = ironMat.clone();
   ringMat.side = THREE.DoubleSide;
-  const manhole = new THREE.Mesh(new THREE.RingGeometry(0.55, 0.98, 40), ringMat);
-  manhole.rotation.x = -Math.PI / 2;
-  manhole.position.copy(shaftTop);
-  scene.add(manhole);
+  const coalHole = new THREE.Mesh(new THREE.RingGeometry(0.55, 0.98, 40), ringMat);
+  coalHole.rotation.x = -Math.PI / 2;
+  coalHole.position.copy(shaftTop);
+  scene.add(coalHole);
   const cover = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.0, 0.07, 28), ironMat.clone());
   cover.position.copy(shaftTop).add(new THREE.Vector3(1.5, -0.02, 0.35));
   cover.rotation.z = 0.42; // levered up on its edge, not lying flat
   scene.add(cover);
-  const manholeLight = new THREE.PointLight(0xd9c9a8, 0, 4.5, 2);
-  manholeLight.position.copy(shaftTop).add(new THREE.Vector3(0, 0.4, 0));
-  scene.add(manholeLight);
+  const coalHoleLight = new THREE.PointLight(0xd9c9a8, 0, 4.5, 2);
+  coalHoleLight.position.copy(shaftTop).add(new THREE.Vector3(0, 0.4, 0));
+  scene.add(coalHoleLight);
   // a dim glow while climbing, well below the strike as we pass the ring itself
   const climbLight = new THREE.PointLight(0xc9b48a, 0, 3, 3);
   scene.add(climbLight);
@@ -424,7 +431,7 @@ if (renderer) {
     // climb, the street reveal, and a held beat on it before the canvas hands off to the video.
     const camT = Math.min(CAM_MAX_T, easeOut(ramp(p, 0.08, 0.64)) * CAM_MAX_T);
     const { eye, look } = camPose(camT);
-    // Tunnel travel ends at the foot of the manhole shaft; from here the camera leaves the
+    // Tunnel travel ends at the foot of the coal-hole shaft; from here the camera leaves the
     // curve and rises straight up through it, onto the street, facing the building.
     const rise = easeInOut(ramp(p, 0.66, 0.8));
     camera.position.copy(rise > 0 ? eye.lerp(riseTop, rise) : eye);
@@ -461,8 +468,8 @@ if (renderer) {
     climbLight.position.copy(camera.position).add(new THREE.Vector3(0, 0.3, 0.15));
     const climbing = easeOut(ramp(rise, 0.04, 0.62)) * (1 - easeOut(ramp(rise, 0.62, 0.85)));
     climbLight.intensity = 2.4 * Math.max(0, climbing);
-    const throughManhole = Math.max(0, 1 - Math.abs(rise - 0.75) / 0.09);
-    manholeLight.intensity = 6 * throughManhole;
+    const throughCoalHole = Math.max(0, 1 - Math.abs(rise - 0.75) / 0.09);
+    coalHoleLight.intensity = 6 * throughCoalHole;
 
     // the street fades up as the rise completes: real photographed brick, tarmac, a lamp
     const surfaced = easeOut(ramp(rise, 0.7, 0.95));
