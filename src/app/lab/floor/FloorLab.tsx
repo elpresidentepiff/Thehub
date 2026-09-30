@@ -7,6 +7,7 @@
  */
 import { useEffect, useRef, useState, useTransition, type KeyboardEvent } from 'react';
 import type { UnitState } from '@/commerce/availability.ts';
+import { bookingAction, createLatestRequestCoordinator, resolveBookingRefresh } from '@/commerce/booking-action.ts';
 import type { Floor, Space, Unit, UnitKind } from '@/commerce/inventory.ts';
 import { floorStates, quoteUnit, type FloorView, type QuoteView } from './actions.ts';
 import type { LabDay, OfferSummary, PeriodInput } from './lab-data.ts';
@@ -32,11 +33,11 @@ const STATE_WORD: Record<UnitState, string> = {
 
 const STATE_SENTENCE: Record<UnitState, string> = {
   available: 'Free for this time.',
-  held: 'Someone is paying for this right now. It may come free in a few minutes.',
+  held: 'Temporarily held by another visitor. It may come free in a few minutes.',
   unavailable: 'Booked for this time.',
   closed: 'The floor is closed then.',
   not_bookable: 'Not offered for booking.',
-  yours: 'You have this booked for this time.',
+  yours: 'You have this held or booked for this time.',
 };
 
 const FILTERS: { value: UnitKind | 'all'; label: string }[] = [
@@ -102,8 +103,10 @@ export function FloorLab(props: FloorLabProps) {
   const [focusId, setFocusId] = useState(units[0]?.id ?? '');
   const [addOns, setAddOns] = useState<string[]>([]);
   const [quote, setQuote] = useState<QuoteView | null>(null);
+  const [availabilityResolved, setAvailabilityResolved] = useState(true);
   const [pending, startTransition] = useTransition();
-  const request = useRef(0);
+  const refreshRequests = useRef(createLatestRequestCoordinator());
+  const periodRef = useRef(period);
   const unitEls = useRef(new Map<string, SVGGElement>());
   const scroller = useRef<HTMLDivElement>(null);
 
@@ -120,29 +123,38 @@ export function FloorLab(props: FloorLabProps) {
 
   /** Ask the server again. Only the latest answer is applied, so fast changes never race. */
   function refresh(next: { period?: PeriodInput; unitId?: string | null; addOns?: string[] }) {
-    const p = next.period ?? period;
+    const p = next.period ?? periodRef.current;
     const id = next.unitId !== undefined ? next.unitId : selectedId;
     const extras = next.addOns ?? addOns;
-    const n = ++request.current;
+    const isLatest = refreshRequests.current.begin();
+    setAvailabilityResolved(false);
+    setQuote(null);
     startTransition(async () => {
-      const [v, q] = await Promise.all([
-        next.period ? floorStates(p) : null,
-        id ? quoteUnit({ ...p, unitId: id, addOns: extras }) : null,
-      ]);
-      if (n !== request.current) return;
-      if (v) setView(v);
-      setQuote(q);
+      const result = await resolveBookingRefresh(
+        { period: p, unitId: id, addOns: extras },
+        {
+          states: floorStates,
+          quote: ({ period: effectivePeriod, unitId, addOns: effectiveAddOns }) =>
+            quoteUnit({ ...effectivePeriod, unitId, addOns: effectiveAddOns }),
+        },
+      );
+      if (!isLatest()) return;
+      setView(result.view);
+      setQuote(result.quote);
+      setAvailabilityResolved(true);
     });
   }
 
   function changePeriod(p: PeriodInput) {
+    periodRef.current = p;
     setPeriod(p);
     refresh({ period: p });
   }
 
   function choose(id: string) {
     const unit = units.find((u) => u.id === id);
-    const kept = addOns.filter((a) => unit && props.addOns.find((x) => x.id === a)?.unitKinds.includes(unit.kind));
+    const showCommerce = bookingAction(stateOf(id)).showCommerce;
+    const kept = showCommerce ? addOns.filter((a) => unit && props.addOns.find((x) => x.id === a)?.unitKinds.includes(unit.kind)) : [];
     setSelectedId(id);
     setFocusId(id);
     setAddOns(kept);
@@ -193,6 +205,7 @@ export function FloorLab(props: FloorLabProps) {
   const dayLabel = days.find((d) => d.date === period.date)?.label ?? period.date;
   const unitAddOns = selected ? props.addOns.filter((a) => a.unitKinds.includes(selected.kind)) : [];
   const selectedState = selected ? stateOf(selected.id) : undefined;
+  const selectedAction = selected ? bookingAction(availabilityResolved ? selectedState : undefined) : undefined;
   const desks = units.filter((u) => u.kind === 'desk');
   const wallBanks = [desks.slice(0, 3), desks.slice(3, 6), desks.slice(6, 9)];
   const centreBench = desks.slice(9, 19);
@@ -407,7 +420,9 @@ export function FloorLab(props: FloorLabProps) {
                   {KIND[selected.kind]} · {selected.id}
                 </p>
                 <h2>{selected.label}</h2>
-                <p className={`fl-state is-${selectedState}`}>{STATE_SENTENCE[selectedState]}</p>
+                <p className={`fl-state is-${selectedState}`}>
+                  {availabilityResolved ? STATE_SENTENCE[selectedState] : 'Checking availability for this time…'}
+                </p>
                 <dl className="fl-facts">
                   <div>
                     <dt>Seats</dt>
@@ -422,7 +437,7 @@ export function FloorLab(props: FloorLabProps) {
                 </dl>
                 {selected.note && <p className="fl-note">{selected.note}</p>}
 
-                {(props.offers[selected.id] ?? []).length > 0 && (
+                {selectedAction?.showCommerce && (props.offers[selected.id] ?? []).length > 0 && (
                   <ul className="fl-offers">
                     {props.offers[selected.id]!.map((o) => (
                       <li key={o.label + o.basis}>
@@ -436,7 +451,7 @@ export function FloorLab(props: FloorLabProps) {
                   </ul>
                 )}
 
-                {unitAddOns.length > 0 && (
+                {selectedAction?.showCommerce && unitAddOns.length > 0 && (
                   <fieldset className="fl-addons">
                     <legend>Extras</legend>
                     {unitAddOns.map((a) => (
@@ -449,38 +464,37 @@ export function FloorLab(props: FloorLabProps) {
                   </fieldset>
                 )}
 
-                {quote?.ok ? (
-                  <table className="fl-quote">
-                    <caption>Your price</caption>
-                    <tbody>
-                      {quote.lines.map((l) => (
-                        <tr key={l.label}>
-                          <th scope="row">
-                            {l.label}
-                            {l.detail && <small>{l.detail}</small>}
-                          </th>
-                          <td>{l.amount}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                    <tfoot>
-                      <tr>
-                        <th scope="row">Total</th>
-                        <td>{quote.total}</td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                ) : (
-                  // not_bookable is already said above; the engine's refusal would only repeat it
-                  quote && selectedState !== 'not_bookable' && <p className="fl-refusal">{quote.message}</p>
-                )}
+                {selectedAction?.showCommerce && quote
+                  ? quote.ok
+                    ? (
+                        <table className="fl-quote">
+                          <caption>Your price</caption>
+                          <tbody>
+                            {quote.lines.map((l) => (
+                              <tr key={l.label}>
+                                <th scope="row">
+                                  {l.label}
+                                  {l.detail && <small>{l.detail}</small>}
+                                </th>
+                                <td>{l.amount}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                              <th scope="row">Total</th>
+                              <td>{quote.total}</td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      )
+                    : <p className="fl-refusal">{quote.message}</p>
+                  : null}
 
-                <button type="button" className="fl-btn" disabled>
-                  Hold this place
+                <button type="button" className="fl-btn" disabled={!selectedAction?.canHold}>
+                  {selectedAction?.buttonLabel}
                 </button>
-                <p className="fl-small">
-                  Holding and paying switch on with the Hub database and Stripe test mode, after approval (ROADMAP C2).
-                </p>
+                {selectedAction && <p className="fl-small">{selectedAction.explanation}</p>}
               </>
             )}
           </aside>
