@@ -3,13 +3,32 @@ import { Archivo, Archivo_Black } from 'next/font/google';
 import type { ReactNode } from 'react';
 import { Instrumentation } from '@/experience/perf/Instrumentation';
 import './globals.css';
+import { SITE_URL } from './site-config';
 
 const archivo = Archivo({ subsets: ['latin'], variable: '--font-archivo', display: 'swap' });
 const archivoBlack = Archivo_Black({ subsets: ['latin'], weight: '400', variable: '--font-archivo-black', display: 'swap' });
 
+const TITLE = 'The Hub at Lloyds Wharf';
+const DESCRIPTION =
+  'Workspace in a Victorian wharf warehouse at 2 Mill Street, Shad Thames, London SE1 2BD. Established 1857.';
+
 export const metadata: Metadata = {
-  title: 'The Hub at Lloyds Wharf',
-  description: 'Workspace in a Victorian wharf warehouse at 2 Mill Street, Shad Thames, London SE1 2BD. Established 1857.',
+  metadataBase: new URL(SITE_URL),
+  title: { default: TITLE, template: `%s — ${TITLE}` },
+  description: DESCRIPTION,
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: '/',
+    siteName: TITLE,
+    locale: 'en_GB',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+  },
 };
 
 export const viewport: Viewport = {
