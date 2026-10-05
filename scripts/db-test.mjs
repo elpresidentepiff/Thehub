@@ -137,6 +137,7 @@ try {
 
   // Race on the real desk L2-D001 with a development price.
   race.price = psql('hub', ['-t', '-A', '-c', `
+    update hub.bookable_units set verified = true where id = 'L2-D001';
     insert into hub.products (id, kind, name, unit_kind, billing, period_unit)
       values ('race_day_pass', 'day_pass', 'Race test', 'desk', 'one_time', 'day');
     insert into hub.product_prices (product_id, environment, unit_amount)

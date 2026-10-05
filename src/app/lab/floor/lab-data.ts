@@ -5,9 +5,11 @@
  */
 import registryJson from '../../../../data/inventory/unit4-l2.json';
 import { catalogueFor, formatMoney, formatPrice, offersFor } from '@/commerce/catalogue.ts';
+import { periodFrom } from '@/commerce/booking-input.ts';
+export type { PeriodInput } from '@/commerce/booking-input.ts';
 import { hubEnvironment } from '@/commerce/env.ts';
 import { parseRegistry } from '@/commerce/inventory.ts';
-import { dayPeriod, londonTime, londonWallClock, type Period } from '@/commerce/period.ts';
+import { dayPeriod, londonWallClock } from '@/commerce/period.ts';
 
 export const registry = parseRegistry(registryJson);
 export const catalogue = () => catalogueFor(hubEnvironment());
@@ -15,20 +17,7 @@ export const catalogue = () => catalogueFor(hubEnvironment());
 /** One desk the mock shows as already yours, so the "your booking" state can be reviewed. */
 export const LAB_YOURS: readonly string[] = ['L2-D006'];
 
-export interface PeriodInput {
-  date: string;
-  from: string;
-  until: string;
-}
-
-export function periodFrom(input: PeriodInput): Period | null {
-  if (typeof input?.date !== 'string' || typeof input.from !== 'string' || typeof input.until !== 'string') return null;
-  try {
-    return { start: londonTime(input.date, input.from), end: londonTime(input.date, input.until) };
-  } catch {
-    return null;
-  }
-}
+export { periodFrom };
 
 const noon = (date: string) => new Date(`${date}T12:00:00Z`);
 const addDays = (date: string, n: number) => new Date(noon(date).getTime() + n * 86_400_000).toISOString().slice(0, 10);

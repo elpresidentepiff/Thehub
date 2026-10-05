@@ -1,7 +1,7 @@
 -- Who can see and do what: anon, a signed-in customer, another customer, an operator,
 -- and someone who tries to promote themselves through user_metadata.
 begin;
-select plan(21);
+select plan(24);
 
 insert into hub.floors (id, name, plan_revision, plan_asset_path, width_m, height_m)
 values ('test-floor', 'Test floor', 'rev-t', 'test.svg', 10, 10);
@@ -42,6 +42,12 @@ select throws_ok(
   $$select private.acquire_hold('L9-D001', '00000000-0000-4000-8000-0000000000d1', now() + interval '3 days', now() + interval '3 days 1 hour', 10, null, repeat('a', 64))$$,
   '42501', null, 'anon cannot call booking operations');
 select throws_ok(
+  $$select * from api.server_unit_availability('test-floor', now() + interval '3 days', now() + interval '3 days 1 hour', null, repeat('a', 64))$$,
+  '42501', null, 'anon cannot call server booking RPCs');
+select throws_ok(
+  $$select api.server_consume_booking_attempt(repeat('a', 64), repeat('b', 64))$$,
+  '42501', null, 'anon cannot consume or probe server rate-limit buckets');
+select throws_ok(
   $$insert into hub.reservations (unit_id, product_price_id, owner_token_hash, during, hold_expires_at)
     values ('L9-D001', '00000000-0000-4000-8000-0000000000d1', repeat('a', 64), tstzrange(now() + interval '4 days', now() + interval '4 days 1 hour'), now() + interval '10 minutes')$$,
   '42501', null, 'anon cannot write reservations directly');
@@ -59,6 +65,9 @@ select throws_ok(
 select throws_ok(
   $$select private.release_hold(gen_random_uuid(), repeat('a', 64), null)$$,
   '42501', null, 'a customer cannot call booking operations directly');
+select throws_ok(
+  $$select * from api.server_acquire_hold('L9-D001', 'test_day_pass', 'development', now() + interval '3 days', now() + interval '3 days 1 hour', 10, null, repeat('a', 64))$$,
+  '42501', null, 'an authenticated browser cannot call server booking RPCs');
 reset role;
 
 -- ---- customer B -------------------------------------------------------------------------

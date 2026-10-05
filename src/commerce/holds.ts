@@ -19,7 +19,7 @@ export function hashOwnerToken(token: string): string {
   return createHash('sha256').update(token).digest('hex');
 }
 
-export type HoldRefusal = 'invalid' | 'not_owner' | 'unknown' | 'unavailable' | 'hold_lapsed' | 'closed';
+export type HoldRefusal = 'invalid' | 'not_owner' | 'unknown' | 'unavailable' | 'hold_lapsed' | 'closed' | 'rate_limited';
 
 /** Hub SQLSTATEs raised by supabase/migrations/*_hub_booking_operations.sql. */
 const REFUSALS: Record<string, { refusal: HoldRefusal; status: number; message: string }> = {
@@ -29,6 +29,7 @@ const REFUSALS: Record<string, { refusal: HoldRefusal; status: number; message: 
   HB409: { refusal: 'unavailable', status: 409, message: 'Someone has just taken this for that time. Choose another time or space.' },
   HB410: { refusal: 'hold_lapsed', status: 410, message: 'Your hold ran out before payment started. Choose the time again.' },
   HB423: { refusal: 'closed', status: 423, message: 'This space is closed for that time.' },
+  HB429: { refusal: 'rate_limited', status: 429, message: 'Too many booking attempts. Please wait a moment and try again.' },
 };
 
 /**
