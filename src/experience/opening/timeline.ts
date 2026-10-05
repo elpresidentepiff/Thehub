@@ -76,7 +76,14 @@ export function buildOpeningTimeline(q: Query): gsap.core.Timeline {
     { opacity: 0, scale: 1.14 },
     { opacity: 1, scale: 1, ease: E, duration: span(W.insideIn) },
     start(W.insideIn),
-  ).fromTo(q('[data-pillars]'), { opacity: 0, y: 22 }, { opacity: 1, y: 0, ease: E, duration: span(W.pillars) }, start(W.pillars));
+  )
+    .fromTo(q('[data-pillars]'), { opacity: 0, y: 22 }, { opacity: 1, y: 0, ease: E, duration: span(W.pillars) }, start(W.pillars))
+    .fromTo(
+      q('[data-arrival-action]'),
+      { opacity: 0, y: 18 },
+      { opacity: 1, y: 0, ease: E, duration: span(W.pillars) * 0.75 },
+      start(W.pillars) + span(W.pillars) * 0.25,
+    );
 
   // Pin the timeline to exactly one unit so time == progress.
   tl.set({}, {}, 1);

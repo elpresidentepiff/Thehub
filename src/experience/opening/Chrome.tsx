@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useSyncExternalStore } from 'react';
 import { BEATS, activeBeat } from './choreography';
 import { setMotionPaused, useMotionPaused } from '../runtime/motion';
@@ -16,6 +17,9 @@ export function OpeningChrome() {
       </div>
       <BeatNav />
       <MotionToggle />
+      <Link href="/book" className="op-skip hub-label">
+        Skip to booking
+      </Link>
     </>
   );
 }

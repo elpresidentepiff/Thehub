@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { MEDIA } from './media';
 
 const PILLARS = ['WORK', 'MEET', 'CREATE', 'CONNECT', 'BELONG'] as const;
@@ -28,6 +29,13 @@ export function Arrival() {
           <PillarItem key={word} word={word} i={i} />
         ))}
       </ul>
+      <div className="op-arrival-action" data-arrival-action>
+        <p>You have arrived at The Hub.</p>
+        <Link href="/book" className="op-arrival-link">
+          Choose your space
+          <span aria-hidden="true"> →</span>
+        </Link>
+      </div>
     </>
   );
 }

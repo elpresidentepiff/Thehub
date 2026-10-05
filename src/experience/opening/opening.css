@@ -167,6 +167,53 @@
   gap: clamp(14px, 3.4vw, 54px);
 }
 
+.op-arrival-action {
+  position: absolute;
+  left: 50%;
+  bottom: max(64px, 9svh);
+  z-index: 2;
+  width: min(92vw, 520px);
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.op-arrival-action p {
+  margin: 0 0 14px;
+  color: var(--hub-cream-dim);
+  font-size: 12px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.op-arrival-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 24px;
+  border: 1px solid var(--hub-halo-warm);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--hub-ink) 74%, transparent);
+  color: var(--hub-cream);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background-color var(--hub-dur-fast) var(--hub-ease), color var(--hub-dur-fast) var(--hub-ease);
+}
+
+.op-arrival-link:hover {
+  background: var(--hub-halo-warm);
+  color: var(--hub-ink);
+}
+
+.op-arrival-link:focus-visible,
+.op-skip:focus-visible {
+  outline: 2px solid var(--hub-halo);
+  outline-offset: 3px;
+}
+
 .op-pillars li {
   font-weight: 600;
   font-size: clamp(10px, 1.35vw, 16px);
@@ -192,6 +239,21 @@
 .op-beats,
 .op-motion {
   display: none;
+}
+
+.op-skip {
+  position: fixed;
+  top: max(8px, env(safe-area-inset-top));
+  left: clamp(12px, 2.2vw, 28px);
+  z-index: 20;
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  color: var(--hub-cream-dim);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-decoration: none;
+  text-transform: uppercase;
 }
 
 .op-hint-bar {
@@ -306,6 +368,11 @@
   transform: translateY(22px);
 }
 
+[data-motion='full'] .op-arrival-action {
+  opacity: 0;
+  transform: translate(-50%, 18px);
+}
+
 [data-motion='full'] .op-hint {
   position: fixed;
   left: 50%;
@@ -367,6 +434,10 @@
     padding: 0 16px;
     row-gap: 18px;
     column-gap: 14px;
+  }
+
+  .op-arrival-action {
+    bottom: max(74px, 11svh);
   }
 
   .op-pillars li {
