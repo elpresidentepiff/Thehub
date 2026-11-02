@@ -13,6 +13,11 @@ colour or scene. It carries measured values, not preferences.
 
 `docs/BUILD_PLAN.md` is the phased plan and the open decisions.
 
+Before adding a library, purchased component or spatial experiment, read
+`docs/TECHNOLOGY_RADAR.md`. External component source must be recorded in
+`docs/COMPONENT_REGISTRY.md`. Product work that connects the measured plan to inventory,
+booking or Stripe starts with `docs/COMMERCE_SPATIAL_WORKSTREAM.md`.
+
 ## What is here
 
 | Path | Contents |
@@ -25,6 +30,7 @@ colour or scene. It carries measured values, not preferences.
 | `proto/opening.html` | the opening sequence prototype — zero dependencies |
 | `tools/` | the PDF extraction scripts, re-runnable on a new drawing |
 | `docs/` | build plan |
+| `lab/` | isolated visual, spatial and commerce experiments — never production by default |
 
 ## The prototype
 

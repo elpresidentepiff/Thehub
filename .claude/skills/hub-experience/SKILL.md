@@ -188,6 +188,41 @@ experience has an image or video equivalent.
 Reuse validated components before inventing another system. shadcn/ui and Radix are the
 base. Do not hand-roll a dialog, a popover or a combobox.
 
+### Component harvesting rule
+
+External component catalogues are a parts department, not the Hub's design direction.
+Claude may research React Bits, 21st.dev, Aceternity UI, Magic UI and Spectrum UI when a
+named interaction needs a starting point. A candidate is not approved merely because it
+looks impressive in its catalogue.
+
+Before selected source reaches production it must:
+
+1. Be copied into the Hub codebase only when its licence and acquisition terms allow it.
+2. Be recorded in `docs/COMPONENT_REGISTRY.md` with its source, licence, named job and owner.
+3. Be converted to Hub tokens, Archivo typography and the building's material language.
+4. Have conflicting styling and unnecessary animation dependencies removed.
+5. Reuse the motion engine already assigned to that job.
+6. Pass keyboard, reduced-motion, contrast, mobile-performance and no-WebGL checks.
+7. Beat a simpler in-house implementation on usefulness or quality.
+
+Never install an entire catalogue to use one effect. Never combine multiple motion engines
+to achieve one interaction. Never copy a catalogue's generic AI/SaaS aesthetic into the Hub.
+
+See `docs/TECHNOLOGY_RADAR.md` before adding any visual, spatial or concierge tool.
+
+## Parallel workstreams
+
+Experience and commerce may be developed independently, but they meet through stable space
+IDs and the shared metric floor coordinate system.
+
+- Experience: arrival, cleat, real media, plan transition and later spatial capture.
+- Product: floor picker, inventory, availability, selection, basket, payment and booking.
+
+The renderer is never the commercial database. SVG shapes, splats and 3D objects reference
+stable IDs; availability, pricing, reservations and customers live behind server-validated
+interfaces. Read `docs/COMMERCE_SPATIAL_WORKSTREAM.md` before building either side of that
+boundary.
+
 ## Copy
 
 Write from the visitor's side of the screen. Specific beats clever. A control says exactly
