@@ -95,7 +95,7 @@ Ideas welcome, within these honest limits:
 | --- | --- |
 | `assets/brand/lloyds-wharf-cleat-wall.jpg` | Real photograph: the painted cleat, "LLOYDS WHARF", "ESTD 1857" on brick, timber bench, cobbles |
 | `assets/brand/nekinger.jpg` | Real photograph: the hand-painted River Neckinger / St Saviours Dock sign |
-| `assets/brand/hub-sign-lit.jpg` | The operator-approved lit sign. Its provenance (photograph or mock-up) is not recorded in this repository, so use it as supplied and do not alter it |
+| `assets/brand/hub-sign-lit.jpg` | A **render** of a proposed backlit reception sign, not a photograph. The operator's signage specification (version 1.0, September 2026) labels the same picture "example render". The sign may not exist yet. Never present it as a photograph or as the real entrance. It may inform the sign's look, no more |
 | `assets/brand/cleat.svg` | The cleat mark as vector paths, `viewBox 0 0 1000 340` |
 | `assets/video/arrive.mp4`, `arrive_poster.jpg` | 11 s walk in from the entrance corridor. 720x1280 portrait |
 | `assets/walk/w_001.webp` to `w_113.webp` | The whole 56 s walkthrough as 113 frames, in order, 540x960 portrait. `walk.json` describes them. Landmarks: entrance corridor 1-6, glass partitions 7-18, brick wall and desks 19-24, timber posts 25-29, arched windows 33-37, yellow lockers 38-40, long white desks 67-84, black wall 85-96, sofa and clock 97-110, the window onto Shad Thames 111-113 |
@@ -115,10 +115,11 @@ Do not guess them.
 - **Email and phone.** The contact route for now is email and phone. Online booking and payment are
   not open yet and will be connected later, so leave a clean place for a real join action to replace the
   contact links. Put the two values in one configuration object.
-- The wording of the five-word line. Three variants exist on the building: `WORK MEET CREATE
-  COLLABORATE BELONG` (entrance wall), `WORK CONNECT BELONG` (under the cleat), and the lockup
-  `WORK · MEET · CREATE · CONNECT · BELONG`. Use the lockup as a placeholder and make it one edit to
-  change. The operator decides.
+- The wording of the five-word line. Three variants appear in the supplied material: `WORK MEET CREATE
+  COLLABORATE BELONG`, `WORK CONNECT BELONG` (on the proposed sign) and the lockup
+  `WORK · MEET · CREATE · CONNECT · BELONG`. The real photograph of the cleat wall carries no
+  such line, so none of the three is confirmed as built. Use the lockup as a placeholder and make it
+  one edit to change. The operator decides.
 - Opening hours, tour booking, VAT registration status, final plan names, the accent yellow (RAL), the
   other floors, and the tenants.
 - A link-preview image and the final domain.
