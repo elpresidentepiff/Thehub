@@ -1,0 +1,53 @@
+/* GENERATED from pricing/pricing.json by tools/build_pricing_js.py. Do not edit. */
+window.HUB_PRICING = {
+  "_meta": {
+    "status": "SCHEME_SET_BY_OPERATOR",
+    "set_on": "2026-11-01",
+    "note": "Pricing scheme chosen by the operator. No Stripe product or price has been created from this file. proto/opening.html displays it through the generated pricing/pricing.js. It is also the seed for hub.products / hub.product_prices and the Stripe test-mode catalogue (see docs/PRICING.md).",
+    "source": "Set by the operator",
+    "currency": "GBP",
+    "amounts_are": "gross, VAT included, in pence",
+    "stripe_tax_behavior": "inclusive"
+  },
+  "memberships": [
+    {
+      "id": "membership_40h",
+      "working_name": "40 hours",
+      "amount_pence": 18000,
+      "interval": "month",
+      "hours_per_month": 40,
+      "hours_roll_over": false,
+      "guests_per_month": 1,
+      "desk_booking_days_ahead": 7,
+      "contract": false
+    },
+    {
+      "id": "membership_80h",
+      "working_name": "80 hours",
+      "amount_pence": 24500,
+      "interval": "month",
+      "hours_per_month": 80,
+      "hours_roll_over": false,
+      "guests_per_month": 2,
+      "desk_booking_days_ahead": 7,
+      "contract": false
+    },
+    {
+      "id": "membership_unlimited",
+      "working_name": "Unlimited",
+      "amount_pence": 29500,
+      "interval": "month",
+      "hours_per_month": null,
+      "hours_roll_over": false,
+      "guests_per_month": 2,
+      "desk_booking_days_ahead": 7,
+      "contract": false
+    }
+  ],
+  "day_pass": {
+    "id": "day_pass",
+    "amount_pence": 4000,
+    "unit": "day",
+    "membership_required": false
+  }
+};
