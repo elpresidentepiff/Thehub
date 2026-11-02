@@ -1,4 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>The Hub at Lloyds Wharf</title>
+<meta name="description" content="A workspace in a Victorian wharf warehouse in Shad Thames, established 1857. Monthly memberships and day passes. 2 Mill Street, SE1 2BD.">
+<meta name="theme-color" content="#0B0907">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Hub at Lloyds Wharf">
+<meta property="og:description" content="A workspace in a Victorian wharf warehouse in Shad Thames, established 1857. Monthly memberships and day passes.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-100 -449 1200 1200'%3E%3Crect x='-100' y='-449' width='1200' height='1200' rx='180' fill='%230B0907'/%3E%3Cg fill='none' stroke='%23EFE7DA' stroke-width='44' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M 26 52 C 170 22 350 14 500 14 C 650 14 830 22 974 52 C 990 62 988 82 966 88 C 830 68 650 60 500 60 C 350 60 170 68 34 88 C 12 82 10 62 26 52 Z'/%3E%3Cpath d='M 196 62 C 202 122 252 172 322 200 C 394 224 606 224 678 200 C 748 172 798 122 804 62'/%3E%3Cpath d='M 500 60 L 500 288'/%3E%3Cpath d='M 240 150 L 190 288 L 810 288 L 760 150'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Black&display=swap">
@@ -17,8 +28,8 @@ body{margin:0;background:var(--ink);color:var(--cream);font-family:var(--body);
      -webkit-font-smoothing:antialiased;overflow-x:hidden}
 
 /* ---------- stage ---------- */
-.scroller{height:560vh;position:relative}
-.stage{position:sticky;top:0;height:100vh;overflow:hidden;background:var(--ink)}
+.scroller{height:430vh;position:relative}
+.stage{position:sticky;top:0;height:100vh;height:100dvh;overflow:hidden;background:var(--ink)}
 .layer{position:absolute;inset:0;display:grid;place-items:center;will-change:opacity,transform}
 
 /* ---------- water (the Neckinger) ---------- */
@@ -35,39 +46,49 @@ body{margin:0;background:var(--ink);color:var(--cream);font-family:var(--body);
       margin:26px auto 0;transform-origin:50% 50%}
 
 /* ---------- beat 2 : the cleat, lit by its own halo ---------- */
-.cleatwrap{position:relative;width:min(84vw,860px);filter:drop-shadow(0 0 var(--glow,0px) var(--halo-warm))}
+.cleatwrap{position:relative;width:min(84vw,860px);filter:drop-shadow(0 0 var(--glow,0px) var(--halo-warm));
+  transform-style:preserve-3d;perspective:900px}
 .cleatglow{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
   width:130%;aspect-ratio:2.4/1;border-radius:50%;pointer-events:none;
   background:radial-gradient(ellipse at center,
     rgba(254,230,181,.60) 0%,rgba(248,207,149,.30) 32%,
     rgba(185,124,60,.14) 55%,rgba(11,9,7,0) 74%);filter:blur(16px)}
+.liquid-ring{position:absolute;left:50%;top:50%;width:112%;aspect-ratio:2.45/1;
+  border:1px solid rgba(254,230,181,.28);border-radius:50%;pointer-events:none;
+  transform:translate(-50%,-50%) scale(.72);opacity:0;
+  box-shadow:inset 0 0 24px rgba(248,207,149,.12),0 0 34px rgba(185,124,60,.14);
+  animation:liquidOrbit 4.8s cubic-bezier(.22,.61,.36,1) infinite}
+.liquid-ring.r2{width:126%;animation-delay:-2.4s;animation-duration:6.4s}
+@keyframes liquidOrbit{
+  0%{opacity:0;transform:translate(-50%,-50%) rotateX(66deg) rotateZ(-2deg) scale(.68)}
+  24%{opacity:.42}
+  68%{opacity:.16}
+  100%{opacity:0;transform:translate(-50%,-50%) rotateX(66deg) rotateZ(5deg) scale(1.14)}
+}
 svg.cleat{display:block;width:100%;height:auto;color:var(--cream);position:relative}
 svg.cleat path,svg.cleat rect,svg.cleat circle{
   stroke-dasharray:1;stroke-dashoffset:1;vector-effect:non-scaling-stroke}
 
-/* ---------- beat 3 : THE HUB, footage inside the letters ---------- */
-.wordmark{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1vw,14px)}
-.the{font-family:var(--display);font-size:clamp(28px,5.2vw,74px);letter-spacing:.06em;
-     color:var(--cream);line-height:1}
-.hubtype{position:relative;width:min(92vw,1000px);aspect-ratio:1000/260;overflow:hidden}
-.hubtype video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-     filter:saturate(.82) contrast(1.16) brightness(1.06)}
-.hubtype svg{position:absolute;inset:0;width:100%;height:100%}
-.hubtype .sheen{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;
-     background:linear-gradient(105deg,transparent 38%,rgba(254,230,181,.30) 50%,transparent 62%);
-     background-size:260% 100%}
-.wharf{font-family:var(--body);font-weight:600;color:var(--cream-dim);
-     font-size:clamp(11px,1.5vw,19px);letter-spacing:.34em;text-indent:.34em}
-
 /* ---------- beat 5 : inside ---------- */
 .inside video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* the footage is 720x1280 portrait: on a landscape screen frame it as a column, never crop it to a strip of floor */
+@media (min-aspect-ratio:5/4){
+  .inside video{inset:0 auto 0 50%;width:auto;height:100%;transform:translateX(-50%);
+    -webkit-mask-image:linear-gradient(to right,transparent,#000 24%,#000 76%,transparent);
+    mask-image:linear-gradient(to right,transparent,#000 24%,#000 76%,transparent)}
+}
 .insidegrade{position:absolute;inset:0;
   background:radial-gradient(ellipse at 50% 42%,rgba(11,9,7,0) 34%,rgba(11,9,7,.78) 100%)}
+.closing{position:relative;display:flex;flex-direction:column;align-items:center;gap:clamp(16px,2.6vh,28px);
+  padding:clamp(28px,5vh,56px) 5vw;
+  background:radial-gradient(closest-side,rgba(11,9,7,.62),rgba(11,9,7,0))}
+.closing .name{font:400 clamp(22px,3.6vw,48px)/1 var(--display);color:var(--halo);text-align:center;
+  text-wrap:balance;text-shadow:0 2px 28px rgba(11,9,7,.95)}
 .pillars{position:relative;display:flex;flex-wrap:wrap;justify-content:center;
-  gap:clamp(14px,3.4vw,54px);padding:0 5vw}
+  gap:clamp(14px,3.4vw,54px)}
 .pillars span{font-family:var(--body);font-weight:600;letter-spacing:.3em;
-  font-size:clamp(10px,1.35vw,16px);color:var(--cream);text-indent:.3em;
-  text-shadow:0 2px 26px rgba(11,9,7,.9)}
+  font-size:clamp(12px,1.5vw,18px);color:var(--cream);text-indent:.3em;
+  text-shadow:0 0 18px rgba(11,9,7,.95),0 1px 3px rgba(11,9,7,.9)}
 .pillars span i{font-style:normal;color:var(--brass);padding-right:clamp(14px,3.4vw,54px)}
 
 /* ---------- chrome ---------- */
@@ -83,19 +104,92 @@ svg.cleat path,svg.cleat rect,svg.cleat circle{
 .beats button[aria-current="true"] i{background:var(--halo);transform:scale(1.5)}
 .beats button:focus-visible i{outline:2px solid var(--halo);outline-offset:3px}
 .note{position:fixed;left:clamp(12px,2.2vw,28px);bottom:clamp(12px,2.2vw,24px);z-index:20;
-  font-size:10px;letter-spacing:.16em;color:#5E5348;max-width:34ch;line-height:1.7}
+  font-size:10px;letter-spacing:.16em;color:var(--cream-dim);text-shadow:0 1px 12px rgba(11,9,7,.9);
+  max-width:34ch;line-height:1.7}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;border:0}
+@media (max-width:600px){
+  /* five words stack instead of wrapping over the footage */
+  .pillars{flex-direction:column;align-items:center;gap:14px}
+  .pillars span i{display:none}
+  /* the name wraps to two lines and keeps clear of the section dots on the right edge */
+  .closing{padding-left:48px;padding-right:48px}
+  .closing .name{font-size:26px;max-width:10.5em}
+  /* hint and corner note shared the bottom edge: lift the hint clear of the note */
+  .hint{bottom:calc(clamp(12px,2.2vw,24px) + 4.6em + 14px)}
+}
+
+/* ---------- membership : below the sequence, static ---------- */
+.membership{position:relative;z-index:1;background:var(--ink);border-top:1px solid rgba(185,124,60,.35);
+  padding:clamp(72px,12vh,140px) max(56px,6vw) clamp(72px,12vh,140px) max(20px,6vw)}
+.membership-inner{max-width:1180px;margin:0 auto}
+.m-label{font-weight:600;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--brass)}
+.m-title{margin:14px 0 14px;font:400 clamp(34px,5.5vw,76px)/.95 var(--display)}
+.m-lede{margin:0;max-width:46ch;color:var(--cream-dim);font-size:clamp(14px,1.4vw,18px);line-height:1.6}
+.m-plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:clamp(36px,6vh,64px);
+  border-top:1px solid var(--brass)}
+.m-plan{padding:28px clamp(16px,2.4vw,36px) 30px 0}
+.m-plan+.m-plan{padding-left:clamp(16px,2.4vw,36px);border-left:1px solid rgba(185,124,60,.28)}
+.m-tag{margin:0;font-weight:600;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--brass)}
+.m-price{margin:14px 0 4px;font:400 clamp(40px,5vw,64px)/1 var(--display);color:var(--halo)}
+.m-price small{font:500 14px/1 var(--body);letter-spacing:0;color:var(--cream-dim)}
+.m-rate{margin:0 0 20px;min-height:1.4em;color:var(--cream-dim);font-size:13px}
+.m-facts{margin:0}
+.m-facts div{display:flex;justify-content:space-between;gap:16px;padding:11px 0;
+  border-top:1px solid rgba(239,231,218,.1);font-size:14px}
+.m-facts dt{color:var(--cream-dim)}
+.m-facts dd{margin:0;font-weight:600;text-align:right}
+.m-calc{padding:28px 0 32px;border-top:1px solid var(--brass)}
+.m-calc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(20px,4vw,56px);margin-top:18px}
+.m-field label{display:flex;justify-content:space-between;gap:12px;margin-bottom:10px;color:var(--cream-dim);font-size:14px}
+.m-field output{color:var(--cream);font-weight:600}
+.m-field input[type=range]{display:block;width:100%;height:28px;margin:0;accent-color:var(--brass);cursor:pointer}
+.m-field input[type=range]:focus-visible{outline:2px solid var(--halo);outline-offset:4px}
+.m-calc-res{display:flex;align-items:center;gap:clamp(18px,3vw,40px);flex-wrap:wrap;margin-top:26px}
+.m-calc-res .m-price{margin:0;min-width:0}
+.m-calc-line{margin:0;font-size:16px;font-weight:600}
+.m-calc-sub{margin:6px 0 0;max-width:52ch;color:var(--cream-dim);font-size:14px;line-height:1.6}
+.m-day{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  padding:28px 0;border-top:1px solid var(--brass)}
+.m-day p{margin:8px 0 0;color:var(--cream-dim);font-size:14px}
+.m-day .m-price{margin:0}
+.m-ask{display:inline-block;margin-top:14px;padding:10px 0;color:var(--halo);font-weight:600;font-size:14px;
+  text-decoration:underline;text-decoration-color:var(--brass);text-underline-offset:5px}
+.m-ask:hover{text-decoration-color:var(--halo)}
+.m-ask:focus-visible,.m-visit-list a:focus-visible{outline:2px solid var(--halo);outline-offset:4px}
+.m-visit{padding:28px 0 32px;border-top:1px solid var(--brass)}
+.m-visit-line{margin:12px 0 0;max-width:52ch;color:var(--cream-dim);font-size:14px;line-height:1.6}
+.m-visit-list{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:12px}
+.m-visit-list:empty{display:none}
+.m-visit-list li{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+.m-visit-list span{min-width:5.5em;color:var(--cream-dim);font-size:14px}
+.m-visit-list a{color:var(--cream);font-weight:600;font-size:clamp(18px,2.4vw,26px);overflow-wrap:anywhere;
+  text-decoration:underline;text-decoration-color:var(--brass);text-underline-offset:6px}
+.m-address{margin:18px 0 0;font-style:normal;color:var(--cream-dim);font-size:14px}
+.m-foot{margin:0;color:var(--cream-dim);font-size:12px;line-height:1.7;max-width:60ch}
+@media (max-width:860px){
+  .m-calc-grid{grid-template-columns:1fr}
+  .m-plans{grid-template-columns:1fr}
+  .m-plan{padding-right:0}
+  .m-plan+.m-plan{padding-left:0;border-left:0;border-top:1px solid rgba(185,124,60,.28)}
+}
 
 @media (prefers-reduced-motion:reduce){
   .scroller{height:auto}
   .stage{position:static;height:auto;display:flex;flex-direction:column;gap:64px;padding:64px 0}
   .layer{position:static;opacity:1!important;transform:none!important;min-height:52vh}
   svg.cleat path,svg.cleat rect,svg.cleat circle{stroke-dashoffset:0!important}
+  .liquid-ring{animation:none;opacity:.18;transform:translate(-50%,-50%) scale(.9)}
+  .cleat-art{filter:none}
   .hint{display:none}
   #water{position:static;height:30vh}
   .inside{min-height:70vh;position:relative}
 }
 </style>
-
+</head>
+<body>
+<h1 class="sr-only">The Hub at Lloyds Wharf</h1>
+<main>
 <div class="scroller">
 <div class="stage">
 
@@ -114,9 +208,21 @@ svg.cleat path,svg.cleat rect,svg.cleat circle{
   <div class="layer" id="L2">
     <div class="cleatwrap" id="cleatwrap">
       <div class="cleatglow" id="cleatglow"></div>
+      <div class="liquid-ring"></div><div class="liquid-ring r2"></div>
       <svg class="cleat" viewBox="0 0 1000 340" fill="none" stroke="currentColor"
            stroke-width="17" stroke-linecap="round" stroke-linejoin="round"
            role="img" aria-label="The Lloyds Wharf mooring cleat">
+        <defs>
+          <filter id="liquidCleat" x="-18%" y="-35%" width="136%" height="170%">
+            <feTurbulence type="fractalNoise" baseFrequency=".006 .014" numOctaves="2" seed="19" result="flow">
+              <animate attributeName="baseFrequency" dur="5.6s" values=".006 .014;.011 .008;.005 .016;.006 .014" repeatCount="indefinite"/>
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="flow" scale="7" xChannelSelector="R" yChannelSelector="B">
+              <animate attributeName="scale" dur="4.2s" values="4;11;6;9;4" repeatCount="indefinite"/>
+            </feDisplacementMap>
+          </filter>
+        </defs>
+        <g class="cleat-art" filter="url(#liquidCleat)">
         <path pathLength="1" d="M 26 52 C 170 22, 350 14, 500 14 C 650 14, 830 22, 974 52
               C 990 62, 988 82, 966 88 C 830 68, 650 60, 500 60 C 350 60, 170 68, 34 88
               C 12 82, 10 62, 26 52 Z"/>
@@ -128,68 +234,168 @@ svg.cleat path,svg.cleat rect,svg.cleat circle{
         <rect pathLength="1" x="718" y="190" width="30" height="44" rx="14"/>
         <circle pathLength="1" cx="238" cy="262" r="14"/>
         <circle pathLength="1" cx="762" cy="262" r="14"/>
+        </g>
       </svg>
-    </div>
-  </div>
-
-  <!-- 3 -->
-  <div class="layer" id="L3">
-    <div class="wordmark" id="wordmark">
-      <div class="the">THE</div>
-      <div class="hubtype">
-        <video id="typevid" src="type.mp4" muted loop playsinline autoplay preload="auto"></video>
-        <svg viewBox="0 0 1000 260" preserveAspectRatio="none" aria-hidden="true">
-          <defs><mask id="knock" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="260">
-            <rect x="0" y="0" width="1000" height="260" fill="#fff"/>
-            <text x="500" y="212" text-anchor="middle" fill="#000"
-                  font-family="Archivo Black, Archivo, Impact, sans-serif"
-                  font-size="268" letter-spacing="6">HUB</text>
-          </mask></defs>
-          <rect x="0" y="0" width="1000" height="260" fill="#0B0907" mask="url(#knock)"/>
-        </svg>
-        <div class="sheen" id="sheen"></div>
-      </div>
-      <div class="wharf">@ LLOYDS WHARF</div>
     </div>
   </div>
 
   <!-- 5 -->
   <div class="layer inside" id="L5">
-    <video id="arrivevid" src="arrive.mp4" poster="arrive_poster.jpg" muted loop playsinline preload="auto"></video>
+    <video id="arrivevid" src="../assets/video/arrive.mp4" poster="../assets/video/arrive_poster.jpg" muted playsinline preload="auto" aria-hidden="true" tabindex="-1"></video>
     <div class="insidegrade"></div>
-    <div class="pillars" id="pillars">
-      <span>WORK<i> ·</i></span><span>MEET<i> ·</i></span><span>CREATE<i> ·</i></span><span>CONNECT<i> ·</i></span><span>BELONG</span>
+    <div class="closing" id="pillars">
+      <div class="name" aria-hidden="true">THE HUB @ LLOYDS WHARF</div>
+      <div class="pillars">
+        <span>WORK<i> ·</i></span><span>MEET<i> ·</i></span><span>CREATE<i> ·</i></span><span>CONNECT<i> ·</i></span><span>BELONG</span>
+      </div>
     </div>
   </div>
 
 </div>
 </div>
 
+<section class="membership" id="membership" aria-labelledby="m-title">
+  <div class="membership-inner">
+    <div class="m-label">Membership</div>
+    <h2 class="m-title" id="m-title">Pay monthly.<br>Cancel any time.</h2>
+    <p class="m-lede">Three ways in, by the hours you use. No contract. Every price includes VAT.</p>
+    <div class="m-plans" id="m-plans"></div>
+    <div class="m-calc" role="group" aria-labelledby="m-calc-title">
+      <h3 class="m-tag" id="m-calc-title">Which plan fits</h3>
+      <div class="m-calc-grid">
+        <div class="m-field">
+          <label for="c-days"><span>Days in each week</span><output id="c-days-o" for="c-days">3</output></label>
+          <input type="range" id="c-days" min="1" max="7" step="1" value="3">
+        </div>
+        <div class="m-field">
+          <label for="c-hours"><span>Hours each day</span><output id="c-hours-o" for="c-hours">6</output></label>
+          <input type="range" id="c-hours" min="1" max="12" step="1" value="6">
+        </div>
+      </div>
+      <div class="m-calc-res" aria-live="polite">
+        <div class="m-price" id="c-price"></div>
+        <div><p class="m-calc-line" id="c-line"></p><p class="m-calc-sub" id="c-sub"></p></div>
+      </div>
+    </div>
+    <div class="m-day" id="m-day"></div>
+    <div class="m-visit" id="m-visit">
+      <h3 class="m-tag">Join or visit</h3>
+      <p class="m-visit-line" id="m-visit-line"></p>
+      <ul class="m-visit-list" id="m-visit-list"></ul>
+      <address class="m-address">2 Mill Street, Shad Thames, London SE1 2BD</address>
+    </div>
+    <p class="m-foot" id="m-foot"></p>
+  </div>
+</section>
+</main>
+
 <div class="hint" id="hint"><span>SCROLL</span><span class="bar"></span></div>
 <nav class="beats" id="beatnav" aria-label="Sequence"></nav>
-<div class="note">Opening sequence prototype · real Lloyds Wharf footage · scroll or use the dots</div>
+<div class="note" id="note">Opening sequence prototype · real Lloyds Wharf footage · scroll or use the dots</div>
 
+<script src="../pricing/pricing.js"></script>
+<script>
+/* The only place contact details are typed. Interim route until booking and payment go live.
+   Leave a field empty and nothing is shown for it. */
+window.HUB_CONTACT=window.HUB_CONTACT||{email:"",phone:""};
+</script>
 <script>
 (function(){
   "use strict";
   var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   var scroller = document.querySelector(".scroller");
   var L1=document.getElementById("L1"), L2=document.getElementById("L2"),
-      L3=document.getElementById("L3"), L5=document.getElementById("L5");
+      L5=document.getElementById("L5");
   var rule=document.getElementById("rule"), wrap=document.getElementById("cleatwrap"),
-      glow=document.getElementById("cleatglow"), wm=document.getElementById("wordmark"),
-      sheen=document.getElementById("sheen"), pillars=document.getElementById("pillars"),
+      glow=document.getElementById("cleatglow"), pillars=document.getElementById("pillars"),
       hint=document.getElementById("hint");
   var strokes = document.querySelectorAll("svg.cleat path, svg.cleat rect, svg.cleat circle");
-  var typevid=document.getElementById("typevid"), arrivevid=document.getElementById("arrivevid");
+  var arrivevid=document.getElementById("arrivevid");
 
-  var BEATS=[{n:"1857",p:0.02},{n:"Cleat",p:0.26},{n:"The Hub",p:0.50},{n:"Through",p:0.70},{n:"Inside",p:0.92}];
+  var membership=document.getElementById("membership"), note=document.getElementById("note");
+
+  /* ---- membership: prices come from pricing/pricing.json via pricing.js, never typed here ---- */
+  function money(p){ var v=p/100; return "£"+(v%1===0 ? v : v.toFixed(2)); }
+  /* contact: validated here so a typo can never become markup */
+  var CT=window.HUB_CONTACT||{};
+  var EMAIL=/^[^\s<>"'@]+@[^\s<>"'@]+\.[^\s<>"'@]+$/.test(CT.email||"") ? CT.email : "";
+  var PHONE=(CT.phone||"").replace(/[^\d+ ()-]/g,"").trim();
+  var PHONE_HREF="tel:"+PHONE.replace(/[^\d+]/g,"");
+  function askLink(m){
+    if(EMAIL) return '<a class="m-ask" href="mailto:'+EMAIL+'?subject='+encodeURIComponent("Membership enquiry: "+m.working_name)+'">Ask about this plan</a>';
+    if(PHONE) return '<a class="m-ask" href="'+PHONE_HREF+'">Call about this plan</a>';
+    return "";
+  }
+  (function renderVisit(){
+    var line=document.getElementById("m-visit-line"), list=document.getElementById("m-visit-list");
+    line.textContent=(EMAIL||PHONE)
+      ? "Online booking is not open yet. To join, or to see the floor first, get in touch."
+      : "Online booking is not open yet.";
+    var items=[];
+    if(EMAIL) items.push('<li><span>Email</span><a href="mailto:'+EMAIL+'">'+EMAIL+'</a></li>');
+    if(PHONE) items.push('<li><span>Phone</span><a href="'+PHONE_HREF+'">'+PHONE+'</a></li>');
+    list.innerHTML=items.join("");
+  })();
+  (function renderMembership(){
+    var d=window.HUB_PRICING, foot=document.getElementById("m-foot");
+    if(!d){ foot.textContent="Pricing data not loaded."; return; }
+    document.getElementById("m-plans").innerHTML=d.memberships.map(function(m){
+      var unl=m.hours_per_month==null;
+      return '<article class="m-plan"><h3 class="m-tag">'+m.working_name+'</h3>'+
+        '<div class="m-price">'+money(m.amount_pence)+' <small>/ '+m.interval+'</small></div>'+
+        '<p class="m-rate">'+(unl ? 'No hours cap' : 'Works out at '+money(Math.round(m.amount_pence/m.hours_per_month))+' an hour')+'</p>'+
+        '<dl class="m-facts">'+
+          '<div><dt>Hours</dt><dd>'+(unl ? 'Unlimited' : m.hours_per_month+' a month')+'</dd></div>'+
+          '<div><dt>Guests</dt><dd>'+m.guests_per_month+' a month</dd></div>'+
+          '<div><dt>Book a desk</dt><dd>'+m.desk_booking_days_ahead+' days ahead</dd></div>'+
+        '</dl>'+askLink(m)+'</article>';
+    }).join("");
+    document.getElementById("m-day").innerHTML=
+      '<div><h3 class="m-tag">Day pass</h3><p>One day, one desk. No membership needed.</p></div>'+
+      '<div class="m-price">'+money(d.day_pass.amount_pence)+'</div>';
+    foot.textContent="Hours reset each billing month and do not roll over. Online booking is not open yet.";
+  })();
+
+  /* ---- which plan fits: every number comes from pricing.js ---- */
+  (function planCalc(){
+    var d=window.HUB_PRICING; if(!d) return;
+    var days=document.getElementById("c-days"), hrs=document.getElementById("c-hours");
+    var WEEKS_PER_MONTH=52/12;
+    // cheapest plan first; the uncapped plan (hours_per_month null) is last
+    var plans=d.memberships.slice().sort(function(a,b){
+      return (a.hours_per_month==null?1e9:a.hours_per_month)-(b.hours_per_month==null?1e9:b.hours_per_month);
+    });
+    function pick(need){
+      for(var i=0;i<plans.length;i++){ if(plans[i].hours_per_month==null || plans[i].hours_per_month>=need) return plans[i]; }
+      return plans[plans.length-1];
+    }
+    function plural(n,w){ return n+" "+w+(n===1?"":"s"); }
+    function update(){
+      var dw=+days.value, hd=+hrs.value;
+      document.getElementById("c-days-o").textContent=dw;
+      document.getElementById("c-hours-o").textContent=hd;
+      var need=Math.round(dw*hd*WEEKS_PER_MONTH), dayCount=Math.round(dw*WEEKS_PER_MONTH);
+      var plan=pick(need), passCost=dayCount*d.day_pass.amount_pence;
+      document.getElementById("c-price").innerHTML=money(plan.amount_pence)+' <small>/ '+plan.interval+'</small>';
+      document.getElementById("c-line").textContent=plan.working_name+" fits: about "+plural(need,"hour")+" a month at "+money(Math.round(plan.amount_pence/need))+" an hour.";
+      var diff=passCost-plan.amount_pence;
+      document.getElementById("c-sub").textContent= diff>0
+        ? "Day passes for "+plural(dayCount,"day")+" would cost "+money(passCost)+", so this saves "+money(diff)+" a month."
+        : "Day passes for "+plural(dayCount,"day")+" would cost "+money(passCost)+", which is "+money(-diff)+" less than membership at this level.";
+    }
+    days.addEventListener("input",update); hrs.addEventListener("input",update); update();
+  })();
+
+  var BEATS=[{n:"1857",p:0.02},{n:"The cleat",p:0.30},{n:"Walk in",p:0.61},{n:"The floor",p:0.88},{n:"Membership",el:membership}];
+  /* reduced motion stacks the layers, so scroll fractions mean nothing: point each dot at its layer */
+  if(reduce){ BEATS[0].el=L1; BEATS[1].el=L2; BEATS[2].el=L5; BEATS[3].el=pillars; }
   var nav=document.getElementById("beatnav");
   BEATS.forEach(function(b,i){
     var btn=document.createElement("button");
     btn.innerHTML='<i></i>'; btn.title=b.n;
     btn.setAttribute("aria-label","Go to "+b.n);
     btn.addEventListener("click",function(){
+      if(b.el){ b.el.scrollIntoView({behavior:reduce?"auto":"smooth"}); return; }
       var max=scroller.scrollHeight-innerHeight;
       scrollTo({top:b.p*max,behavior:"smooth"});
     });
@@ -203,54 +409,69 @@ svg.cleat path,svg.cleat rect,svg.cleat circle{
   function ease(t){return t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2}
 
   function frame(){
-    if(reduce) return;
+    /* the fixed footer note would sit on top of the membership copy */
+    var inMembership=membership.getBoundingClientRect().top<innerHeight*0.6;
+    note.style.opacity=inMembership?"0":"1";
+    if(reduce){
+      var ra=0;
+      for(var r=0;r<BEATS.length;r++) if(BEATS[r].el.getBoundingClientRect().top<innerHeight*0.5) ra=r;
+      for(var rd=0;rd<dots.length;rd++) dots[rd].setAttribute("aria-current", rd===ra?"true":"false");
+      return;
+    }
     var max=scroller.scrollHeight-innerHeight;
     var p=max>0 ? clamp(scrollY/max,0,1) : 0;
 
     /* 1 — 1857 -------------------------------------------------- */
-    var in1=seg(p,0.00,0.06), out1=seg(p,0.15,0.24);
-    L1.style.opacity = (in1*(1-out1)).toFixed(3);
+    /* EST. 1857 is the resting state: visible at scroll 0, never faded in from nothing */
+    var out1=seg(p,0.15,0.24);
+    L1.style.opacity = (1-out1).toFixed(3);
     L1.style.transform = "translateY("+(-26*out1).toFixed(1)+"px)";
     rule.style.transform = "scaleX("+ease(seg(p,0.02,0.14)).toFixed(3)+")";
 
     /* 2 — the cleat, drawn by its own light ---------------------- */
-    var draw=ease(seg(p,0.17,0.40)), out2=seg(p,0.44,0.54);
+    var draw=ease(seg(p,0.17,0.42)), out2=seg(p,0.48,0.72);
     L2.style.opacity = (seg(p,0.15,0.21)*(1-out2)).toFixed(3);
     for(var i=0;i<strokes.length;i++){
       var stagger = i*0.055;
       strokes[i].style.strokeDashoffset = (1-clamp((draw-stagger)/(1-stagger*0.5),0,1)).toFixed(4);
     }
-    var lit=ease(seg(p,0.30,0.46));
+    var lit=ease(seg(p,0.27,0.46));
     glow.style.opacity = lit.toFixed(3);
-    wrap.style.setProperty("--glow",(26*lit).toFixed(1)+"px");
-    wrap.style.transform = "scale("+(1-0.10*out2).toFixed(3)+") translateY("+(-40*out2).toFixed(1)+"px)";
-
-    /* 3 — THE HUB ------------------------------------------------ */
-    var in3=ease(seg(p,0.46,0.58)), push=seg(p,0.66,0.86);
-    L3.style.opacity = (in3*(1-seg(p,0.80,0.88))).toFixed(3);
-    var s = (0.90+0.10*in3) * (1 + 5.2*ease(push));
-    wm.style.transform = "scale("+s.toFixed(3)+")";
-    wm.style.filter = "blur("+(9*push*push).toFixed(2)+"px)";
-    sheen.style.backgroundPosition = (150-190*ease(seg(p,0.50,0.70)))+"% 0";
+    wrap.style.setProperty("--glow",(18+34*lit).toFixed(1)+"px");
+    var push=ease(seg(p,0.50,0.73));
+    var breathe=1+Math.sin(p*34)*.012*lit*(1-push);
+    wrap.style.transform = "rotateX("+(5*lit-12*push).toFixed(2)+"deg) rotateY("+(Math.sin(p*18)*3*lit).toFixed(2)+"deg) scale("+((1+3.8*push)*breathe).toFixed(3)+")";
+    wrap.style.filter = "drop-shadow(0 0 "+(18+34*lit).toFixed(1)+"px var(--halo-warm)) blur("+(7*push*push).toFixed(2)+"px)";
 
     /* 5 — inside ------------------------------------------------- */
-    var in5=ease(seg(p,0.74,0.90));
+    var in5=ease(seg(p,0.58,0.76));
     L5.style.opacity = in5.toFixed(3);
     L5.style.transform = "scale("+(1.14-0.14*in5).toFixed(3)+")";
-    pillars.style.opacity = ease(seg(p,0.90,1.00)).toFixed(3);
-    pillars.style.transform = "translateY("+(22*(1-ease(seg(p,0.90,1.00)))).toFixed(1)+"px)";
+    pillars.style.opacity = ease(seg(p,0.84,1.00)).toFixed(3);
+    pillars.style.transform = "translateY("+(22*(1-ease(seg(p,0.84,1.00)))).toFixed(1)+"px)";
 
     hint.style.opacity = (1-seg(p,0.00,0.07)).toFixed(3);
 
     /* play only what is on screen */
-    tog(typevid, in3>0.05 && push<0.98);
     tog(arrivevid, in5>0.02);
 
     var active=0;
-    for(var b=0;b<BEATS.length;b++) if(p>=BEATS[b].p-0.02) active=b;
+    for(var b=0;b<BEATS.length;b++) if(BEATS[b].p!=null && p>=BEATS[b].p-0.02) active=b;
+    if(inMembership) active=BEATS.length-1;
     for(var d=0;d<dots.length;d++) dots[d].setAttribute("aria-current", d===active?"true":"false");
   }
-  function tog(v,on){ if(!v) return; if(on){ if(v.paused) v.play().catch(function(){}); } else if(!v.paused) v.pause(); }
+  /* the walk plays once and holds on the floor; leaving the section and coming back plays it again */
+  var vidOn=false;
+  function tog(v,on){
+    if(!v) return;
+    if(on){
+      if(!vidOn){ vidOn=true; try{ v.currentTime=0; }catch(e){} }
+      if(v.paused && !v.ended) v.play().catch(function(){});
+    } else {
+      vidOn=false;
+      if(!v.paused) v.pause();
+    }
+  }
 
   var tick=false;
   function onScroll(){ if(!tick){ tick=true; requestAnimationFrame(function(){ frame(); tick=false; }); } }
@@ -284,3 +505,5 @@ svg.cleat path,svg.cleat rect,svg.cleat circle{
   frame();
 })();
 </script>
+</body>
+</html>
