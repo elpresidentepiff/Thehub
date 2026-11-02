@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Tunnel exit test — The Hub at Lloyds Wharf</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Black&display=swap">
+  <style>
+    :root{
+      --ink:#0b0907;--cream:#efe7da;--cream-dim:#a99c8b;--brass:#b97c3c;--halo:#fee6b5;
+      --exit:0;--settle:0;--pulse:0;
+    }
+    *{box-sizing:border-box}
+    html,body{width:100%;height:100%;margin:0;background:var(--ink);overflow:hidden}
+    body{font-family:"Archivo",system-ui,sans-serif;color:var(--cream);-webkit-font-smoothing:antialiased}
+    button{font:inherit}
+    .stage{position:fixed;inset:0;isolation:isolate;background:var(--ink)}
+    .destination,.tunnel,.porthole,.bloom,.vignette,.grain{position:absolute;inset:0}
+    .destination{
+      z-index:1;overflow:hidden;
+      background:#0b0907;
+      clip-path:circle(calc(4% + var(--exit) * 76%) at 50% 48%);
+      filter:blur(calc((1 - var(--exit)) * 7px)) saturate(calc(.76 + var(--exit) * .24));
+      transform:scale(calc(1.18 - var(--exit) * .18 + var(--settle) * .018));transform-origin:50% 48%;
+      will-change:clip-path,filter,transform;
+    }
+    .destination::before{content:"";position:absolute;z-index:0;inset:-5%;background:url("../../assets/brand/hub-sign-lit.jpg") 50% 50%/cover no-repeat;filter:blur(24px) brightness(.42) saturate(.8);transform:scale(1.06)}
+    .destination img{position:relative;z-index:1;width:100%;height:100%;display:block;object-fit:contain;object-position:50% 50%}
+    .destination::after{content:"";position:absolute;z-index:2;inset:0;background:linear-gradient(180deg,rgba(11,9,7,.18),transparent 34%,transparent 72%,rgba(11,9,7,.46));opacity:calc(.65 - var(--exit) * .25)}
+    .tunnel{z-index:2;opacity:calc(1 - var(--exit) * 1.18);transform:scale(calc(1 + var(--exit) * .38));filter:blur(calc(var(--exit) * 4px));will-change:opacity,transform,filter}
+    .tunnel video{width:100%;height:100%;display:block;object-fit:cover;object-position:50% 50%}
+    .tunnel::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 48%,transparent 9%,rgba(11,9,7,.05) 32%,rgba(11,9,7,.78) 100%);opacity:calc(.54 - var(--exit) * .35)}
+    .porthole{
+      z-index:3;pointer-events:none;
+      background:radial-gradient(circle at 50% 48%,transparent calc(3% + var(--exit) * 73%),rgba(254,230,181,.84) calc(3.6% + var(--exit) * 73.4%),rgba(185,124,60,.32) calc(4.5% + var(--exit) * 74%),transparent calc(6.2% + var(--exit) * 75%));
+      opacity:var(--pulse);filter:blur(calc(1px + var(--exit) * 3px));will-change:background,opacity;
+    }
+    .bloom{z-index:4;pointer-events:none;background:radial-gradient(circle at 50% 48%,rgba(254,230,181,.62),rgba(248,207,149,.16) 26%,transparent 58%);mix-blend-mode:screen;opacity:calc(var(--pulse) * .72);transform:scale(calc(.38 + var(--exit) * 1.2))}
+    .vignette{z-index:5;pointer-events:none;box-shadow:inset 0 0 20vw rgba(11,9,7,.68);opacity:calc(.82 - var(--exit) * .58)}
+    .grain{z-index:6;pointer-events:none;opacity:.075;mix-blend-mode:soft-light;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.72'/%3E%3C/svg%3E")}
+    .arrival{
+      position:absolute;z-index:7;left:50%;bottom:clamp(26px,5vw,64px);width:min(92vw,880px);
+      transform:translate(-50%,calc(24px * (1 - var(--exit))));display:flex;align-items:end;justify-content:space-between;gap:24px;
+      opacity:clamp(0,calc((var(--exit) - .72) * 4),1);pointer-events:none;
+    }
+    .arrival p{margin:0;text-transform:uppercase;letter-spacing:.31em;font-size:clamp(9px,1vw,12px);font-weight:600;text-shadow:0 2px 18px #000}
+    .arrival .eyebrow{color:var(--halo)}.arrival .line{width:clamp(50px,11vw,130px);height:1px;margin:0 18px 3px;background:linear-gradient(90deg,var(--brass),var(--halo));flex:1}.arrival .tag{color:var(--cream-dim);text-align:right}
+    .chrome{position:fixed;z-index:10;inset:0;pointer-events:none}
+    .lab{position:absolute;top:18px;left:20px;font-size:9px;letter-spacing:.27em;text-transform:uppercase;color:rgba(239,231,218,.68)}
+    .phase{position:absolute;top:18px;right:20px;font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--halo)}
+    .controls{position:absolute;right:18px;bottom:18px;display:flex;gap:8px;pointer-events:auto}
+    .controls button{appearance:none;border:1px solid rgba(254,230,181,.28);border-radius:999px;background:rgba(11,9,7,.52);color:var(--cream);padding:10px 14px;font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;backdrop-filter:blur(12px);cursor:pointer}
+    .controls button:hover,.controls button:focus-visible{border-color:var(--halo);background:rgba(11,9,7,.76);outline:none}
+    .progress{position:absolute;left:0;bottom:0;width:100%;height:2px;background:rgba(239,231,218,.12)}
+    .progress i{display:block;width:100%;height:100%;background:linear-gradient(90deg,var(--brass),var(--halo));transform:scaleX(0);transform-origin:left;will-change:transform}
+    @media(max-width:680px){.destination img{width:170%;left:-35%}.arrival{align-items:center;bottom:76px}.arrival .line{display:none}.arrival .tag{max-width:13ch;line-height:1.65}.lab{top:14px;left:14px}.phase{top:14px;right:14px}.controls{left:14px;right:14px;justify-content:space-between}}
+    @media(prefers-reduced-motion:reduce){:root{--exit:1;--settle:0}.tunnel,.porthole,.bloom{display:none}.destination{clip-path:none;filter:none;transform:none}.arrival{opacity:1;transform:translateX(-50%)}}
+  </style>
+</head>
+<body>
+  <main class="stage" aria-label="Tunnel exit transition test">
+    <div class="destination" id="destination"><img src="../../assets/brand/hub-sign-lit.jpg" alt="The illuminated Hub at Lloyds Wharf wall and cleat sign"></div>
+    <div class="tunnel" id="tunnel"><video id="film" src="../../assets/video/arrive.mp4" poster="../../assets/video/arrive_poster.jpg" muted playsinline preload="auto"></video></div>
+    <div class="porthole" aria-hidden="true"></div><div class="bloom" aria-hidden="true"></div><div class="vignette" aria-hidden="true"></div><div class="grain" aria-hidden="true"></div>
+    <div class="arrival" id="arrival"><p class="eyebrow">Arrival · Est. 1857</p><span class="line" aria-hidden="true"></span><p class="tag">Work · Connect · Belong</p></div>
+  </main>
+  <aside class="chrome" aria-label="Test controls">
+    <span class="lab">Lab 04 · Porthole exit</span><span class="phase" id="phase" aria-live="polite">Tunnel</span>
+    <div class="controls"><button type="button" id="exitNow">Test exit</button><button type="button" id="replay">Replay</button></div>
+    <div class="progress" aria-hidden="true"><i id="progress"></i></div>
+  </aside>
+  <script>
+    (function(){
+      "use strict";
+      var root=document.documentElement,film=document.getElementById("film"),phase=document.getElementById("phase"),progress=document.getElementById("progress"),replay=document.getElementById("replay"),exitNow=document.getElementById("exitNow");
+      var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches,forced=false,forcedStarted=0,raf=0;
+      function clamp(v,a,b){return v<a?a:v>b?b:v}function smooth(t){t=clamp(t,0,1);return t*t*(3-2*t)}
+      function setExit(value){var eased=smooth(value),pulse=Math.sin(eased*Math.PI);root.style.setProperty("--exit",eased.toFixed(4));root.style.setProperty("--settle",(pulse*.5).toFixed(4));root.style.setProperty("--pulse",pulse.toFixed(4));phase.textContent=eased<.08?"Tunnel":eased<.92?"Through the porthole":"The Hub at Lloyds Wharf"}
+      function frame(now){var duration=film.duration||11.033,timeline=clamp(film.currentTime/duration,0,1),exit;if(forced){if(!forcedStarted)forcedStarted=now;exit=clamp((now-forcedStarted)/1850,0,1)}else exit=clamp((timeline-.72)/.26,0,1);setExit(exit);progress.style.transform="scaleX("+(forced?(.72+exit*.28):timeline).toFixed(4)+")";if(exit<1||(!film.paused&&!film.ended))raf=requestAnimationFrame(frame)}
+      function start(){if(reduce){setExit(1);progress.style.transform="scaleX(1)";return}forced=false;forcedStarted=0;cancelAnimationFrame(raf);setExit(0);film.currentTime=0;film.play().then(function(){raf=requestAnimationFrame(frame)}).catch(function(){phase.textContent="Press replay to begin"})}
+      function forceExit(){if(reduce)return;forced=true;forcedStarted=0;film.pause();cancelAnimationFrame(raf);raf=requestAnimationFrame(frame)}
+      replay.addEventListener("click",start);exitNow.addEventListener("click",forceExit);film.addEventListener("ended",function(){setExit(1);progress.style.transform="scaleX(1)"});
+      if(film.readyState>=1)start();else film.addEventListener("loadedmetadata",function(){if(!forced)start()},{once:true});
+    })();
+  </script>
+</body>
+</html>
