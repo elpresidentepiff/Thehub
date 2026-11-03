@@ -97,6 +97,7 @@ Ideas welcome, within these honest limits:
 | `assets/brand/nekinger.jpg` | Real photograph: the hand-painted River Neckinger / St Saviours Dock sign |
 | `assets/brand/hub-sign-lit.jpg` | A **render** of a proposed backlit reception sign, not a photograph. The operator's signage specification (version 1.0, September 2026) labels the same picture "example render". The sign may not exist yet. Never present it as a photograph or as the real entrance. It may inform the sign's look, no more |
 | `assets/brand/cleat.svg` | The cleat mark as vector paths, `viewBox 0 0 1000 340` |
+| `assets/photos/floor-corridor-1.jpg`, `floor-corridor-2.jpg` | Two real portrait photographs of the floor (glass partitions, columns, lockers) |
 | `assets/video/arrive.mp4`, `arrive_poster.jpg` | 11 s walk in from the entrance corridor. 720x1280 portrait |
 | `assets/walk/w_001.webp` to `w_113.webp` | The whole 56 s walkthrough as 113 frames, in order, 540x960 portrait. `walk.json` describes them. Landmarks: entrance corridor 1-6, glass partitions 7-18, brick wall and desks 19-24, timber posts 25-29, arched windows 33-37, yellow lockers 38-40, long white desks 67-84, black wall 85-96, sofa and clock 97-110, the window onto Shad Thames 111-113 |
 | `assets/plan/floor_unit4_l2.svg` | Measured floor plan, Unit 4, second floor. `viewBox` is in metres. See the constitution before using it |
@@ -106,6 +107,20 @@ Ideas welcome, within these honest limits:
 The footage is **portrait** (720x1280) and handheld. A landscape reshoot is planned but has not
 happened. On a wide screen, frame the portrait footage deliberately (for example as a column). Do not
 stretch it full-bleed, which crops it to a strip of floor.
+
+## Other branches (reference only)
+
+This branch, `main`, is the brief and the shared assets. The operator's earlier build lives on the
+**`develop`** branch and is worth reading for ideas, not for copying:
+https://github.com/elpresidentepiff/Thehub/tree/develop
+
+- `lab/history-studies/neckinger.html`: a three.js tunnel down the River Neckinger, with credited
+  public-domain archive pictures set into the brick, that comes up into the real corridor footage.
+  Run `npm install` first, because `three` is loaded from `node_modules`. Image sources and licences are in
+  `lab/history-studies/archive/CREDITS.md`. Some are CC BY-SA, so credit lines must travel with any use.
+- `lab/cleat-studies/`: studies of the cleat.
+- `src/`, `package.json`: a Next.js application with a contact page, a booking floor and Supabase wiring
+  that is switched off. It is an earlier attempt, not a requirement. Supabase and Stripe stay off.
 
 ## Facts nobody has supplied yet
 
