@@ -91,21 +91,23 @@ const radiusAt = (t) => lerp(1.15, 1.6, easeInOut(ramp(t, TUNNEL_END, DOCK)));
 if (renderer) {
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.82;
+  renderer.toneMappingExposure = 0.9;
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x070504);
   scene.fog = new THREE.FogExp2(0x070504, 0.026);
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.add(new THREE.HemisphereLight(0x2a241c, 0x000000, 0.05));
+  scene.add(new THREE.HemisphereLight(0x3b3329, 0x080604, 0.16));
 
   // ——— the tunnel: brick, varying radius, lit only by what falls through the gratings ———
   const brickTex = new THREE.TextureLoader().load('../cleat-studies/brick.jpg');
   brickTex.wrapS = brickTex.wrapT = THREE.RepeatWrapping;
   brickTex.colorSpace = THREE.SRGBColorSpace;
-  const brickMat = new THREE.MeshStandardMaterial({ map: brickTex, color: 0x4a4038, roughness: 0.97, metalness: 0, envMapIntensity: 0.02, side: THREE.FrontSide });
-  const tunnelGeo = buildVaryingTube(curve, radiusAt, 260, 40, [5, 0.16]);
+  const brickMat = new THREE.MeshStandardMaterial({ map: brickTex, color: 0x74685c, roughness: 0.97, metalness: 0, envMapIntensity: 0.02, side: THREE.FrontSide });
+  // The source is a real brick-wall photo: keep its near-square physical tile proportions
+  // instead of stretching each tile six metres down the culvert.
+  const tunnelGeo = buildVaryingTube(curve, radiusAt, 260, 40, [5, 1]);
   const tunnelMesh = new THREE.Mesh(tunnelGeo, brickMat);
   tunnelMesh.updateMatrixWorld(true);
   scene.add(tunnelMesh);
@@ -145,15 +147,29 @@ if (renderer) {
     mesh.lookAt(hit.point.clone().add(normal));
     decalLoader.load(url, (tex) => {
       tex.colorSpace = THREE.SRGBColorSpace;
+      tex.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 8);
       mesh.material.map = tex;
       mesh.material.needsUpdate = true;
+      // Preserve each source image's proportions and use the available wall space without
+      // stretching maps, engravings, or photographs into a generic landscape frame.
+      const aspect = tex.image.width / tex.image.height;
+      const height = Math.min(h, w / aspect);
+      const width = height * aspect;
+      mesh.geometry.dispose();
+      mesh.geometry = new THREE.PlaneGeometry(width, height);
+      mesh.userData.displayHeight = height;
+      mesh.userData.displayWidth = width;
+      if (mesh.userData.caption) {
+        const { label, point, side, radius } = mesh.userData.caption;
+        label.position.copy(point).add(new THREE.Vector3(side * radius * 0.5, radius * 0.05 - height / 2 - 0.28, 0));
+      }
     });
     scene.add(mesh);
     return mesh;
   }
 
   // The whole tunnel wall, both sides, mouth to the dock opening — not two isolated moments.
-  // Two of the nine get the full grating-and-light-shaft treatment (the strongest images); the
+  // Three of the thirteen get the full grating-and-light-shaft treatment (the strongest images); the
   // rest hang as a lit gallery, dim but never fully dark, brightening as the camera nears each.
   const HISTORY = [
     ['jacobs-island-map-1813-web.jpg', '1813 — the earliest surveyed plan of this ground'],
@@ -193,15 +209,16 @@ if (renderer) {
     }
     scene.add(grate);
 
-    const photo = wallDecal(t, side, `archive/${file}`, hero ? 2.6 : 1.7, hero ? 1.9 : 1.25);
+    const photo = wallDecal(t, side, `archive/${file}`, hero ? 3.1 : 2.1, hero ? 2.05 : 1.55);
 
     const label = new THREE.Mesh(
-      new THREE.PlaneGeometry(hero ? 2.3 : 1.6, 0.34),
+      new THREE.PlaneGeometry(hero ? 2.9 : 2.0, 0.34),
       new THREE.MeshBasicMaterial({ map: paintedSignTexture([{ text: caption, size: hero ? 30 : 24, dy: 6 }], { w: 900, h: 170 }), transparent: true, opacity: 0 }),
     );
-    const labelDrop = (hero ? 1.9 : 1.25) / 2 + 0.28;
+    const labelDrop = (hero ? 2.05 : 1.55) / 2 + 0.28;
     label.position.copy(point).add(new THREE.Vector3(side * r * 0.5, r * 0.05 - labelDrop, 0));
     label.lookAt(curve.getPointAt(clamp01(t - 0.12)).add(new THREE.Vector3(0, r * 0.05, 0)));
+    if (photo) photo.userData.caption = { label, point, side, radius: r };
     scene.add(label);
 
     return { t, hero, shaft, grate, photo, label };
@@ -455,9 +472,9 @@ if (renderer) {
         s.shaft.material.uniforms.uOpacity.value = approach * 0.6;
         s.shaft.material.uniforms.uTime.value = now / 1000;
       }
-      s.grate.intensity = (s.hero ? 4 : 1.4) * on;
+      s.grate.intensity = (s.hero ? 5 : 2.1) * on;
       if (s.photo) s.photo.material.opacity = (s.hero ? 0.95 : 0.8) * on;
-      s.label.material.opacity = (s.hero ? 0.85 : 0.55) * on;
+      s.label.material.opacity = (s.hero ? 0.95 : 0.78) * on;
     }
     const signOn = easeOut(Math.max(0, 1 - Math.abs(camT - 0.5) / 0.1));
     sign.material.opacity = 0.95 * signOn;

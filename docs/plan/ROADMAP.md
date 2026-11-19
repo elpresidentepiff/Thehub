@@ -72,7 +72,7 @@ Last updated: 2026-09-28.
 | # | Decision | Unblocks |
 | --- | --- | --- |
 | D1 | Logo + opening-shot design | M2 sync |
-| D2 | Cleat direction. Operator reviewed the four `lab/cleat-studies/` sketches 24 Sep ("none of the 4 wowed me... where is the Neckinger... why so short"). Second pass: `lab/history-studies/neckinger.html` — a real underground river journey (tunnel, light, archive history, the cleat held for a long arrival) built from research into GodRays/bloom/grain technique and real Wikimedia Commons material. Pending operator review | Opening |
+| D2 | Cleat direction. Operator reviewed the four `lab/cleat-studies/` sketches 24 Sep ("none of the 4 wowed me... where is the Neckinger... why so short"). Second pass: `lab/history-studies/neckinger.html` — a real underground river journey (tunnel, light, archive history, the cleat held for a long arrival) built from research into GodRays/bloom/grain technique and real Wikimedia Commons material. Visual clarity pass 19 Nov: archive panels preserve source proportions and gain usable wall area; brick UV scale and warm detail lighting are tuned. Pending operator review | Opening |
 | D3 | Approve the Supabase schema proposal (or amend) | C2 |
 | D4 | Approve the Stripe object mapping (or amend) | C2 |
 | D5 | Can visitors book anonymously, or sign in first? | Hold ownership, RLS |
