@@ -93,6 +93,26 @@ export default function BookPage() {
             <details><summary>What can I choose on the plan?</summary><p>You can inspect individual desks, meeting rooms and private offices. Each selectable place has a stable reference and capacity.</p></details>
             <details><summary>Will the plan prevent double bookings?</summary><p>Yes. When booking opens, the server will check live availability and temporarily hold your selection before payment.</p></details>
             <details><summary>Where can I ask a question?</summary><p>Use the contact page and tell us what kind of space or visit you are planning.</p></details>
+            <details>
+              <summary>Where is The Hub, and how do I get there?</summary>
+              <p>The Hub is at 2 Mill Street, Shad Thames, London SE1 2BD. The nearest Underground station is Bermondsey on the Jubilee line. Nearby bus stops include Dockhead, served by routes 47, 188 and 381, and Jamaica Road / Abbey Street, served by routes 47, 188, 381 and C10.</p>
+            </details>
+            <details>
+              <summary>Is printing included?</summary>
+              <p>Yes. Reasonable printing for work is included at no extra cost.</p>
+            </details>
+            <details>
+              <summary>What Wi-Fi speed is available?</summary>
+              <p>Members have access to 300 Mbps Wi-Fi.</p>
+            </details>
+            <details>
+              <summary>Do members have access to a locker?</summary>
+              <p>Yes. Locker access is included with membership.</p>
+            </details>
+            <details>
+              <summary>Can members use the kitchen?</summary>
+              <p>Yes. Members can use the kitchen facilities, with coffee and refreshments included as part of membership.</p>
+            </details>
           </div>
         </section>
       </div>

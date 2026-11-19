@@ -12,6 +12,7 @@ Last updated: 2026-09-28.
 | Area | State | Evidence | Blocked on |
 | --- | --- | --- | --- |
 | Opening narrative | **Approved:** EST. 1857 → gold line → cleat → real walkthrough → WORK · MEET · CREATE · CONNECT · BELONG. HUB-letters photo beat **cut** on operator request (23 Sep) | `proto/opening.html` | — |
+| Public booking-page FAQs | Location and nearby transport plus operator-confirmed member amenities added to `/book` | `src/app/book/page.tsx` | — |
 | Cleat | Operator: "cool, but we can do more". Current liquid pass reads as shaky, not liquid | `lab/cleat-studies/` | Operator choice of direction |
 | Opening tests A/B/C | **Rejected** ("good attempt but not looking cool"). Kept as evidence only | `lab/opening-tests/` | — |
 | Production opening (Next.js) | **Synced to the approved prototype 24 Sep:** HUB-letters beat removed; the camera now pushes through the cleat (prototype timings, dolly ×4.8); build + camera test pass; frame-compared with `proto/opening.html` | `src/experience/opening/` | Cleat choice (D2) and logo (D1) slot into the same beat |
