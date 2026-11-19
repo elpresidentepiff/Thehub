@@ -2,7 +2,7 @@
 // EST. 1857 + gold line at the start, the real walkthrough at the end.
 //
 //   ?t=0.42  freeze at a progress (review / screenshots)      ?auto  play by itself
-//   prefers-reduced-motion: the study renders its finished still.
+//   prefers-reduced-motion: the study renders its finished still unless playback is explicitly requested.
 
 export const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 export const ramp = (p, a, b) => clamp((p - a) / (b - a));
@@ -80,7 +80,7 @@ export function run(render, opts = {}) {
       scrollTo(0, easeInOut(t) * max);
       if (t >= 1) auto = null;
     }
-    const goal = fixed ?? (reduced ? 1 : target);
+    const goal = fixed ?? (reduced && !auto ? 1 : target);
     const p = shown < 0 || fixed !== null ? goal : lerp(shown, goal, 0.14);
     if (Math.abs(p - shown) > 1e-4) {
       shown = Math.abs(p - goal) < 1e-4 ? goal : p;
