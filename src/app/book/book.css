@@ -1,9 +1,31 @@
-.book-page { min-height: 100svh; background: var(--hub-ink); color: var(--hub-cream); }
+.book-page {
+  /* Owner-selected River Teal & Sage palette, scoped to this page only. */
+  --book-river: #174849;
+  --book-deep: #113436;
+  --book-sage: #B7D0C4;
+  --book-sage-muted: #AFC4BA;
+  --book-ivory: #F1EFE7;
+
+  --hub-ink: var(--book-river);
+  --hub-ink-2: var(--book-deep);
+  --hub-halo: var(--book-sage);
+  --hub-halo-warm: var(--book-ivory);
+  --hub-brass: var(--book-sage);
+  --hub-brass-deep: var(--book-deep);
+  --hub-plaster: var(--book-ivory);
+  --hub-daylight: var(--book-sage);
+  --hub-cream: var(--book-ivory);
+  --hub-cream-dim: var(--book-sage-muted);
+
+  min-height: 100svh;
+  background: var(--hub-ink);
+  color: var(--hub-cream);
+}
 .book-page a:focus-visible, .book-page summary:focus-visible { outline: 2px solid var(--hub-halo); outline-offset: 4px; }
 .book-header {
   position: sticky; top: 0; z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: 20px;
-  min-height: 62px; padding: 10px clamp(18px, 4vw, 64px); border-bottom: 1px solid color-mix(in srgb, var(--hub-halo) 14%, transparent);
-  background: color-mix(in srgb, var(--hub-ink) 94%, transparent); backdrop-filter: blur(14px);
+  min-height: 62px; padding: 10px clamp(18px, 4vw, 64px); border-bottom: 1px solid color-mix(in srgb, var(--book-sage) 24%, transparent);
+  background: color-mix(in srgb, var(--book-deep) 96%, transparent); backdrop-filter: blur(14px);
 }
 .book-brand { color: var(--hub-cream); font: 400 14px/1 var(--hub-display); letter-spacing: .055em; text-decoration: none; text-transform: uppercase; }
 .book-header nav { display: flex; align-items: center; gap: clamp(12px, 2.4vw, 32px); }
